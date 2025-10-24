@@ -6,15 +6,15 @@ export const OrangeCloudShader = () => {
   return (
     <Hero
       trustBadge={{
-        text: "Trusted by forward-thinking teams.",
+        text: "Hi there 👋",
         // icons: ["✨"],
-        icons: ["🚀"], // optional
+        // icons: ["🚀"], // optional
       }}
       headline={{
         line1: "DEVS",
         line2: "Stories  knowledge and growth",
       }}
-      subtitle="Supercharge productivity with AI-powered automation and integrations built for the next generation of teams — fast, seamless, and limitless."
+      subtitle=""
       buttons={{
         primary: {
           text: "Get Started for Free",
