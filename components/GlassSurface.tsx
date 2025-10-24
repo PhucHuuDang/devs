@@ -1,5 +1,7 @@
 "use client";
 
+import { useMounted } from "@/hooks/use-mounted";
+import { MixBlendMode } from "@/hooks/use-settings-glass-surface";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState, useId } from "react";
 
@@ -21,25 +23,8 @@ export interface GlassSurfaceProps {
   blueOffset?: number;
   xChannel?: "R" | "G" | "B";
   yChannel?: "R" | "G" | "B";
-  mixBlendMode?:
-    | "normal"
-    | "multiply"
-    | "screen"
-    | "overlay"
-    | "darken"
-    | "lighten"
-    | "color-dodge"
-    | "color-burn"
-    | "hard-light"
-    | "soft-light"
-    | "difference"
-    | "exclusion"
-    | "hue"
-    | "saturation"
-    | "color"
-    | "luminosity"
-    | "plus-darker"
-    | "plus-lighter";
+  mixBlendMode?: MixBlendMode;
+
   className?: string;
   style?: React.CSSProperties;
 
@@ -105,6 +90,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const gaussianBlurRef = useRef<SVGFEGaussianBlurElement>(null);
 
   const isDarkMode = useDarkMode();
+
+  const mounted = useMounted();
 
   const generateDisplacementMap = () => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -238,6 +225,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
       "--glass-frost": backgroundOpacity,
       "--glass-saturation": saturation,
     } as React.CSSProperties;
+
+    // if (!mounted) return baseStyles;
 
     const svgSupported = supportsSVGFilters();
     const backdropFilterSupported = supportsBackdropFilter();

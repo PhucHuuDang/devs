@@ -45,6 +45,18 @@
   --radius-xl: calc(var(--radius) + 4px);
   --color-brand: var(--brand);
   --color-highlight: var(--highlight);
+  --animate-border-beam: border-beam calc(var(--duration) * 1s) infinite linear;
+
+  @keyframes border-beam {
+    100% {
+      offset-distance: 100%;
+    }
+  }
+  @keyframes border-beam {
+    100% {
+      offset-distance: 100%;
+    }
+  }
 }
 
 :root {
@@ -126,6 +138,33 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@theme {
+  --animate-collapsible-down: collapsible-down 0.2s ease-out;
+  --animate-collapsible-up: collapsible-up 0.2s ease-out;
+
+  @keyframes collapsible-down {
+    from {
+      height: 0;
+      opacity: 0;
+    }
+    to {
+      height: var(--radix-collapsible-content-height);
+      opacity: 1;
+    }
+  }
+
+  @keyframes collapsible-up {
+    from {
+      height: var(--radix-collapsible-content-height);
+      opacity: 1;
+    }
+    to {
+      height: 0;
+      opacity: 0;
+    }
   }
 }
 
