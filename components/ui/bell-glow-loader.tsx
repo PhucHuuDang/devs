@@ -1,6 +1,5 @@
 "use client";
 
-import LoadingPage from "@/app/loading";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 export type BellLoaderProps = {

@@ -1,7 +1,7 @@
 "use client";
 
 import { BellLoader } from "../ui/bell-glow-loader";
-import { SHADER_SRC, ShaderCanvas, VERT_SRC } from "../ui/radial-shader";
+import { SHADER_SRC, ShaderCanvas } from "../ui/radial-shader";
 import { OrangeCloudShader } from "./orange-cloud-shader";
 import { RippleShader } from "./ripple-shader";
 import { useMounted } from "@/hooks/use-mounted";
