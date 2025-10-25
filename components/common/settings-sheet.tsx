@@ -52,6 +52,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useGetSettings } from "@/hooks/use-get-settings";
 
 const triggerStyle =
   "border rounded-lg p-2 bg-slate-500/10 hover:bg-slate-500/20 transition-all duration-300 cursor-pointer";
@@ -81,24 +82,26 @@ export function SettingsSheet() {
   const onOpen = useOpenSheetSelectors.use.onOpen();
   const onClose = useOpenSheetSelectors.use.onClose();
 
-  const settings = {
-    borderRadius: useSettingsGlassSurfaceSelectors.use.borderRadius?.(),
-    borderWidth: useSettingsGlassSurfaceSelectors.use.borderWidth?.(),
-    brightness: useSettingsGlassSurfaceSelectors.use.brightness?.(),
-    opacity: useSettingsGlassSurfaceSelectors.use.opacity?.(),
-    blur: useSettingsGlassSurfaceSelectors.use.blur?.(),
-    displace: useSettingsGlassSurfaceSelectors.use.displace?.(),
-    backgroundOpacity:
-      useSettingsGlassSurfaceSelectors.use.backgroundOpacity?.(),
-    saturation: useSettingsGlassSurfaceSelectors.use.saturation?.(),
-    distortionScale: useSettingsGlassSurfaceSelectors.use.distortionScale?.(),
-    redOffset: useSettingsGlassSurfaceSelectors.use.redOffset?.(),
-    greenOffset: useSettingsGlassSurfaceSelectors.use.greenOffset?.(),
-    blueOffset: useSettingsGlassSurfaceSelectors.use.blueOffset?.(),
-    xChannel: useSettingsGlassSurfaceSelectors.use.xChannel?.(),
-    yChannel: useSettingsGlassSurfaceSelectors.use.yChannel?.(),
-    mixBlendMode: useSettingsGlassSurfaceSelectors.use.mixBlendMode?.(),
-  };
+  // const settings = {
+  //   borderRadius: useSettingsGlassSurfaceSelectors.use.borderRadius?.(),
+  //   borderWidth: useSettingsGlassSurfaceSelectors.use.borderWidth?.(),
+  //   brightness: useSettingsGlassSurfaceSelectors.use.brightness?.(),
+  //   opacity: useSettingsGlassSurfaceSelectors.use.opacity?.(),
+  //   blur: useSettingsGlassSurfaceSelectors.use.blur?.(),
+  //   displace: useSettingsGlassSurfaceSelectors.use.displace?.(),
+  //   backgroundOpacity:
+  //     useSettingsGlassSurfaceSelectors.use.backgroundOpacity?.(),
+  //   saturation: useSettingsGlassSurfaceSelectors.use.saturation?.(),
+  //   distortionScale: useSettingsGlassSurfaceSelectors.use.distortionScale?.(),
+  //   redOffset: useSettingsGlassSurfaceSelectors.use.redOffset?.(),
+  //   greenOffset: useSettingsGlassSurfaceSelectors.use.greenOffset?.(),
+  //   blueOffset: useSettingsGlassSurfaceSelectors.use.blueOffset?.(),
+  //   xChannel: useSettingsGlassSurfaceSelectors.use.xChannel?.(),
+  //   yChannel: useSettingsGlassSurfaceSelectors.use.yChannel?.(),
+  //   mixBlendMode: useSettingsGlassSurfaceSelectors.use.mixBlendMode?.(),
+  // };
+
+  const settings = useGetSettings();
 
   const applyChanges = shallow(defaultSettings, settings);
 
