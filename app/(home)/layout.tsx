@@ -7,7 +7,7 @@ interface HomeLayoutProps {
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
     <section className="relative h-screen w-full overflow-hidden ">
-      <Navbar />
+      {/* <Navbar /> */}
 
       {children}
     </section>

@@ -5,11 +5,13 @@ import { SHADER_SRC, ShaderCanvas } from "../ui/radial-shader";
 import { OrangeCloudShader } from "./orange-cloud-shader";
 import { RippleShader } from "./ripple-shader";
 import { useMounted } from "@/hooks/use-mounted";
+import { ShaderCanvasContent } from "./shader-canvas-content";
+import { defaultContent } from "../common/background-content";
 
 const components: React.ReactNode[] = [
   <RippleShader key="ripple" />,
   <OrangeCloudShader key="orange-cloud" />,
-  <ShaderCanvas key="shader-canvas" fragSource={SHADER_SRC} />,
+  <ShaderCanvasContent key="shader-canvas" />,
 ];
 
 const randomIndex = Math.floor(Math.random() * components.length);
