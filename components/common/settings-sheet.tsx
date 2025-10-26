@@ -90,8 +90,6 @@ export function SettingsSheet() {
 
   const applyChanges = shallow(defaultSettings, settings);
 
-  // console.log({ testShalow });
-
   //actions
   const onReset = useSettingsGlassSurfaceSelectors.use.onReset();
   const setBrightness = useSettingsGlassSurfaceSelectors.use.setBrightness();
@@ -129,7 +127,7 @@ export function SettingsSheet() {
         trigger={
           <SheetTrigger asChild>
             <div>
-              <EllipsisVerticalIcon className="size-8 shadow-lg bg-slate-200 cursor-pointer  p-1 rounded-lg hover:scale-105 transition-all duration-300 hover:p-0.5 hover:bg-slate-400/20" />
+              <EllipsisVerticalIcon className="size-8 shadow-lg bg-slate-200 cursor-pointer  p-1 rounded-lg hover:scale-105 transition-all duration-300 hover:p-0.5 hover:bg-slate-400/20 dark:bg-slate-800 dark:hover:bg-slate-700" />
             </div>
           </SheetTrigger>
         }
@@ -145,7 +143,6 @@ export function SettingsSheet() {
        border-0"
       >
         <SheetHeader className="">
-          {/* <div className="flex-1"> */}
           <SheetTitle className="flex items-center gap-1">
             <SettingsIcon className="size-4 animate-spin duration-500 transform transition" />
             Settings
@@ -153,7 +150,6 @@ export function SettingsSheet() {
           <SheetDescription>
             Make changes to your profile here. Click save when you&apos;re done.
           </SheetDescription>
-          {/* </div> */}
 
           <div className="flex items-center gap-2 justify-end">
             <Button

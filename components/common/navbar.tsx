@@ -1,6 +1,4 @@
 "use client";
-import { EllipsisVerticalIcon } from "lucide-react";
-// import GlassSurface from "../GlassSurface";
 import dynamic from "next/dynamic";
 
 const GlassSurface = dynamic(() => import("../GlassSurface"), { ssr: false });
@@ -8,14 +6,13 @@ const GlassSurface = dynamic(() => import("../GlassSurface"), { ssr: false });
 import { Logo } from "./logo";
 import { SettingsSheet } from "./settings-sheet";
 import { useGetSettings } from "@/hooks/use-get-settings";
+import { ThemeToggleButtonStyles } from "../theme/theme-toggle-button";
 
 export const Navbar = () => {
   const settings = useGetSettings();
 
-  console.log({ settings });
-
   return (
-    <div className="fixed top-10 flex justify-center items-center w-full z-50">
+    <div className="fixed top-6 flex justify-center items-center w-full z-50">
       <GlassSurface
         width={`90%`}
         height={60}
@@ -31,7 +28,8 @@ export const Navbar = () => {
         // mixBlendMode="darken"
       >
         <Logo />
-        <div>
+        <div className="flex items-center gap-2">
+          <ThemeToggleButtonStyles />
           <SettingsSheet />
         </div>
       </GlassSurface>

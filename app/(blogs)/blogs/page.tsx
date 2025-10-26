@@ -1,4 +1,7 @@
-// Không cần gì đặc biệt, chỉ để Next biết đây là route chính
-export default function Page() {
-  return null;
-}
+import React from "react";
+
+const BlogsPage = () => {
+  return <div>BlogsPage</div>;
+};
+
+export default BlogsPage;
