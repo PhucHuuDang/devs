@@ -28,7 +28,7 @@ export const Navbar = () => {
         // mixBlendMode="darken"
       >
         <Logo />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center gap-2">
           <ThemeToggleButtonStyles />
           <SettingsSheet />
         </div>

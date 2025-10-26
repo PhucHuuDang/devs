@@ -320,7 +320,19 @@ export const ThemeToggleButton4 = ({
 }) => {
   const [isDark, setIsDark] = useState<boolean | null>(false);
 
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, systemTheme } = useTheme();
+
+  useEffect(() => {
+    if (theme === "system") {
+      setTimeout(() => {
+        setIsDark(systemTheme === "dark");
+      }, 0);
+    } else {
+      setTimeout(() => {
+        setIsDark(theme === "dark");
+      }, 0);
+    }
+  }, [theme, systemTheme]);
 
   const handleToggle = () => {
     const newTheme = isDark ? "light" : "dark";

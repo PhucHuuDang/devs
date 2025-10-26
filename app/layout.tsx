@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     template: "%s | DEVS",
     default: "DEVS",
   },
+  icons: {
+    icon: "/icon.webp",
+  },
   description:
     "DEVS is a platform for developers to share their stories and learn from others, grow their skills and network with other developers, and get hired, get freelance work, and more.",
 
