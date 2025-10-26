@@ -56,7 +56,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useGetSettings } from "@/hooks/use-get-settings";
-import GlassIconWrapper from "@/app/icons/glass-primary-icon";
+import GlassIconWrapper from "@/app/icons/glass-icon-wrapper";
 
 const triggerStyle =
   "border rounded-lg p-2 bg-slate-500/10 hover:bg-slate-500/20 transition-all duration-300 cursor-pointer";
