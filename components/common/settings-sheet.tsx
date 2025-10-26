@@ -12,11 +12,14 @@ import {
 } from "@/components/ui/sheet";
 import {
   EllipsisVerticalIcon,
+  HomeIcon,
   LucideIcon,
   OptionIcon,
   PaletteIcon,
   RotateCwIcon,
+  Settings2Icon,
   SettingsIcon,
+  UserIcon,
   ZapIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
@@ -53,6 +56,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useGetSettings } from "@/hooks/use-get-settings";
+import GlassIconWrapper from "@/app/icons/glass-primary-icon";
 
 const triggerStyle =
   "border rounded-lg p-2 bg-slate-500/10 hover:bg-slate-500/20 transition-all duration-300 cursor-pointer";
@@ -81,25 +85,6 @@ export function SettingsSheet() {
   const isOpen = useOpenSheetSelectors.use.isOpen();
   const onOpen = useOpenSheetSelectors.use.onOpen();
   const onClose = useOpenSheetSelectors.use.onClose();
-
-  // const settings = {
-  //   borderRadius: useSettingsGlassSurfaceSelectors.use.borderRadius?.(),
-  //   borderWidth: useSettingsGlassSurfaceSelectors.use.borderWidth?.(),
-  //   brightness: useSettingsGlassSurfaceSelectors.use.brightness?.(),
-  //   opacity: useSettingsGlassSurfaceSelectors.use.opacity?.(),
-  //   blur: useSettingsGlassSurfaceSelectors.use.blur?.(),
-  //   displace: useSettingsGlassSurfaceSelectors.use.displace?.(),
-  //   backgroundOpacity:
-  //     useSettingsGlassSurfaceSelectors.use.backgroundOpacity?.(),
-  //   saturation: useSettingsGlassSurfaceSelectors.use.saturation?.(),
-  //   distortionScale: useSettingsGlassSurfaceSelectors.use.distortionScale?.(),
-  //   redOffset: useSettingsGlassSurfaceSelectors.use.redOffset?.(),
-  //   greenOffset: useSettingsGlassSurfaceSelectors.use.greenOffset?.(),
-  //   blueOffset: useSettingsGlassSurfaceSelectors.use.blueOffset?.(),
-  //   xChannel: useSettingsGlassSurfaceSelectors.use.xChannel?.(),
-  //   yChannel: useSettingsGlassSurfaceSelectors.use.yChannel?.(),
-  //   mixBlendMode: useSettingsGlassSurfaceSelectors.use.mixBlendMode?.(),
-  // };
 
   const settings = useGetSettings();
 
@@ -209,8 +194,8 @@ export function SettingsSheet() {
                   label
                   title="Displace"
                   min={0}
-                  max={10}
-                  step={1}
+                  max={5}
+                  step={0.1}
                   values={Number(settings.displace)}
                   onValueChange={setDisplace}
                 />
@@ -369,20 +354,33 @@ export function SettingsSheet() {
             </AccordionItem>
           </Accordion>
 
-          <Card className="mt-4">
+          <Card
+            className="mt-4 rounded-3xl"
+            style={{
+              backgroundImage: `url(${`https://images.unsplash.com/photo-1760648149145-560e619098ef?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2940`})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "repeat",
+              animation: "var(--animate-move-bg)",
+            }}
+          >
             <CardHeader>
-              <CardTitle>Preview</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-white">Preview</CardTitle>
+              <CardDescription className="text-slate-100">
                 Preview the changes you have made to the glass surface.
               </CardDescription>
               {/* <CardAction>Card Action</CardAction> */}
             </CardHeader>
             <CardContent>
-              <p>Card Content</p>
+              <div className="grid md:grid-cols-4 lg:grid-cols-6 gap-2">
+                <GlassIconWrapper icon={HomeIcon} />
+                <GlassIconWrapper icon={UserIcon} />
+                <GlassIconWrapper icon={Settings2Icon} />
+                <GlassIconWrapper icon={ZapIcon} />
+                <GlassIconWrapper icon={PaletteIcon} />
+                <GlassIconWrapper icon={RotateCwIcon} />
+              </div>
             </CardContent>
-            {/* <CardFooter>
-              <p>Card Footer</p>
-            </CardFooter> */}
           </Card>
         </div>
         <SheetFooter>

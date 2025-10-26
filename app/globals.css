@@ -6,6 +6,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --animate-move-bg: move-bg 20s linear infinite;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -55,6 +57,15 @@
   @keyframes border-beam {
     100% {
       offset-distance: 100%;
+    }
+  }
+
+  @keyframes move-bg {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 0 100%;
     }
   }
 }
@@ -143,8 +154,8 @@
 
 @theme {
   --animate-collapsible-down: collapsible-down 0.2s ease-out;
-  --animate-collapsible-up: collapsible-up 0.2s ease-out;
 
+  --animate-move-bg: move-bg 20s linear infinite;
   @keyframes collapsible-down {
     from {
       height: 0;
