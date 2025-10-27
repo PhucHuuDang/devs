@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { ThemeProvider } from "../providers/next-theme-provider";
 import { Navbar } from "@/components/common/navbar";
 import { ListCategory } from "@/components/common/list-category.";
+import { AppleFloatingDock } from "@/components/common/apple-floating-dock";
 
 interface BlogsLayoutProps {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
 const BlogsLayout = ({ children }: BlogsLayoutProps) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <section className="relative h-screen w-full overflow-hidden ">
+      <section className="relative h-screen  w-full overflow-hidden ">
         <Navbar />
         <div className="pt-28 px-10 w-full">
           <div className="w-full px-2">
@@ -31,6 +32,9 @@ const BlogsLayout = ({ children }: BlogsLayoutProps) => {
           </div>
 
           {children}
+        </div>
+        <div className="fixed bottom-0 left-0 right-0">
+          <AppleFloatingDock />
         </div>
       </section>
     </ThemeProvider>
