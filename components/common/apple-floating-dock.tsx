@@ -71,7 +71,7 @@ export function AppleFloatingDock() {
     },
   ];
   return (
-    <div className="flex items-center justify-center h-[35rem] w-full">
+    <div className="fixed bottom-4 left-0 right-0    flex items-center justify-center w-full">
       <FloatingDock
         mobileClassName="translate-y-20" // only for demo, remove for production
         items={links}
