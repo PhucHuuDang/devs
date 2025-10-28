@@ -11,6 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
+  DockIcon,
   EllipsisVerticalIcon,
   HomeIcon,
   LucideIcon,
@@ -112,6 +113,11 @@ export function SettingsSheet() {
     useSettingsGlassSurfaceSelectors.use.setBorderRadius();
   const setBorderWidth = useSettingsGlassSurfaceSelectors.use.setBorderWidth();
 
+  // docks
+
+  const setDefaultSize = useSettingsGlassSurfaceSelectors.use.setDefaultSize();
+  const setHoveredSize = useSettingsGlassSurfaceSelectors.use.setHoveredSize();
+
   const distortionTrigger = (
     <div className="flex items-center gap-2  w-full">
       <div className="flex items-center gap-1">
@@ -204,6 +210,33 @@ export function SettingsSheet() {
                   step={10}
                   values={Number(settings.distortionScale)}
                   onValueChange={setDistortionScale}
+                />
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="dock">
+              <AccordionTrigger className={triggerStyle}>
+                <Trigger title="Dock Settings" icon={DockIcon} />
+              </AccordionTrigger>
+              <AccordionContent className={accordionContentStyle}>
+                <DualRangeSliderSingle
+                  label
+                  title="Size of the dock"
+                  min={0}
+                  max={150}
+                  step={0.1}
+                  values={Number(settings.defaultSize)}
+                  onValueChange={setDefaultSize}
+                />
+
+                <DualRangeSliderSingle
+                  label
+                  title="Size when hovered the Dock "
+                  min={0}
+                  max={200}
+                  step={1}
+                  values={Number(settings.hoveredSize)}
+                  onValueChange={setHoveredSize}
                 />
               </AccordionContent>
             </AccordionItem>

@@ -100,7 +100,7 @@ const FloatingDockDesktop = ({
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        "mx-auto hidden h-16 items-end gap-4 rounded-2xl bg-gray-50 px-4 pb-3 md:flex dark:bg-neutral-900",
+        "mx-auto hidden h-16 items-end gap-2 rounded-2xl bg-gray-50 px-4 pb-3 md:flex dark:bg-neutral-900",
         className
       )}
     >
@@ -130,18 +130,28 @@ function IconContainer({
     return val - bounds.x - bounds.width / 2;
   });
 
-  const widthTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
-  const heightTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+  const { defaultSize, hoveredSize } = useGetSettings();
+
+  const widthTransform = useTransform(
+    distance,
+    [-150, 0, 150],
+    [40, hoveredSize, 40]
+  );
+  const heightTransform = useTransform(
+    distance,
+    [-150, 0, 150],
+    [40, hoveredSize, 40]
+  );
 
   const widthTransformIcon = useTransform(
     distance,
     [-150, 0, 150],
-    [20, 40, 20]
+    [defaultSize, 60, defaultSize]
   );
   const heightTransformIcon = useTransform(
     distance,
     [-150, 0, 150],
-    [20, 40, 20]
+    [defaultSize, 60, defaultSize]
   );
 
   const width = useSpring(widthTransform, {
@@ -166,6 +176,8 @@ function IconContainer({
     damping: 12,
   });
 
+  console.log({ widthIcon });
+
   const [hovered, setHovered] = useState(false);
 
   const settings = useGetSettings();
@@ -177,8 +189,8 @@ function IconContainer({
         style={{ width, height }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="relative flex aspect-square items-center justify-center rounded-full bg-gray-200 dark:bg-neutral-800 "
-        // className="flex items-center justify-center aspect-square rounded-full "
+        className="relative flex aspect-square items-center justify-center rounded-full "
+        // className="flex items-center justify-center aspect-square rounded-full bg-gray-200 dark:bg-neutral-800 "
       >
         {/* <GlassSurface
           {...settings}
@@ -209,9 +221,13 @@ function IconContainer({
             </motion.div>
           )}
         </AnimatePresence>
+
         <motion.div
-          style={{ width: widthIcon, height: heightIcon }}
-          className="flex items-center justify-center"
+          style={{
+            width: widthIcon,
+            height: heightIcon,
+          }}
+          className="flex items-center justify-center transition duration-300"
         >
           {icon}
         </motion.div>

@@ -18,6 +18,9 @@ export const useGetSettings = () => {
     xChannel: useSettingsGlassSurfaceSelectors.use.xChannel?.(),
     yChannel: useSettingsGlassSurfaceSelectors.use.yChannel?.(),
     mixBlendMode: useSettingsGlassSurfaceSelectors.use.mixBlendMode?.(),
+
+    defaultSize: useSettingsGlassSurfaceSelectors.use.defaultSize?.(),
+    hoveredSize: useSettingsGlassSurfaceSelectors.use.hoveredSize?.(),
   };
 
   return settings;

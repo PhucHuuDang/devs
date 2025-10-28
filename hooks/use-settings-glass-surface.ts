@@ -9,6 +9,16 @@ export type xChannel = "R" | "G" | "B";
 
 export type yChannel = xChannel;
 
+export interface UseDockSizeProps {
+  defaultSize: number;
+  hoveredSize: number;
+
+  setDefaultSize: (size: number) => void;
+  setHoveredSize: (size: number) => void;
+
+  onReset: () => void;
+}
+
 export type MixBlendMode =
   | "normal"
   | "multiply"
@@ -73,7 +83,8 @@ interface SettingsActions {
 export type SettingStates = Omit<
   GlassSurfaceProps,
   "children" | "className" | "style" | "childClassName" | "width" | "height"
-> & {};
+> &
+  Pick<UseDockSizeProps, "defaultSize" | "hoveredSize">;
 
 export const defaultSettings: SettingStates = {
   borderRadius: 20,
@@ -91,10 +102,15 @@ export const defaultSettings: SettingStates = {
   xChannel: "R",
   yChannel: "G",
   mixBlendMode: "difference",
+
+  // dock size
+
+  defaultSize: 28,
+  hoveredSize: 100,
 };
 
 export const useSettingsGlassSurface = createWithEqualityFn<
-  SettingStates & SettingsActions
+  SettingStates & SettingsActions & UseDockSizeProps
 >()(
   persist(
     immer((set, get) => {
@@ -163,6 +179,19 @@ export const useSettingsGlassSurface = createWithEqualityFn<
           set((state) => {
             state.borderWidth = value;
           }),
+
+        //dock size
+
+        setDefaultSize: (value) =>
+          set((state) => {
+            state.defaultSize = value;
+          }),
+
+        setHoveredSize: (value) => {
+          set((state) => {
+            state.hoveredSize = value;
+          });
+        },
       };
     }),
     {
