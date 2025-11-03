@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@apollo/client/react";
-import { GET_POSTS } from "@/app/queries/queries/post.queries";
+import { GET_POSTS } from "@/app/graphql/queries/post.queries";
 
 const BlogsPage = () => {
   const { data, loading, error } = useQuery(GET_POSTS);
