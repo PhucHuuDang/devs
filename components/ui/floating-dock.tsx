@@ -12,7 +12,6 @@ import {
 } from "motion/react";
 
 import { useRef, useState } from "react";
-import GlassSurface from "../GlassSurface";
 import { useGetSettings } from "@/hooks/use-get-settings";
 
 export const FloatingDock = ({
@@ -176,11 +175,7 @@ function IconContainer({
     damping: 12,
   });
 
-  console.log({ widthIcon });
-
   const [hovered, setHovered] = useState(false);
-
-  const settings = useGetSettings();
 
   return (
     <a href={href}>

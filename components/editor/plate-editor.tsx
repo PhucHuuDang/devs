@@ -1,9 +1,7 @@
 "use client";
 
-import * as React from "react";
-
 import { normalizeNodeId } from "platejs";
-import { Plate, usePlateEditor } from "platejs/react";
+import { Plate, useEditorSelector, usePlateEditor } from "platejs/react";
 
 import { EditorKit } from "@/components/editor/editor-kit";
 import { SettingsDialog } from "@/components/editor/settings-dialog";

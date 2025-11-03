@@ -19,6 +19,16 @@ export const metadata: Metadata = {
     { name: "Harry Dang", url: "https://www.facebook.com/HP2K2Official" },
   ],
   creator: "Harry Dang",
+
+  metadataBase: new URL("localhost:3000/blogs"),
+  generator: "Next.js",
+  applicationName: "DEVS",
+
+  abstract:
+    "The best platform for developers to share their stories and learn from others, grow their skills and network with other developers, and get hired, get freelance work, and more.",
+
+  category: "technology",
+  publisher: "Vercel",
 };
 
 const BlogsLayout = ({ children }: BlogsLayoutProps) => {
