@@ -10,10 +10,7 @@ export const RippleShader = () => {
   return (
     <>
       <ShaderAnimation />
-      {/* <div className="absolute pointer-events-none z-10 text-center text-7xl leading-none font-semibold tracking-tighter whitespace-pre-wrap text-white flex flex-col items-center justify-center">
-        <span className="text-7xl">DEVS</span>
-        <span className="text-7xl">Stories knowledge and growth</span>
-      </div> */}
+
       <BackgroundContent {...defaultContent} />
     </>
   );

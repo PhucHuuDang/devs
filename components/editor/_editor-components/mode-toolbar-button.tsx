@@ -7,7 +7,13 @@ import {
   type DropdownMenuProps,
   DropdownMenuItemIndicator,
 } from "@radix-ui/react-dropdown-menu";
-import { CheckIcon, EyeIcon, PencilLineIcon, PenIcon } from "lucide-react";
+import {
+  CheckIcon,
+  EyeIcon,
+  PencilLineIcon,
+  PenIcon,
+  ShieldCheckIcon,
+} from "lucide-react";
 import { useEditorRef, usePlateState, usePluginOption } from "platejs/react";
 
 import {
@@ -43,8 +49,13 @@ export function ModeToolbarButton(props: DropdownMenuProps) {
       label: "Suggestion",
     },
     viewing: {
-      icon: <EyeIcon />,
+      icon: <ShieldCheckIcon />,
       label: "Viewing",
+    },
+
+    viewClient: {
+      icon: <EyeIcon />,
+      label: "Viewing Client",
     },
   };
 
@@ -100,6 +111,15 @@ export function ModeToolbarButton(props: DropdownMenuProps) {
             <Indicator />
             {item.viewing.icon}
             {item.viewing.label}
+          </DropdownMenuRadioItem>
+
+          <DropdownMenuRadioItem
+            className="pl-2 *:first:[span]:hidden *:[svg]:text-muted-foreground"
+            value="viewClient"
+          >
+            <Indicator />
+            {item.viewClient.icon}
+            {item.viewClient.label}
           </DropdownMenuRadioItem>
 
           <DropdownMenuRadioItem

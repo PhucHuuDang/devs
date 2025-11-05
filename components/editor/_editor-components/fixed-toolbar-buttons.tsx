@@ -15,7 +15,13 @@ import {
   WandSparklesIcon,
 } from "lucide-react";
 import { KEYS } from "platejs";
-import { useEditorReadOnly } from "platejs/react";
+import {
+  useEditorComposing,
+  useEditorReadOnly,
+  useEditorSelector,
+  useEditorState,
+  useEditorValue,
+} from "platejs/react";
 
 import { AIToolbarButton } from "./ai-toolbar-button";
 import { AlignToolbarButton } from "./align-toolbar-button";
@@ -49,6 +55,13 @@ import { TurnIntoToolbarButton } from "./turn-into-toolbar-button";
 
 export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
+
+  const test = useEditorState();
+
+  const value = useEditorValue();
+
+  console.log({ test });
+  console.log({ value });
 
   return (
     <div className="flex w-full">

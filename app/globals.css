@@ -181,4 +181,33 @@
 
 .slate-editor {
   padding-inline: max(64px, calc(40% - 350px));
+
+  ::selection {
+    background: oklch(93.8% 0.127 124.321);
+    /* color: oklch(100% 0 0); */
+    text-shadow: none;
+  }
+
+  ::-moz-selection {
+    background: oklch(93.8% 0.127 124.321);
+    /* color: #eee; */
+    text-shadow: none;
+  }
 }
+
+/* ::selection {
+  background: oklch(76.9% 0.188 70.08);
+  color: #eee;
+  text-shadow: none;
+}
+
+::-moz-selection {
+  background: oklch(76.9% 0.188 70.08);
+  color: #eee;
+  text-shadow: none;
+} */
+
+/* [data-plate-editor] ::selection {
+  background-color: transparent;
+  color: #f97316;
+} */

@@ -5,7 +5,7 @@ export const SimpleLoading = () => {
     <div className="absolute inset-0 flex items-center justify-center">
       <div className="flex items-center justify-center gap-1">
         <Spinner />
-        <span>Loading...</span>
+        <span className="text-sm font-medium">Loading...</span>
       </div>
     </div>
   );
