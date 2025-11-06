@@ -153,6 +153,7 @@
 }
 
 @theme {
+  --breakpoint-3xl: 120rem;
   --animate-collapsible-down: collapsible-down 0.2s ease-out;
 
   --animate-move-bg: move-bg 20s linear infinite;
@@ -210,4 +211,39 @@
 /* [data-plate-editor] ::selection {
   background-color: transparent;
   color: #f97316;
+} */
+
+.card-shine-effect {
+  --shine-deg: 130deg;
+  position: relative;
+  overflow: hidden;
+
+  background-repeat: no-repeat;
+  background-position: -100% 0, 0 0;
+
+  background-image: linear-gradient(
+    var(--shine-deg),
+    transparent 20%,
+    transparent 40%,
+    rgba(159, 118, 64, 0.2) 50%,
+    rgba(159, 87, 46, 0.2) 55%,
+    transparent 70%,
+    transparent 100%
+  );
+
+  background-size: 250% 250%, 100% 100%;
+  transition: background-position 0s ease;
+}
+
+.card-shine-effect:hover {
+  background-position: 200%0, 0 0;
+  transition-duration: 1s;
+}
+
+/* .sc-jhlPcU {
+  background-color: red !important;
+}
+
+.dwGmYG {
+  background-color: blue !important;
 } */

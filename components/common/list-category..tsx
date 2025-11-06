@@ -26,7 +26,7 @@ export function ListCategory() {
         {listCategory.map((category, index) => (
           <CarouselItem
             key={index}
-            className="basis-1/2 sm:basis-1/3 md:basis-1/5 lg:basis-1/7 xl:basis-1/10 2xl:basis-1/12 p-2"
+            className="basis-1/2 sm:basis-1/3 md:basis-1/5 lg:basis-1/7 xl:basis-1/10 2xl:basis-1/10 3xl:basis-1/12 p-2"
           >
             {/* <CategoryItem title={`Category ${index + 1}`} icon={Home} /> */}
 

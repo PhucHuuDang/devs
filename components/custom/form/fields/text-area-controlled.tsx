@@ -7,10 +7,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { FieldValues, Path, useFormContext } from "react-hook-form";
 
-interface InputControlledProps<T extends FieldValues> {
+interface TextareaControlledProps<T extends FieldValues> {
   name: Path<T>;
   label: string;
 
@@ -23,7 +24,7 @@ interface InputControlledProps<T extends FieldValues> {
 
   classNameInput?: string;
 }
-export const InputControlled = <T extends FieldValues>({
+export const TextareaControlled = <T extends FieldValues>({
   name,
   label,
   placeholder,
@@ -33,7 +34,7 @@ export const InputControlled = <T extends FieldValues>({
   description,
   className,
   classNameInput,
-}: InputControlledProps<T>) => {
+}: TextareaControlledProps<T>) => {
   const { control, getFieldState } = useFormContext();
 
   return (
@@ -47,13 +48,12 @@ export const InputControlled = <T extends FieldValues>({
           <FormItem className={className}>
             <FormLabel>{label}</FormLabel>
             <FormControl onBlur={onBlur}>
-              <Input
+              <Textarea
                 placeholder={placeholder}
-                type={type}
                 {...field}
                 disabled={isDisabled}
                 className={cn(
-                  `pr-12 ${
+                  `pr-12 h-29 rounded-2xl ${
                     isDisabled &&
                     "bg-gray-100 text-sm font-semibold cursor-not-allowed"
                   }  ${getFieldState(name).error && "text-destructive"}`,

@@ -68,24 +68,29 @@ export const MultipleSelect = ({
           layout
           ref={containerRef}
           className={cn(
-            `selected no-scrollbar flex h-20 w-full items-center overflow-x-scroll scroll-smooth rounded-2xl border border-solid border-slate-200 bg-slate-50 p-2 ${
+            `selected no-scrollbar flex h-20 w-full items-center overflow-x-auto scroll-smooth rounded-2xl border border-solid border-primary/20 bg-primary-foreground text-accent p-5 ${
               disabled ? "opacity-50 cursor-not-allowed" : ""
             }`,
             className
           )}
         >
-          <motion.div layout className="flex items-center gap-2">
+          <motion.div layout className="flex items-center p-2 gap-2  flex-wrap">
             {selected?.map((item) => (
               <Tag
                 name={item?.key}
                 key={item?.key}
-                className={"bg-white shadow"}
+                className={"bg-white shadow font-semibold"}
               >
                 <div className="flex items-center gap-2">
                   <motion.span layout className={"text-nowrap"}>
                     {item?.name}
                   </motion.span>
-                  <button className={""} onClick={() => onDeselect(item)}>
+                  <button
+                    className={
+                      "hover:text-rose-500 transition duration-300 cursor-pointer"
+                    }
+                    onClick={() => onDeselect(item)}
+                  >
                     <X size={14} />
                   </button>
                 </div>
@@ -94,7 +99,7 @@ export const MultipleSelect = ({
           </motion.div>
         </motion.div>
         {tags?.length > selected?.length && (
-          <div className="flex w-full flex-wrap gap-2 rounded-2xl border border-solid border-slate-200 bg-slate-50 p-2">
+          <div className="flex w-full flex-wrap gap-2 rounded-2xl border border-solid border-primary/20 bg-primary-foreground p-5 font-semibold text-accent">
             {tags
               ?.filter((item) => !selected?.some((i) => i.key === item.key))
               .map((item) => (
@@ -102,6 +107,7 @@ export const MultipleSelect = ({
                   name={item?.key}
                   onClick={() => onSelect(item)}
                   key={item?.key}
+                  className="font-semibold"
                 >
                   {customTag ? (
                     customTag(item)
@@ -131,7 +137,14 @@ export const Tag = ({ children, className, name, onClick }: TagProps) => {
       layout
       layoutId={name}
       onClick={onClick}
-      className={`cursor-pointer rounded-md bg-gray-200 px-2 py-1 text-sm ${className}`}
+      whileTap={{ scale: 0.9 }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+      }}
+      whileHover={{ scale: 1.1 }}
+      className={`cursor-pointer rounded-md bg-gray-200 px-2 py-1 text-sm card-shine-effect hover:shadow-md  ${className}`}
     >
       {children}
     </motion.div>
