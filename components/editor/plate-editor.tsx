@@ -1,7 +1,13 @@
 "use client";
 
-import { normalizeNodeId } from "platejs";
-import { Plate, useEditorSelector, usePlateEditor } from "platejs/react";
+import { normalizeNodeId, Value } from "platejs";
+import {
+  Plate,
+  useEditorSelector,
+  useEditorState,
+  useEditorValue,
+  usePlateEditor,
+} from "platejs/react";
 
 import { EditorKit } from "@/components/editor/editor-kit";
 import { SettingsDialog } from "@/components/editor/settings-dialog";
@@ -9,15 +15,30 @@ import {
   Editor,
   EditorContainer,
 } from "@/components/editor/_editor-components/editor";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-export function PlateEditor() {
+interface PlateEditorProps {
+  value: Value;
+  onChange: Dispatch<SetStateAction<Value>>;
+}
+
+export function PlateEditor({ value, onChange }: PlateEditorProps) {
   const editor = usePlateEditor({
     plugins: EditorKit,
-    value,
+    value: value.length > 0 ? value : initialValue,
   });
 
+  useEffect(() => {
+    console.log("editorell.children: ", editor.children);
+  }, [editor.children]);
+
   return (
-    <Plate editor={editor}>
+    <Plate
+      editor={editor}
+      onChange={({ value, editor }) => {
+        onChange(value);
+      }}
+    >
       <EditorContainer className="">
         <Editor variant="default" />
       </EditorContainer>
@@ -27,7 +48,7 @@ export function PlateEditor() {
   );
 }
 
-const value = normalizeNodeId([
+const initialValue = normalizeNodeId([
   {
     children: [{ text: "Welcome to the Plate Playground!" }],
     type: "h1",

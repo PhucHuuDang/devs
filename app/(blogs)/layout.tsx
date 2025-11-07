@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 const BlogsLayout = ({ children }: BlogsLayoutProps) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <section className="relative h-screen w-full overflow-hidden">
+      <section className="relative h-screen w-full overflow-y-auto">
         <Navbar />
         <div className="pt-28 px-10 w-full">
           <div className="w-full px-2">

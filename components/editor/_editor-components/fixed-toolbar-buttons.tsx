@@ -56,13 +56,6 @@ import { TurnIntoToolbarButton } from "./turn-into-toolbar-button";
 export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
 
-  const test = useEditorState();
-
-  const value = useEditorValue();
-
-  console.log({ test });
-  console.log({ value });
-
   return (
     <div className="flex w-full">
       {!readOnly && (

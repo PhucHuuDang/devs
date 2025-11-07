@@ -4,19 +4,13 @@ import { useQuery } from "@apollo/client/react";
 import { GET_POSTS } from "@/app/graphql/queries/post.queries";
 import FormWrapper from "@/components/custom/form/form-wrapper";
 import z from "zod";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
-import { PasswordControlled } from "@/components/custom/form/fields/password-controlled";
 import { MultiSelectControlled } from "@/components/custom/form/fields/multi-select-controlled";
 import { TTag } from "@/components/ui/multiple-select";
-import {
-  CldImage,
-  CldUploadWidget,
-  CloudinaryUploadWidgetInfo,
-} from "next-cloudinary";
-import { toast } from "sonner";
+
 import { UploadImage } from "@/components/_images/upload-image";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -29,6 +23,43 @@ import {
 } from "@/components/ui/card";
 import { generateSlug } from "@/lib/generate";
 import { TextareaControlled } from "@/components/custom/form/fields/text-area-controlled";
+import { Button } from "@/components/ui/button";
+import {
+  AlertTriangleIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  CopyIcon,
+  NotepadTextDashedIcon,
+  RocketIcon,
+  ShareIcon,
+  TrashIcon,
+  Upload,
+  UserRoundXIcon,
+  VolumeOffIcon,
+} from "lucide-react";
+import { SimpleLoading } from "@/components/_loading/simple-loading";
+import dynamic from "next/dynamic";
+import { Value } from "platejs";
+import { ButtonGroup } from "@/components/ui/button-group";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const PlateEditor = dynamic(
+  () =>
+    import("@/components/editor/plate-editor").then((mod) => mod.PlateEditor),
+  {
+    ssr: false,
+    loading() {
+      return <SimpleLoading />;
+    },
+  }
+);
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -55,6 +86,8 @@ const formSchema = z.object({
     message: "Main image must be a valid URL.",
   }),
 });
+
+const cardStyle = `hover:border-primary/20 rounded-3xl  transition-all duration-300`;
 
 export const TABS = [
   { key: "web-development", name: "Web Development" },
@@ -84,10 +117,13 @@ const BlogsPage = () => {
 
   const [mainImage, setMainImage] = useState<string>("");
 
+  const [content, setContent] = useState<Value>([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
+      slug: "",
       description: "",
       mainImage: "",
       tags: [TABS[0]! as TTag],
@@ -99,11 +135,7 @@ const BlogsPage = () => {
 
   const handleMainImageUploadSuccess = (url: string | string[]) => {
     console.log({ url });
-    if (!Array.isArray(url)) {
-      // setMainImage(url);
-      form.setValue("mainImage", url);
-      return;
-    }
+    form.setValue("mainImage", url as string);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -113,10 +145,10 @@ const BlogsPage = () => {
   // if (loading) return <p>Đang tải...</p>;
   // if (error) return <p>Lỗi: {error.message}</p>;
 
-  const cardStyle = `hover:border-primary/20 rounded-3xl  transition-all duration-300`;
-
   const watchTitle = form.watch("title");
 
+  const img = form.watch("mainImage");
+  console.log({ img });
   useEffect(() => {
     if (typeof watchTitle === "string") {
       form.setValue("slug", generateSlug(watchTitle));
@@ -178,22 +210,39 @@ const BlogsPage = () => {
             />
           )} */}
 
-          <div className="sticky top-0 col-span-1">
-            <UploadImage
-              onUploadSuccess={handleMainImageUploadSuccess}
-              className="w-full h-full object-cover rounded-md max-w-lg mx-auto"
-              classNameIcon="size-16"
-              classContainer="w-full h-96 object-cover rounded-md mx-auto border-2 border-dashed border-primary/20 p-4"
-            />
-
-            {form.getValues("mainImage") && (
-              <Image
-                src={form.getValues("mainImage")}
-                alt="Main Image"
-                width={500}
-                height={500}
-                className="w-full h-full object-cover rounded-md max-w-lg mx-auto"
+          <div className="w-full">
+            {!img ? (
+              <UploadImage
+                onUploadSuccess={handleMainImageUploadSuccess}
+                className="w-full h-full object-cover rounded-2xl max-w-lg mx-auto"
+                classNameIcon="size-16"
+                classContainer="w-full h-96 object-cover rounded-2xl mx-auto border-2 border-dashed border-primary/20 p-4"
               />
+            ) : (
+              <div className="w-full h-96 xl:h-auto aspect-video relative flex justify-center items-center rounded-2xl group overflow-hidden  transition-all duration-300 ease-in-out">
+                <Image
+                  src={img}
+                  alt="main-image-of-the-blog"
+                  layout="fill"
+                  sizes="(max-width: 768px) 100vw,
+                (max-width: 1200px) 80vw,
+                60vw"
+                  className="size-full min-h-20 object-cover rounded-2xl w-full "
+                  loading="lazy"
+                />
+
+                <div className="absolute cursor-pointer opacity-0 group-hover:opacity-100 group-hover:bg-black/20 group-hover:inset-0 hidden group-hover:flex justify-center items-center w-full h-full rounded-2xl transition-all duration-300 ease-in-out ">
+                  <Button
+                    variant="outline"
+                    className="flex flex-col gap-2"
+                    type="button"
+                    size="icon"
+                    onClick={() => form.setValue("mainImage", "")}
+                  >
+                    <TrashIcon className="size-4" />
+                  </Button>
+                </div>
+              </div>
             )}
 
             {form.formState.errors["mainImage"]?.message && (
@@ -203,7 +252,7 @@ const BlogsPage = () => {
             )}
           </div>
 
-          <Card>
+          <Card className={cardStyle}>
             <CardHeader>
               <CardTitle>Description</CardTitle>
               <CardDescription>
@@ -223,6 +272,21 @@ const BlogsPage = () => {
           <div>
             <MultiSelectControlled name="tags" label="Tags" options={TABS} />
           </div>
+
+          <div></div>
+
+          <Card className={cardStyle}>
+            <CardHeader>
+              <CardTitle>Content</CardTitle>
+              <CardDescription>
+                Lets cook the content with plenty of tools and features...
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <PlateEditor value={content} onChange={setContent} />
+            </CardContent>
+          </Card>
         </div>
 
         <button
@@ -231,26 +295,65 @@ const BlogsPage = () => {
         >
           Submit
         </button>
-
-        {form.getValues("mainImage") && (
-          <Image
-            src={form.getValues("mainImage")}
-            alt="Main Image"
-            width={500}
-            height={500}
-            className="w-full h-full object-cover rounded-md max-w-lg mx-auto"
-          />
-        )}
       </FormWrapper>
 
-      <div className="sticky top-0 col-span-1">
-        <UploadImage onUploadSuccess={handleMainImageUploadSuccess} />
+      <div className="col-span-1 relative bg-red-500">
+        <div className="sticky top-28 w-full">
+          <ButtonGroup className="grid grid-cols-3 w-full bg-green-300">
+            <Button variant="outline" size="icon" className="w-full">
+              <NotepadTextDashedIcon className="size-6 text-primary" />
+              <span>Draft</span>
+            </Button>
 
-        {form.formState.errors["mainImage"]?.message && (
-          <p className="text-rose-500 text-sm">
-            {form.formState.errors["mainImage"]?.message}
-          </p>
-        )}
+            <Button variant="outline" size="icon" className="w-full col-span-1">
+              <RocketIcon className="size-6 text-primary" />
+              <span>Publish</span>
+            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <ChevronDownIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="[--radius:1rem]">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <VolumeOffIcon />
+                    Mute Conversation
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <CheckIcon />
+                    Mark as Read
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <AlertTriangleIcon />
+                    Report Conversation
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <UserRoundXIcon />
+                    Block User
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <ShareIcon />
+                    Share Conversation
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <CopyIcon />
+                    Copy Conversation
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem variant="destructive">
+                    <TrashIcon />
+                    Delete Conversation
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </ButtonGroup>
+        </div>
       </div>
     </div>
   );

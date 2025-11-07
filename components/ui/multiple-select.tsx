@@ -63,23 +63,31 @@ export const MultipleSelect = ({
 
   return (
     <AnimatePresence mode={"popLayout"}>
-      <div className={" w-full"}>
+      <div className={" w-full 500 space-y-2"}>
         <motion.div
           layout
           ref={containerRef}
           className={cn(
-            `selected no-scrollbar flex h-20 w-full items-center overflow-x-auto scroll-smooth rounded-2xl border border-solid border-primary/20 bg-primary-foreground text-accent p-5 ${
+            `selected no-scrollbar flex h-20 w-full items-center overflow-x-auto scroll-smooth rounded-2xl bg-white border border-solid border-primary/20 dark:bg-primary-foreground text-accent p-5 ${
               disabled ? "opacity-50 cursor-not-allowed" : ""
             }`,
             className
           )}
         >
-          <motion.div layout className="flex items-center p-2 gap-2  flex-wrap">
+          <motion.div
+            layout
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center p-2 gap-2  flex-wrap"
+          >
             {selected?.map((item) => (
               <Tag
                 name={item?.key}
                 key={item?.key}
-                className={"bg-white shadow font-semibold"}
+                className={
+                  "dark:bg-white bg-slate-200/50 shadow font-semibold text-primary dark:text-accent"
+                }
               >
                 <div className="flex items-center gap-2">
                   <motion.span layout className={"text-nowrap"}>
@@ -99,7 +107,7 @@ export const MultipleSelect = ({
           </motion.div>
         </motion.div>
         {tags?.length > selected?.length && (
-          <div className="flex w-full flex-wrap gap-2 rounded-2xl border border-solid border-primary/20 bg-primary-foreground p-5 font-semibold text-accent">
+          <div className="flex w-full flex-wrap gap-2 rounded-2xl border border-solid bg-white dark:bg-primary-foreground  border-primary/20  p-5 font-semibold text-primary dark:text-accent">
             {tags
               ?.filter((item) => !selected?.some((i) => i.key === item.key))
               .map((item) => (
@@ -107,7 +115,7 @@ export const MultipleSelect = ({
                   name={item?.key}
                   onClick={() => onSelect(item)}
                   key={item?.key}
-                  className="font-semibold"
+                  className="font-semibold bg-slate-200/50 dark:text-white"
                 >
                   {customTag ? (
                     customTag(item)
@@ -132,10 +140,13 @@ type TagProps = PropsWithChildren &
   };
 
 export const Tag = ({ children, className, name, onClick }: TagProps) => {
+  const motionProps = name ? { layoutId: name } : {};
+
   return (
     <motion.div
       layout
-      layoutId={name}
+      // layoutId={name}
+      {...motionProps}
       onClick={onClick}
       whileTap={{ scale: 0.9 }}
       transition={{

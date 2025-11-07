@@ -48,9 +48,9 @@ export const InputControlled = <T extends FieldValues>({
             <FormLabel>{label}</FormLabel>
             <FormControl onBlur={onBlur}>
               <Input
+                {...field}
                 placeholder={placeholder}
                 type={type}
-                {...field}
                 disabled={isDisabled}
                 className={cn(
                   `pr-12 ${

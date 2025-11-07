@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import createSelectors from "../auto-selector";
+import { createWithEqualityFn } from "zustand/traditional";
 
 interface UseOpenSheetProps {
   isOpen: boolean;
@@ -7,7 +7,7 @@ interface UseOpenSheetProps {
   onClose: () => void;
 }
 
-export const useOpenSheet = create<UseOpenSheetProps>((set) => ({
+export const useOpenSheet = createWithEqualityFn<UseOpenSheetProps>((set) => ({
   isOpen: false,
   onOpen: (value) => set({ isOpen: value }),
   onClose: () => set({ isOpen: false }),
