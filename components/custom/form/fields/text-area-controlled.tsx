@@ -6,7 +6,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { FieldValues, Path, useFormContext } from "react-hook-form";
@@ -14,26 +13,23 @@ import { FieldValues, Path, useFormContext } from "react-hook-form";
 interface TextareaControlledProps<T extends FieldValues> {
   name: Path<T>;
   label: string;
-
   disabled?: boolean;
   placeholder: string;
   type?: string;
   onBlur?: () => void;
   description?: string;
   className?: string;
-
-  classNameInput?: string;
+  classNameTextarea?: string;
 }
 export const TextareaControlled = <T extends FieldValues>({
   name,
   label,
   placeholder,
-  type,
   disabled,
   onBlur,
   description,
   className,
-  classNameInput,
+  classNameTextarea,
 }: TextareaControlledProps<T>) => {
   const { control, getFieldState } = useFormContext();
 
@@ -57,7 +53,7 @@ export const TextareaControlled = <T extends FieldValues>({
                     isDisabled &&
                     "bg-gray-100 text-sm font-semibold cursor-not-allowed"
                   }  ${getFieldState(name).error && "text-destructive"}`,
-                  classNameInput
+                  classNameTextarea
                 )}
                 aria-invalid={getFieldState(name).error ? "true" : "false"}
               />

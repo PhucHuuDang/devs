@@ -18,6 +18,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -26,14 +27,21 @@ import { TextareaControlled } from "@/components/custom/form/fields/text-area-co
 import { Button } from "@/components/ui/button";
 import {
   AlertTriangleIcon,
+  ChartNoAxesGanttIcon,
   CheckIcon,
   ChevronDownIcon,
+  CodeIcon,
   CopyIcon,
+  EyeIcon,
+  GlobeIcon,
+  HeartIcon,
+  MessageCircleIcon,
   NotepadTextDashedIcon,
   RocketIcon,
+  ServerIcon,
   ShareIcon,
+  Shield,
   TrashIcon,
-  Upload,
   UserRoundXIcon,
   VolumeOffIcon,
 } from "lucide-react";
@@ -49,6 +57,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { truncate } from "lodash";
+import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
+import { RichBadge } from "@/components/ui/badge-1";
+import { HoverCardCustom } from "@/components/custom/hover-card-custom";
+import { BlogCard } from "@/components/_blogs/blog-card";
+import {
+  SelectControlled,
+  SelectOption,
+} from "@/components/custom/form/fields/select-controlled";
+import { FormMessage } from "@/components/ui/form";
 
 const PlateEditor = dynamic(
   () =>
@@ -60,6 +78,16 @@ const PlateEditor = dynamic(
     },
   }
 );
+
+const people = [
+  {
+    id: 1,
+    name: "John Doe",
+    designation: "Software Engineer",
+    image:
+      "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80",
+  },
+];
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -85,7 +113,22 @@ const formSchema = z.object({
   mainImage: z.string().url({
     message: "Main image must be a valid URL.",
   }),
+
+  category: z.string().min(1, {
+    message: "Category is required.",
+  }),
+
+  content: z.json(),
 });
+
+const categoryOptions: SelectOption[] = [
+  { label: "Web Development", value: "web-development", icon: <GlobeIcon /> },
+  { label: "JavaScript", value: "javascript", icon: <CodeIcon /> },
+  { label: "TypeScript", value: "typescript", icon: <CodeIcon /> },
+  { label: "React", value: "react", icon: <CodeIcon /> },
+  { label: "Next.js", value: "nextjs", icon: <CodeIcon /> },
+  { label: "Node.js", value: "nodejs", icon: <ServerIcon /> },
+];
 
 const cardStyle = `hover:border-primary/20 rounded-3xl  transition-all duration-300`;
 
@@ -115,8 +158,6 @@ export const TABS = [
 const BlogsPage = () => {
   const { data, loading, error } = useQuery(GET_POSTS);
 
-  const [mainImage, setMainImage] = useState<string>("");
-
   const [content, setContent] = useState<Value>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -127,6 +168,7 @@ const BlogsPage = () => {
       description: "",
       mainImage: "",
       tags: [TABS[0]! as TTag],
+      category: categoryOptions[0]!.value,
     },
     // mode: "onChange",
 
@@ -148,7 +190,6 @@ const BlogsPage = () => {
   const watchTitle = form.watch("title");
 
   const img = form.watch("mainImage");
-  console.log({ img });
   useEffect(() => {
     if (typeof watchTitle === "string") {
       form.setValue("slug", generateSlug(watchTitle));
@@ -200,27 +241,20 @@ const BlogsPage = () => {
             </CardContent>
           </Card>
 
-          {/* {form.getValues("mainImage") && (
-            <Image
-              src={form.getValues("mainImage")}
-              alt="Main Image"
-              width={500}
-              height={500}
-              className="w-full h-full object-cover rounded-md max-w-lg mx-auto"
-            />
-          )} */}
-
           <div className="w-full">
             {!img ? (
               <UploadImage
                 onUploadSuccess={handleMainImageUploadSuccess}
                 className="w-full h-full object-cover rounded-2xl max-w-lg mx-auto"
                 classNameIcon="size-16"
-                classContainer="w-full h-96 object-cover rounded-2xl mx-auto border-2 border-dashed border-primary/20 p-4"
+                classContainer={`w-full h-96 object-cover rounded-2xl mx-auto border-2 border-dashed border-primary/20 p-4 ${
+                  form.formState.errors["mainImage"]?.message &&
+                  "border-rose-500"
+                }`}
               />
             ) : (
               <div className="w-full h-96 xl:h-auto aspect-video relative flex justify-center items-center rounded-2xl group overflow-hidden  transition-all duration-300 ease-in-out">
-                <Image
+                {/* <Image
                   src={img}
                   alt="main-image-of-the-blog"
                   layout="fill"
@@ -229,6 +263,18 @@ const BlogsPage = () => {
                 60vw"
                   className="size-full min-h-20 object-cover rounded-2xl w-full "
                   loading="lazy"
+                /> */}
+
+                <Image
+                  src={img}
+                  alt="main-image-of-the-blog"
+                  fill
+                  priority
+                  loading="eager"
+                  sizes="(max-width: 768px) 100vw,
+                    (max-width: 1200px) 80vw,
+                     60vw"
+                  className="object-cover rounded-2xl w-full h-full min-h-20"
                 />
 
                 <div className="absolute cursor-pointer opacity-0 group-hover:opacity-100 group-hover:bg-black/20 group-hover:inset-0 hidden group-hover:flex justify-center items-center w-full h-full rounded-2xl transition-all duration-300 ease-in-out ">
@@ -246,9 +292,9 @@ const BlogsPage = () => {
             )}
 
             {form.formState.errors["mainImage"]?.message && (
-              <p className="text-rose-500 text-sm">
+              <FormMessage className="mt-2">
                 {form.formState.errors["mainImage"]?.message}
-              </p>
+              </FormMessage>
             )}
           </div>
 
@@ -269,11 +315,28 @@ const BlogsPage = () => {
               />
             </CardContent>
           </Card>
+
+          <Card className={cardStyle}>
+            <CardHeader>
+              <CardTitle>Category</CardTitle>
+              <CardDescription>
+                Select the category of the blog post...
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <SelectControlled
+                name="category"
+                label=""
+                placeholder="Select the category of the blog post..."
+                selectOptions={categoryOptions}
+              />
+            </CardContent>
+          </Card>
+
           <div>
             <MultiSelectControlled name="tags" label="Tags" options={TABS} />
           </div>
-
-          <div></div>
 
           <Card className={cardStyle}>
             <CardHeader>
@@ -288,24 +351,23 @@ const BlogsPage = () => {
             </CardContent>
           </Card>
         </div>
-
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-2 rounded-md mt-4"
-        >
-          Submit
-        </button>
       </FormWrapper>
 
-      <div className="col-span-1 relative bg-red-500">
+      <div className="col-span-1 relative border rounded-2xl p-4">
         <div className="sticky top-28 w-full">
-          <ButtonGroup className="grid grid-cols-3 w-full bg-green-300">
+          <ButtonGroup className="grid grid-cols-3 w-full mb-4">
             <Button variant="outline" size="icon" className="w-full">
               <NotepadTextDashedIcon className="size-6 text-primary" />
               <span>Draft</span>
             </Button>
 
-            <Button variant="outline" size="icon" className="w-full col-span-1">
+            <Button
+              variant="outline"
+              type="submit"
+              size="icon"
+              className="w-full col-span-1"
+              onClick={form.handleSubmit(onSubmit)}
+            >
               <RocketIcon className="size-6 text-primary" />
               <span>Publish</span>
             </Button>
@@ -353,6 +415,33 @@ const BlogsPage = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </ButtonGroup>
+
+          <div className="my-2 p-1 pl-4 bg-slate-100 rounded-xl">
+            <span className="text-sm text-slate-800 font-medium">
+              https://devs.com/blogs/{form.watch("slug")}
+            </span>
+          </div>
+
+          <BlogCard
+            title={form.watch("title") || "Lets make impressive title!"}
+            description={
+              form.watch("description") ||
+              `Lets make the description interesting and catchy - This will be the
+        first thing people see when they land on your blog post`
+            }
+            image={form.watch("mainImage") || "/image.jpg"}
+            views={100}
+            tags={
+              form.watch("tags")?.map((tag: TTag) => tag.name) || [
+                "Web Development",
+                "JavaScript",
+                "React",
+              ]
+            }
+            createdAt={new Date().toISOString()}
+            updatedAt="2021-01-01"
+            author={people}
+          />
         </div>
       </div>
     </div>
