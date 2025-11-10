@@ -233,6 +233,9 @@ export const ThemeToggleButton2 = ({
             cy="16"
           />
           <motion.g
+            initial={{
+              opacity: 0,
+            }}
             animate={{
               rotate: isDark ? -100 : 0,
               scale: isDark ? 0.5 : 1,
@@ -296,6 +299,10 @@ export const ThemeToggleButton3 = ({
             cy="16"
           />
           <motion.g
+            initial={{
+              opacity: 0,
+              scale: 0.5,
+            }}
             animate={{
               scale: isDark ? 0.5 : 1,
               opacity: isDark ? 0 : 1,

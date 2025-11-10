@@ -19,7 +19,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface PlateEditorProps {
   value: Value;
-  onChange: Dispatch<SetStateAction<Value>>;
+  onChange: (value: Value) => void;
 }
 
 export function PlateEditor({ value, onChange }: PlateEditorProps) {
@@ -29,8 +29,9 @@ export function PlateEditor({ value, onChange }: PlateEditorProps) {
   });
 
   useEffect(() => {
-    console.log("editorell.children: ", editor.children);
-  }, [editor.children]);
+    // console.log("editorell.children: ", editor.children);
+    onChange(normalizeNodeId(editor.children));
+  }, []);
 
   return (
     <Plate

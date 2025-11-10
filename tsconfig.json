@@ -16,6 +16,18 @@
     "plugins": [
       {
         "name": "next"
+      },
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "http://localhost:3001/graphql"
+        // "schema": "./app/graphql/__generated__/graphql.ts"
+      },
+      {
+        "name": "@graphql-codegen/typescript",
+        "options": {
+          // "schema": "./app/graphql/__generated__/graphql.ts"
+          "schema": "http://localhost:3001/graphql"
+        }
       }
     ],
     "paths": {

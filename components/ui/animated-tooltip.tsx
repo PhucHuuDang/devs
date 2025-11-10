@@ -11,13 +11,13 @@ import {
 import Image from "next/image";
 
 export interface AnimatedItemsProps {
-  id: number;
+  id: string;
   name: string;
   designation: string;
   image: string;
 }
 export const AnimatedTooltip = ({ items }: { items: AnimatedItemsProps[] }) => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<string | null>(null);
   const springConfig = { stiffness: 100, damping: 15 };
   const x = useMotionValue(0);
   const animationFrameRef = useRef<number | null>(null);
@@ -88,6 +88,7 @@ export const AnimatedTooltip = ({ items }: { items: AnimatedItemsProps[] }) => {
             width={100}
             src={item.image}
             alt={item.name}
+            loading="lazy"
             className="relative !m-0 h-14 w-14 rounded-full border-2 border-white object-cover object-top !p-0 transition duration-500 group-hover:z-30 group-hover:scale-105"
           />
         </div>

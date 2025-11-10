@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -24,35 +24,49 @@ import { cn } from "@/lib/utils";
 export interface BlogCardProps {
   title: string;
   description: string;
-  image: string;
+  mainImage: string;
   views: number;
   tags: string[];
   author: AnimatedItemsProps[];
+
+  isBorderHover?: boolean;
+  isBorderDefault?: boolean;
   options?: TruncateOptions;
-  createdAt: string;
-  updatedAt: string;
   classImage?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const cardStyle = `hover:border-primary/20 rounded-3xl transition-all duration-300 relative`;
+const cardStyle = `hover:border-primary/20 rounded-3xl group transition-all duration-300 relative cursor-pointer hover:scale-105`;
 
 export const BlogCard = ({
   title,
   description,
-  image,
+  mainImage,
   views,
   tags,
   author,
+  isBorderDefault = false,
+  isBorderHover = false,
   options = { length: 150 },
   classImage,
   createdAt,
   updatedAt,
 }: BlogCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  console.log({ isHovered, isBorderHover });
   return (
-    <Card className={cardStyle}>
-      <BorderBeam />
+    <Card
+      className={cardStyle}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {isBorderHover && isHovered ? <BorderBeam /> : null}
+
+      {isBorderDefault && <BorderBeam />}
       <CardHeader>
-        <div className="flex flex-row items-center justify-start gap-2 ">
+        <div className="flex flex-row items-center justify-start gap-2 mb-2">
           <AnimatedTooltip items={author} />
 
           <div className="flex flex-col items-start justify-start ml-4">
@@ -62,7 +76,7 @@ export const BlogCard = ({
         </div>
 
         <Image
-          src={image}
+          src={mainImage}
           alt={title}
           width={500}
           height={500}
@@ -70,7 +84,7 @@ export const BlogCard = ({
             `w-full h-full max-h-[500px] object-cover rounded-2xl`,
             classImage
           )}
-          loading="lazy"
+          loading="eager"
         />
 
         <CardTitle>{title}</CardTitle>

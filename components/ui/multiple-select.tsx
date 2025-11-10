@@ -10,7 +10,6 @@ import {
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export type TTag = {
@@ -76,10 +75,9 @@ export const MultipleSelect = ({
         >
           <motion.div
             layout
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex items-center p-2 gap-2  flex-wrap"
+            className="flex items-center p-2 gap-2 flex-wrap"
           >
             {selected?.map((item) => (
               <Tag
@@ -144,8 +142,8 @@ export const Tag = ({ children, className, name, onClick }: TagProps) => {
 
   return (
     <motion.div
-      layout
-      // layoutId={name}
+      // layout
+      layoutId={name}
       {...motionProps}
       onClick={onClick}
       whileTap={{ scale: 0.9 }}
