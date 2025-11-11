@@ -1,18 +1,44 @@
 "use client";
 
-import { useQuery } from "@apollo/client/react";
-import { GET_POST_BY_SLUG } from "@/app/graphql/queries/post.queries";
+// import { useQuery } from "@apollo/client/react";
 
-export const BlogDetail = ({ slug }: { slug: string }) => {
-  const { data, loading, error } = useQuery(GET_POST_BY_SLUG, {
-    variables: { slug },
-    fetchPolicy: "network-only",
-  });
+import { Post } from "@/app/graphql/__generated__/graphql";
+import { SimpleLoading } from "@/components/_loading/simple-loading";
+import dynamic from "next/dynamic";
 
-  if (loading) return <p>Đang tải...</p>;
-  if (error) return <p>Lỗi: {error.message}</p>;
+interface BlogDetailProps {
+  data: Post;
+}
 
-  console.log({ data });
+const PlateEditor = dynamic(
+  () =>
+    import("@/components/editor/plate-editor").then((mod) => mod.PlateEditor),
+  {
+    ssr: false,
+    loading() {
+      return <SimpleLoading />;
+    },
+  }
+);
 
-  return <div></div>;
+export const BlogDetail = ({ data }: BlogDetailProps) => {
+  // const { data, loading, error } = useQuery(GET_POST_BY_SLUG_QUERY,
+  //   variables: { slug },{
+  //   fetchPolicy: "network-only",
+  //   ssr: true,
+  // });
+
+  // if (loading) return <p>Đang tải...</p>;
+  // if (error) return <p>Lỗi: {error.message}</p>;
+
+  // console.log({ data });
+
+  return (
+    <PlateEditor
+      value={data?.content || []}
+      readonly={true}
+      onChange={() => {}}
+    />
+  );
+  // return <div></div>;
 };

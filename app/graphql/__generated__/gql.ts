@@ -17,13 +17,11 @@ type Documents = {
     "\n  mutation CreateBlog(\n    $title: String!\n    $description: String!\n    $slug: String!\n    $mainImage: String!\n    $categoryId: String!\n    $tags: [String!]!\n    $content: JSON!\n    $authorId: String!\n    $isPublished: Boolean!\n  ) {\n    createPost(\n      title: $title\n      description: $description\n      slug: $slug\n      mainImage: $mainImage\n      tags: $tags\n      content: $content\n      isPublished: $isPublished\n      authorId: $authorId\n      categoryId: $categoryId\n    ) {\n      id\n      title\n      slug\n      createdAt\n    }\n  }\n": typeof types.CreateBlogDocument,
     "\n  mutation UpdateBlog($id: String!, $data: UpdatePostInput!) {\n    updatePost(id: $id, data: $data) {\n      id\n      title\n      slug\n      createdAt\n    }\n  }\n": typeof types.UpdateBlogDocument,
     "\n  query GetPosts {\n    allPosts {\n      id\n      title\n      mainImage\n      description\n      content\n      votes\n      authorId\n      categoryId\n      createdAt\n      updatedAt\n      tags\n      slug\n      views\n      isPublished\n      isPriority\n      isPinned\n      isDeleted\n\n      author {\n        id\n        name\n        avatarUrl\n        bio\n        designation\n      }\n      category {\n        id\n        name\n      }\n    }\n  }\n": typeof types.GetPostsDocument,
-    "\n  query GetPostBySlug($slug: String!) {\n    findPostBySlug(slug: $slug) {\n      id\n      title\n      description\n      mainImage\n      createdAt\n    }\n  }\n": typeof types.GetPostBySlugDocument,
 };
 const documents: Documents = {
     "\n  mutation CreateBlog(\n    $title: String!\n    $description: String!\n    $slug: String!\n    $mainImage: String!\n    $categoryId: String!\n    $tags: [String!]!\n    $content: JSON!\n    $authorId: String!\n    $isPublished: Boolean!\n  ) {\n    createPost(\n      title: $title\n      description: $description\n      slug: $slug\n      mainImage: $mainImage\n      tags: $tags\n      content: $content\n      isPublished: $isPublished\n      authorId: $authorId\n      categoryId: $categoryId\n    ) {\n      id\n      title\n      slug\n      createdAt\n    }\n  }\n": types.CreateBlogDocument,
     "\n  mutation UpdateBlog($id: String!, $data: UpdatePostInput!) {\n    updatePost(id: $id, data: $data) {\n      id\n      title\n      slug\n      createdAt\n    }\n  }\n": types.UpdateBlogDocument,
     "\n  query GetPosts {\n    allPosts {\n      id\n      title\n      mainImage\n      description\n      content\n      votes\n      authorId\n      categoryId\n      createdAt\n      updatedAt\n      tags\n      slug\n      views\n      isPublished\n      isPriority\n      isPinned\n      isDeleted\n\n      author {\n        id\n        name\n        avatarUrl\n        bio\n        designation\n      }\n      category {\n        id\n        name\n      }\n    }\n  }\n": types.GetPostsDocument,
-    "\n  query GetPostBySlug($slug: String!) {\n    findPostBySlug(slug: $slug) {\n      id\n      title\n      description\n      mainImage\n      createdAt\n    }\n  }\n": types.GetPostBySlugDocument,
 };
 
 /**
@@ -52,10 +50,6 @@ export function graphql(source: "\n  mutation UpdateBlog($id: String!, $data: Up
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query GetPosts {\n    allPosts {\n      id\n      title\n      mainImage\n      description\n      content\n      votes\n      authorId\n      categoryId\n      createdAt\n      updatedAt\n      tags\n      slug\n      views\n      isPublished\n      isPriority\n      isPinned\n      isDeleted\n\n      author {\n        id\n        name\n        avatarUrl\n        bio\n        designation\n      }\n      category {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetPosts {\n    allPosts {\n      id\n      title\n      mainImage\n      description\n      content\n      votes\n      authorId\n      categoryId\n      createdAt\n      updatedAt\n      tags\n      slug\n      views\n      isPublished\n      isPriority\n      isPinned\n      isDeleted\n\n      author {\n        id\n        name\n        avatarUrl\n        bio\n        designation\n      }\n      category {\n        id\n        name\n      }\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query GetPostBySlug($slug: String!) {\n    findPostBySlug(slug: $slug) {\n      id\n      title\n      description\n      mainImage\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  query GetPostBySlug($slug: String!) {\n    findPostBySlug(slug: $slug) {\n      id\n      title\n      description\n      mainImage\n      createdAt\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

@@ -20,12 +20,19 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 interface PlateEditorProps {
   value: Value;
   onChange: (value: Value) => void;
+
+  readonly?: boolean;
 }
 
-export function PlateEditor({ value, onChange }: PlateEditorProps) {
+export function PlateEditor({
+  value,
+  onChange,
+  readonly = false,
+}: PlateEditorProps) {
   const editor = usePlateEditor({
     plugins: EditorKit,
     value: value.length > 0 ? value : initialValue,
+    readOnly: readonly,
   });
 
   useEffect(() => {

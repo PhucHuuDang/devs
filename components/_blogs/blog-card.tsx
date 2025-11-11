@@ -20,6 +20,8 @@ import { HoverCardCustom } from "../custom/hover-card-custom";
 import { AnimatedTooltip, AnimatedItemsProps } from "../ui/animated-tooltip";
 import { BorderBeam } from "../ui/border-beam";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { generateSlug } from "@/lib/generate";
 
 export interface BlogCardProps {
   title: string;
@@ -54,6 +56,11 @@ export const BlogCard = ({
   updatedAt,
 }: BlogCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/blogs/${generateSlug(title)}`);
+  };
 
   console.log({ isHovered, isBorderHover });
   return (
@@ -61,6 +68,7 @@ export const BlogCard = ({
       className={cardStyle}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
     >
       {isBorderHover && isHovered ? <BorderBeam /> : null}
 

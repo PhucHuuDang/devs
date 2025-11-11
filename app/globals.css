@@ -185,7 +185,7 @@
 
   --color-ds-blue-700: var(----ds-blue-700);
 
-  --color-ds-blue-200: var(----ds-blue-200)
+  --color-ds-blue-200: var(----ds-blue-200);
 }
 
 :root {
@@ -369,6 +369,7 @@
     text-shadow: none;
   }
 }
+bg
 
 /* ::selection {
   background: oklch(76.9% 0.188 70.08);
