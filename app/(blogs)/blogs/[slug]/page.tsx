@@ -1,31 +1,112 @@
-import {
-  GetPostsQuery,
-  Post,
-  Query,
-  QueryFindPostBySlugArgs,
-} from "@/app/graphql/__generated__/graphql";
+import { GetPostsQuery, Query } from "@/app/graphql/__generated__/graphql";
 import {
   GET_POST_BY_SLUG,
   GET_POSTS_STRING,
 } from "@/app/graphql/queries/post.queries";
-import { BlogDetail } from "@/components/_url-segment/blog/blog-details-components/blog-detail";
+import { formatDate } from "@/app/utils/date";
+import { BlogDetailWithMode } from "@/components/_url-segment/blog/blog-details-components/blog-detail-with-mode";
+import { NotFoundPage } from "@/components/exceptions/404-page-not-found";
+import {
+  AnimatedItemsProps,
+  AnimatedTooltip,
+} from "@/components/ui/animated-tooltip";
 import { fetchGraphql } from "@/lib/graph-fetch";
+import Head from "next/head";
+import Image from "next/image";
 interface SlugBlogPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 120;
+export const revalidate = 300;
 
 export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
-  const { slug } = await params;
+  try {
+    const { slug } = await params;
+    const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(
+      GET_POSTS_STRING
+    );
+
+    const post = allPosts.find((post) => post.slug === slug);
+    console.log({ post });
+
+    if (!post) {
+      return {
+        title: "Bài viết không tồn tại",
+        description: "Bài viết bạn đang tìm kiếm không tồn tại.",
+      };
+    }
+
+    return {
+      title: post?.title,
+      description: post?.description ?? "",
+      keywords: post?.tags.join(", "),
+
+      author: [{ name: post?.author.name }],
+
+      openGraph: {
+        title: post?.title,
+        description: post?.description ?? "",
+        images: [
+          {
+            url: post?.mainImage ?? "",
+            width: 1200,
+            height: 630,
+            alt: post?.title,
+          },
+        ],
+        type: "article",
+        publishedTime: post?.createdAt,
+        modifiedTime: post?.updatedAt,
+        authors: [post?.author.name],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post?.title,
+        description: post?.description ?? "",
+        images: [
+          {
+            url: post?.mainImage ?? "",
+            width: 1200,
+            height: 630,
+            alt: post?.title,
+          },
+        ],
+      },
+
+      alternates: {
+        canonical: `https://www.devs.com/blogs/${slug}`,
+      },
+    };
+  } catch (error) {
+    return {
+      title: "Loading error...",
+      description: "Failed to load the blog post.",
+    };
+  }
+};
+
+export async function generateSitemaps() {
   const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
 
-  const post = allPosts.find((post) => post.slug === slug);
-  console.log({ post });
+  return allPosts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export async function generateSitemap({ params }: SlugBlogPageProps) {
+  const { slug } = await params;
+
+  const { findPostBySlug } = await fetchGraphql<Query>(GET_POST_BY_SLUG, {
+    slug,
+  });
+
   return {
-    title: post?.title,
+    url: `https://www.devs.com/blogs/${slug}`,
+    lastModified: findPostBySlug.updatedAt,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
   };
-};
+}
 
 export async function generateStaticParams() {
   const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
@@ -49,11 +130,126 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
       slug,
     });
 
-  console.log({ findPostBySlug });
-
   // console.log({ allPosts });
 
-  return <BlogDetail data={findPostBySlug} />;
+  const url = new URL(process.env.NEXT_PUBLIC_CLIENT_URL as string);
+
+  console.log({ url });
+
+  if (!findPostBySlug) {
+    return <NotFoundPage endpoint="/blogs" />;
+  }
+
+  // console.log({ findPostBySlug });
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: findPostBySlug.title,
+    datePublished: findPostBySlug.createdAt,
+    dateModified: findPostBySlug.updatedAt,
+    author: {
+      "@type": "Person",
+      name: findPostBySlug.author.name,
+      url: `https://www.devs.com/blogs/${findPostBySlug.slug}`,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "DEVS",
+      url: "https://www.devs.com",
+    },
+    image: findPostBySlug.mainImage ?? "",
+    description: findPostBySlug.description ?? "",
+
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://www.devs.com/blogs/${findPostBySlug.slug}`,
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Blogs",
+        item: `${url.origin}/blogs`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: findPostBySlug.title,
+        item: `${url.origin}/blogs/${findPostBySlug.slug}`,
+      },
+    ],
+  };
+
+  const structuredData = [jsonLd, breadcrumbJsonLd];
+
+  const author: AnimatedItemsProps[] = [
+    {
+      id: findPostBySlug.author.id,
+      name: findPostBySlug.author.name,
+      designation: findPostBySlug.author.designation ?? "N/A",
+      image: findPostBySlug.author.avatarUrl ?? "/image.jpg",
+    },
+  ];
+
+  return (
+    <>
+      <article
+        className="slate-editor py-10"
+        // dangerouslySetInnerHTML={{
+        //   __html: findPostBySlug.content,
+        // }}
+      >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
+        <div className="w-full">
+          <h1 className="text-4xl text-center font-semibold mb-10">
+            {findPostBySlug.title}
+          </h1>
+
+          <Image
+            src={findPostBySlug.mainImage ?? ""}
+            alt={findPostBySlug.title}
+            width={1200}
+            height={630}
+            priority={true}
+            className="w-full h-full object-cover rounded-3xl mt-4 mx-auto "
+          />
+
+          <div className="pl-14 mt-4">
+            <div className="flex flex-row items-center justify-start gap-2">
+              <div className="flex flex-row items-center justify-start gap-2">
+                <AnimatedTooltip items={author} />
+              </div>
+
+              <div className="flex ml-4 flex-col items-start justify-start ">
+                <h2 className="text-base text-primary font-semibold">
+                  {findPostBySlug.author.name}
+                </h2>
+
+                <div className="text-sm font-medium text-sky-500">
+                  posted on {formatDate(findPostBySlug.createdAt, "long")}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <BlogDetailWithMode
+          data={findPostBySlug.content || []}
+          forcedMode="viewClient"
+        />
+      </article>
+    </>
+  );
 };
 
 export default SlugBlogPage;

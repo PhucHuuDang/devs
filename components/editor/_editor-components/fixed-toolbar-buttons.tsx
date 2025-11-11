@@ -15,19 +15,14 @@ import {
   WandSparklesIcon,
 } from "lucide-react";
 import { KEYS } from "platejs";
-import {
-  useEditorComposing,
-  useEditorReadOnly,
-  useEditorSelector,
-  useEditorState,
-  useEditorValue,
-} from "platejs/react";
+import { useEditorReadOnly } from "platejs/react";
 
 import { AIToolbarButton } from "./ai-toolbar-button";
 import { AlignToolbarButton } from "./align-toolbar-button";
 import { CommentToolbarButton } from "./comment-toolbar-button";
 import { EmojiToolbarButton } from "./emoji-toolbar-button";
 import { ExportToolbarButton } from "./export-toolbar-button";
+import { FeatureGuard } from "./feature-guard";
 import { FontColorToolbarButton } from "./font-color-toolbar-button";
 import { FontSizeToolbarButton } from "./font-size-toolbar-button";
 import { RedoToolbarButton, UndoToolbarButton } from "./history-toolbar-button";
@@ -58,6 +53,7 @@ export function FixedToolbarButtons() {
 
   return (
     <div className="flex w-full">
+      {/* Hide all editing features in client view, show in editing mode */}
       {!readOnly && (
         <>
           <ToolbarGroup>
@@ -160,16 +156,18 @@ export function FixedToolbarButtons() {
 
       <div className="grow" />
 
-      <ToolbarGroup>
-        <MarkToolbarButton nodeType={KEYS.highlight} tooltip="Highlight">
-          <HighlighterIcon />
-        </MarkToolbarButton>
-        <CommentToolbarButton />
-      </ToolbarGroup>
-
-      <ToolbarGroup>
-        <ModeToolbarButton />
-      </ToolbarGroup>
+      {/* These features are available to admin view but hidden in client view */}
+      <FeatureGuard requireFeatures>
+        <ToolbarGroup>
+          <MarkToolbarButton nodeType={KEYS.highlight} tooltip="Highlight">
+            <HighlighterIcon />
+          </MarkToolbarButton>
+          <CommentToolbarButton />
+        </ToolbarGroup>
+        <ToolbarGroup>
+          <ModeToolbarButton />
+        </ToolbarGroup>
+      </FeatureGuard>
     </div>
   );
 }

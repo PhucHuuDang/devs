@@ -355,6 +355,7 @@
 }
 
 .slate-editor {
+  /* padding-inline: max(64px, calc(40% - 350px)); */
   padding-inline: max(64px, calc(40% - 350px));
 
   ::selection {
@@ -369,7 +370,10 @@
     text-shadow: none;
   }
 }
-bg
+
+.slate-h1 {
+  margin-top: 0;
+}
 
 /* ::selection {
   background: oklch(76.9% 0.188 70.08);

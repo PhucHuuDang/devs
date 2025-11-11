@@ -42,6 +42,20 @@ query GetPosts {
       id
       title
       slug
+      tags
+      description
+      mainImage
+      author {
+        id
+        name
+        avatarUrl
+        bio
+        designation
+      }
+      category {
+        id
+        name
+      }
     }
   }`;
 

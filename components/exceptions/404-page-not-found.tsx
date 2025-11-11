@@ -1,6 +1,9 @@
 import Link from "next/link";
 
-export function NotFoundPage() {
+interface NotFoundPageProps {
+  endpoint?: string;
+}
+export function NotFoundPage({ endpoint = "/" }: NotFoundPageProps) {
   return (
     <section className="bg-white font-serif min-h-screen flex items-center justify-center">
       <div className="container mx-auto">
@@ -24,7 +27,7 @@ export function NotFoundPage() {
               </p>
 
               <Link
-                href="/"
+                href={endpoint}
                 className="my-5 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow"
               >
                 Go to Home

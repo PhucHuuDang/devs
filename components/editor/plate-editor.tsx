@@ -22,6 +22,7 @@ interface PlateEditorProps {
   onChange: (value: Value) => void;
 
   readonly?: boolean;
+  isClientView?: boolean;
 }
 
 export function PlateEditor({

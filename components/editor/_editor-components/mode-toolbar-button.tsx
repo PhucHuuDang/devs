@@ -23,6 +23,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useEditorMode } from "@/hooks/use-editor-mode";
 
 import { ToolbarButton } from "../control/toolbar";
 
@@ -30,14 +31,19 @@ export function ModeToolbarButton(props: DropdownMenuProps) {
   const editor = useEditorRef();
   const [readOnly, setReadOnly] = usePlateState("readOnly");
   const [open, setOpen] = React.useState(false);
+  const { mode, setMode } = useEditorMode();
 
   const isSuggesting = usePluginOption(SuggestionPlugin, "isSuggesting");
 
-  let value = "editing";
+  let value = mode;
 
-  if (readOnly) value = "viewing";
-
-  if (isSuggesting) value = "suggestion";
+  // Sync with editor state
+  if (readOnly && mode === "editing") {
+    value = "viewing";
+  }
+  if (isSuggesting) {
+    value = "suggestion";
+  }
 
   const item: Record<string, { icon: React.ReactNode; label: string }> = {
     editing: {
@@ -72,25 +78,35 @@ export function ModeToolbarButton(props: DropdownMenuProps) {
         <DropdownMenuRadioGroup
           value={value}
           onValueChange={(newValue) => {
+            // Update the mode in the hook
+            setMode(newValue as any);
+
+            // Handle viewing mode (admin view - read only with features)
             if (newValue === "viewing") {
               setReadOnly(true);
-
-              return;
-            } else {
-              setReadOnly(false);
-            }
-
-            if (newValue === "suggestion") {
-              editor.setOption(SuggestionPlugin, "isSuggesting", true);
-
-              return;
-            } else {
               editor.setOption(SuggestionPlugin, "isSuggesting", false);
+              return;
             }
 
-            if (newValue === "editing") {
-              editor.tf.focus();
+            // Handle client view mode (user view - read only, no features)
+            if (newValue === "viewClient") {
+              setReadOnly(true);
+              editor.setOption(SuggestionPlugin, "isSuggesting", false);
+              return;
+            }
 
+            // Handle suggestion mode
+            if (newValue === "suggestion") {
+              setReadOnly(false);
+              editor.setOption(SuggestionPlugin, "isSuggesting", true);
+              return;
+            }
+
+            // Handle editing mode (default)
+            if (newValue === "editing") {
+              setReadOnly(false);
+              editor.setOption(SuggestionPlugin, "isSuggesting", false);
+              editor.tf.focus();
               return;
             }
           }}

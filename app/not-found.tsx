@@ -1,4 +1,4 @@
-import { NotFoundPage } from "@/components/ui/404-page-not-found";
+import { NotFoundPage } from "@/components/exceptions/404-page-not-found";
 import React from "react";
 
 const NotFound = () => {
