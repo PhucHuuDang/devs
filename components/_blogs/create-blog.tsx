@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery } from "@apollo/client/react";
-import { GET_POSTS } from "@/app/graphql/queries/post.queries";
+import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
 import FormWrapper from "@/components/custom/form/form-wrapper";
 import z from "zod";
 import { useForm } from "react-hook-form";
@@ -59,7 +59,7 @@ import {
 import { FormMessage } from "@/components/ui/form";
 import { TAGS } from "@/app/mock/tags";
 import { categoryOptions } from "@/app/mock/category";
-import { CREATE_BLOG } from "@/app/graphql/mutaions/post.mutations";
+import { CREATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
 import { toast } from "sonner";
 import {
   CreateBlogMutation,

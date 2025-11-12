@@ -2,9 +2,10 @@ import { GetPostsQuery, Query } from "@/app/graphql/__generated__/graphql";
 import {
   GET_POST_BY_SLUG,
   GET_POSTS_STRING,
-} from "@/app/graphql/queries/post.queries";
+} from "@/app/graphql/queries/blog.queries";
 import { formatDate } from "@/app/utils/date";
 import { BlogDetailWithMode } from "@/components/_url-segment/blog/blog-details-components/blog-detail-with-mode";
+import { ReadTrack } from "@/components/_url-segment/blog/blog-details-components/read-track";
 import { NotFoundPage } from "@/components/exceptions/404-page-not-found";
 import {
   AnimatedItemsProps,
@@ -215,6 +216,8 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
           <h1 className="text-4xl text-center font-semibold mb-10">
             {findPostBySlug.title}
           </h1>
+
+          <ReadTrack blogId={findPostBySlug.id} />
 
           <Image
             src={findPostBySlug.mainImage ?? ""}

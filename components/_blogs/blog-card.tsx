@@ -22,6 +22,7 @@ import { BorderBeam } from "../ui/border-beam";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { generateSlug } from "@/lib/generate";
+import { Skeleton } from "../ui/skeleton";
 
 export interface BlogCardProps {
   title: string;
@@ -62,7 +63,6 @@ export const BlogCard = ({
     router.push(`/blogs/${generateSlug(title)}`);
   };
 
-  console.log({ isHovered, isBorderHover });
   return (
     <Card
       className={cardStyle}
@@ -146,6 +146,38 @@ export const BlogCard = ({
           </HoverCardCustom>
         </div>
       </CardFooter>
+    </Card>
+  );
+};
+
+export const BlogCardSkeleton = () => {
+  return (
+    <Card className={cardStyle}>
+      <CardHeader>
+        <div className="flex flex-row items-center justify-start gap-2 mb-2">
+          <Skeleton className="w-10 h-10 rounded-full" />
+
+          <div className="flex flex-col gap-1 items-start justify-start ml-1">
+            <Skeleton className="w-28 h-4 rounded-full" />
+            <Skeleton className="w-32 h-4 rounded-full" />
+          </div>
+        </div>
+        <Skeleton className="w-full h-60 rounded-2xl" />
+
+        <div className="flex items-center gap-1">
+          <Skeleton className="w-20 h-6 rounded-md" />
+          <Skeleton className="w-20 h-6 rounded-md" />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <Skeleton className="w-20 h-4 rounded-md" />
+
+          <div className="flex items-center gap-2">
+            <Skeleton className="size-6 rounded-full" />
+            <Skeleton className="size-6 rounded-full" />
+          </div>
+        </div>
+      </CardHeader>
     </Card>
   );
 };

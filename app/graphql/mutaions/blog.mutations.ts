@@ -41,3 +41,19 @@ export const UPDATE_BLOG = gql`
     }
   }
 `;
+
+// export const TRACK_BLOG_VIEW = gql`
+//   mutation incrementViews($id: String!, $identifier: String!) {
+//     incrementViews(id: $id, identifier: $identifier) {
+//     }
+//   }
+// `;
+
+export const INCREMENT_BLOG_VIEWS = gql`
+  mutation IncrementBlogViews($id: String!, $identifier: String!) {
+    incrementViews(id: $id, identifier: $identifier) {
+      id
+      views
+    }
+  }
+`;
