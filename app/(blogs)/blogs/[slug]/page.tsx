@@ -12,8 +12,8 @@ import {
   AnimatedTooltip,
 } from "@/components/ui/animated-tooltip";
 import { fetchGraphql } from "@/lib/graph-fetch";
-import Head from "next/head";
 import Image from "next/image";
+import { isEmpty } from "lodash";
 interface SlugBlogPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -89,25 +89,40 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
 export async function generateSitemaps() {
   const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
 
+  if (allPosts.length === 0) {
+    return [];
+  }
+
   return allPosts.map((post) => ({
     slug: post.slug,
+    lastModified: post.updatedAt ?? new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+    images: post.mainImage ? [{ url: post.mainImage }] : undefined,
   }));
 }
 
-export async function generateSitemap({ params }: SlugBlogPageProps) {
-  const { slug } = await params;
+// export async function generateSitemap({ params }: SlugBlogPageProps) {
+//   const { slug } = await params;
 
-  const { findPostBySlug } = await fetchGraphql<Query>(GET_POST_BY_SLUG, {
-    slug,
-  });
+//   const { findPostBySlug } = await fetchGraphql<Query>(GET_POST_BY_SLUG, {
+//     slug,
+//   });
 
-  return {
-    url: `https://www.devs.com/blogs/${slug}`,
-    lastModified: findPostBySlug.updatedAt,
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  };
-}
+//   // if (isEmpty(findPostBySlug)) {
+//   //   return {
+//   //     ...sitemap,
+//   //     lastModified: new Date(),
+//   //   };
+//   // }
+
+//   return {
+//     url: `https://www.devs.com/blogs/${slug}` as string,
+//     lastModified: findPostBySlug?.updatedAt ?? new Date(),
+//     changeFrequency: "weekly" as const,
+//     priority: 0.8,
+//   };
+// }
 
 export async function generateStaticParams() {
   const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
@@ -120,9 +135,9 @@ export async function generateStaticParams() {
 const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
   const { slug } = await params;
 
-  // const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
-
   const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
+
+  const url = new URL(process.env.NEXT_PUBLIC_CLIENT_URL as string);
 
   console.log({ allPosts });
 
@@ -131,17 +146,9 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
       slug,
     });
 
-  // console.log({ allPosts });
-
-  const url = new URL(process.env.NEXT_PUBLIC_CLIENT_URL as string);
-
-  console.log({ url });
-
-  if (!findPostBySlug) {
+  if (isEmpty(findPostBySlug)) {
     return <NotFoundPage endpoint="/blogs" />;
   }
-
-  // console.log({ findPostBySlug });
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -151,7 +158,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
     dateModified: findPostBySlug.updatedAt,
     author: {
       "@type": "Person",
-      name: findPostBySlug.author.name,
+      name: findPostBySlug.author?.name,
       url: `https://www.devs.com/blogs/${findPostBySlug.slug}`,
     },
     publisher: {

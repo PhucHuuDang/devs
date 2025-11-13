@@ -7,7 +7,6 @@ import { AppleFloatingDock } from "@/components/common/apple-floating-dock";
 interface BlogsLayoutProps {
   children: React.ReactNode;
 }
-
 export const metadata: Metadata = {
   title: "Blogs",
   description:

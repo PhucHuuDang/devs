@@ -23,7 +23,7 @@ export const ReadTrack = ({ blogId }: ReadTrackProps) => {
 
           const guestId = await getGuestIdentifier();
 
-          console.log("Tracking view with identifier:", guestId);
+          // console.log("Tracking view with identifier:", guestId);
 
           // mutation
           const result = await incrementViews({
