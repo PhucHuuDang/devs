@@ -11,20 +11,24 @@ import { FireSphereContent } from "../common/fire-sphere-content";
 import { PrimsContent } from "../common/prims-content";
 import { LightningContent } from "../common/lightning-content";
 
-const components: React.ReactNode[] = [
-  <RippleShader key="ripple" />,
-  <OrangeCloudShader key="orange-cloud" />,
-  <ShaderCanvasContent key="shader-canvas" />,
-  <FireSphereContent key="fire-sphere" />,
-  <PrimsContent key="prims" />,
-  <LightningContent key="lightning" />,
-];
-
-const randomIndex = Math.floor(Math.random() * components.length);
-export const HomeBackground = () => {
+export default function HomeBackgroundClient({ shader }: { shader: string }) {
   const mounted = useMounted();
-
   if (!mounted) return <BellLoader />;
 
-  return <>{components[randomIndex]}</>;
-};
+  switch (shader) {
+    case "ripple":
+      return <RippleShader />;
+    case "orange":
+      return <OrangeCloudShader />;
+    case "canvas":
+      return <ShaderCanvasContent />;
+    case "fire":
+      return <FireSphereContent />;
+    case "prims":
+      return <PrimsContent />;
+    case "lightning":
+      return <LightningContent />;
+    default:
+      return null;
+  }
+}

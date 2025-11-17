@@ -96,11 +96,13 @@ export const BlogCard = ({
         />
 
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{truncate(description, options)}</CardDescription>
+        <CardDescription className=" h-auto min-h-20">
+          {truncate(description, options)}
+        </CardDescription>
       </CardHeader>
 
-      <CardContent>
-        <div className="flex items-center gap-1">
+      <CardContent className="w-full">
+        <div className="flex items-center gap-1 h-auto flex-wrap min-h-14">
           {tags
             .map((tag: string, index: number) => {
               return (
@@ -139,7 +141,7 @@ export const BlogCard = ({
 
           <HoverCardCustom
             trigger={
-              <MessageCircleIcon className="size-6 hover:text-blue-500 cursor-pointer hover:scale-110 transition-all duration-300 ease-in-out" />
+              <MessageCircleIcon className="size-6 hover:text-sky-500 cursor-pointer hover:scale-110 transition-all duration-300 ease-in-out" />
             }
           >
             <div className="text-sm font-medium">Leave a comment!</div>

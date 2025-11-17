@@ -61,10 +61,7 @@ import { TAGS } from "@/app/mock/tags";
 import { categoryOptions } from "@/app/mock/category";
 import { CREATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
 import { toast } from "sonner";
-import {
-  CreateBlogMutation,
-  CreateBlogMutationResult,
-} from "@/app/graphql/__generated__/graphql";
+import { CreateBlogMutation } from "@/app/graphql/__generated__/graphql";
 import { useDebounce } from "@/hooks/use-debounce";
 
 const PlateEditor = dynamic(
@@ -180,10 +177,10 @@ export const CreateBlog = () => {
         ...values,
         tags: tags.map((tag: TTag) => tag.key),
       },
-      onCompleted: (data: CreateBlogMutationResult) => {
+      onCompleted: (data: CreateBlogMutation | unknown) => {
         // toast.success(JSON);
         console.log({ data });
-        toast.success(`${data.createPost.title}`);
+        toast.success(`${(data as CreateBlogMutation).createPost.title}`);
       },
       onError: (error: any) => {
         // toast.error(error.message);

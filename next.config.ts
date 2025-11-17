@@ -29,6 +29,35 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  bundlePagesRouterDependencies: true,
+
+  // Optimize web vitals tracking and performance
+  experimental: {
+    // Enable optimized loading for better performance
+    optimizePackageImports: [
+      "web-vitals",
+      "lucide-react",
+      "@radix-ui/*",
+      "@platejs/*",
+    ],
+
+    // Better client-side caching for improved navigation
+    clientSegmentCache: true,
+
+    // Optimize navigation and rendering
+    prerenderEarlyExit: true,
+  },
+
+  // Optimize production builds
+  productionBrowserSourceMaps: false, // Disable in production for better performance
+
+  // Compress output for better TTFB and loading times
+  compress: true,
+
+  trailingSlash: false,
+
+  // cacheComponents: true,
 };
 
 export default nextConfig;

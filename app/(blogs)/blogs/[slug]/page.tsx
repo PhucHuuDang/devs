@@ -14,6 +14,7 @@ import {
 import { fetchGraphql } from "@/lib/graph-fetch";
 import Image from "next/image";
 import { isEmpty } from "lodash";
+import { baseUrl } from "@/lib/utils";
 interface SlugBlogPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -28,7 +29,7 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
     );
 
     const post = allPosts.find((post) => post.slug === slug);
-    console.log({ post });
+    // console.log({ post });
 
     if (!post) {
       return {
@@ -102,28 +103,6 @@ export async function generateSitemaps() {
   }));
 }
 
-// export async function generateSitemap({ params }: SlugBlogPageProps) {
-//   const { slug } = await params;
-
-//   const { findPostBySlug } = await fetchGraphql<Query>(GET_POST_BY_SLUG, {
-//     slug,
-//   });
-
-//   // if (isEmpty(findPostBySlug)) {
-//   //   return {
-//   //     ...sitemap,
-//   //     lastModified: new Date(),
-//   //   };
-//   // }
-
-//   return {
-//     url: `https://www.devs.com/blogs/${slug}` as string,
-//     lastModified: findPostBySlug?.updatedAt ?? new Date(),
-//     changeFrequency: "weekly" as const,
-//     priority: 0.8,
-//   };
-// }
-
 export async function generateStaticParams() {
   const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
 
@@ -139,7 +118,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
   const url = new URL(process.env.NEXT_PUBLIC_CLIENT_URL as string);
 
-  console.log({ allPosts });
+  // console.log({ allPosts });
 
   const { findPostBySlug = {} as Query["findPostBySlug"] } =
     await fetchGraphql<Query>(GET_POST_BY_SLUG, {
@@ -150,6 +129,8 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
     return <NotFoundPage endpoint="/blogs" />;
   }
 
+  // console.log({ baseUrl });
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -159,19 +140,19 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
     author: {
       "@type": "Person",
       name: findPostBySlug.author?.name,
-      url: `https://www.devs.com/blogs/${findPostBySlug.slug}`,
+      url: `${baseUrl}/${findPostBySlug.slug}`,
     },
     publisher: {
       "@type": "Organization",
       name: "DEVS",
-      url: "https://www.devs.com",
+      url: baseUrl,
     },
     image: findPostBySlug.mainImage ?? "",
     description: findPostBySlug.description ?? "",
 
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://www.devs.com/blogs/${findPostBySlug.slug}`,
+      "@id": `${baseUrl}/${findPostBySlug.slug}`,
     },
   };
 
@@ -207,12 +188,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
   return (
     <>
-      <article
-        className="slate-editor py-10"
-        // dangerouslySetInnerHTML={{
-        //   __html: findPostBySlug.content,
-        // }}
-      >
+      <article className="slate-editor py-10">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

@@ -1,15 +1,13 @@
-import { Logo } from "@/components/common/logo";
-import { Navbar } from "@/components/common/navbar";
-import GlassSurface from "@/components/GlassSurface";
-import { HomeBackground } from "@/components/shader/home-background";
-import { HomeRadialBackground } from "@/components/shader/home-radial-background";
-import { OrangeCloudShader } from "@/components/shader/orange-cloud-shader";
+import HomeBackgroundClient from "@/components/shader/home-background";
 
-export default function Page() {
+const options = ["ripple", "orange", "canvas", "fire", "prims", "lightning"];
+
+const randomKey = options[Math.floor(Math.random() * options.length)];
+export default function HomePage() {
   return (
     <>
       <div>
-        <HomeBackground />
+        <HomeBackgroundClient shader={randomKey} />
 
         {/* <HomeRadialBackground /> */}
 
