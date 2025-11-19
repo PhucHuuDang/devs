@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
     <html>
       <body>
         <WebVitals />
-        {process.env.NODE_ENV === 'development' && <WebVitalsMonitor />}
+        {process.env.NODE_ENV === "development" && <WebVitalsMonitor />}
         {children}
       </body>
     </html>
@@ -62,14 +62,16 @@ Adjust how many metrics are batched before sending:
 
 ```tsx
 // Line 120 - Default is 5 metrics
-if (metricQueue.length >= 5) {  // ← Change this number
+if (metricQueue.length >= 5) {
+  // ← Change this number
   flushMetrics();
 } else {
-  flushTimer = setTimeout(flushMetrics, 1000);  // ← Or change timeout
+  flushTimer = setTimeout(flushMetrics, 1000); // ← Or change timeout
 }
 ```
 
 **Recommendations:**
+
 - **High traffic sites:** Use 3-5 metrics (current setting)
 - **Low traffic sites:** Use 10 metrics
 - **Real-time monitoring:** Use 1 metric (disable batching)
@@ -178,24 +180,28 @@ await sendToSentry(validMetrics);
 ```typescript
 // DataDog
 async function sendToDatadog(metrics: WebVitalMetric[]) {
-  const { StatsD } = await import('hot-shots');
+  const { StatsD } = await import("hot-shots");
   const dogstatsd = new StatsD();
-  
+
   for (const metric of metrics) {
-    dogstatsd.histogram(`webvitals.${metric.name.toLowerCase()}`, metric.value, {
-      tags: [`rating:${metric.rating}`, `pathname:${metric.pathname}`]
-    });
+    dogstatsd.histogram(
+      `webvitals.${metric.name.toLowerCase()}`,
+      metric.value,
+      {
+        tags: [`rating:${metric.rating}`, `pathname:${metric.pathname}`],
+      }
+    );
   }
 }
 
 // Sentry
 async function sendToSentry(metrics: WebVitalMetric[]) {
-  const Sentry = await import('@sentry/nextjs');
-  
+  const Sentry = await import("@sentry/nextjs");
+
   for (const metric of metrics) {
-    if (metric.rating === 'poor') {
+    if (metric.rating === "poor") {
       Sentry.captureMessage(`Poor Web Vital: ${metric.name}`, {
-        level: 'warning',
+        level: "warning",
         extra: metric,
       });
     }
@@ -204,16 +210,16 @@ async function sendToSentry(metrics: WebVitalMetric[]) {
 
 // Custom Webhook
 async function sendToSlack(metrics: WebVitalMetric[]) {
-  const poorMetrics = metrics.filter(m => m.rating === 'poor');
-  
+  const poorMetrics = metrics.filter((m) => m.rating === "poor");
+
   if (poorMetrics.length > 0) {
     await fetch(process.env.SLACK_WEBHOOK_URL!, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
-        text: `⚠️ Poor Web Vitals detected:\n${poorMetrics.map(m => 
-          `• ${m.name}: ${m.value} on ${m.pathname}`
-        ).join('\n')}`
-      })
+        text: `⚠️ Poor Web Vitals detected:\n${poorMetrics
+          .map((m) => `• ${m.name}: ${m.value} on ${m.pathname}`)
+          .join("\n")}`,
+      }),
     });
   }
 }
@@ -230,17 +236,17 @@ const handleMetric = useCallback((metric: any) => {
   // ... existing code ...
 
   // Custom handlers
-  if (metric.name === 'LCP' && metric.value > 4000) {
-    console.error('Critical: LCP is over 4 seconds!');
+  if (metric.name === "LCP" && metric.value > 4000) {
+    console.error("Critical: LCP is over 4 seconds!");
     // Send alert, trigger notification, etc.
   }
 
-  if (metric.name === 'CLS' && metric.value > 0.25) {
-    console.warn('Layout shift detected. Check your components.');
+  if (metric.name === "CLS" && metric.value > 0.25) {
+    console.warn("Layout shift detected. Check your components.");
   }
 
   // Track specific routes
-  if (window.location.pathname.startsWith('/blog/')) {
+  if (window.location.pathname.startsWith("/blog/")) {
     // Special handling for blog posts
     sendToBlogAnalytics(metric);
   }
@@ -255,37 +261,38 @@ Different behavior per environment:
 
 ```tsx
 // Disable in test environments
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === "test") {
   return null;
 }
 
 // More verbose logging in staging
-const isDevelopment = process.env.NODE_ENV === 'development';
-const isStaging = process.env.NEXT_PUBLIC_ENV === 'staging';
+const isDevelopment = process.env.NODE_ENV === "development";
+const isStaging = process.env.NEXT_PUBLIC_ENV === "staging";
 
 if (isDevelopment || isStaging) {
   logMetricToConsole(enhancedMetric);
 }
 
 // Only send to external services in production
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   sendToAnalyticsAPI(enhancedMetric);
 }
 ```
 
 ## Configuration Matrix
 
-| Feature | Default | Conservative | Aggressive |
-|---------|---------|--------------|------------|
-| Batch Size | 5 metrics | 10 metrics | 2 metrics |
-| Flush Timeout | 1000ms | 2000ms | 500ms |
-| GA Strategy | afterInteractive | lazyOnload | afterInteractive |
-| Font Preload | true | false | true |
-| Source Maps | false | true (dev) | false |
+| Feature       | Default          | Conservative | Aggressive       |
+| ------------- | ---------------- | ------------ | ---------------- |
+| Batch Size    | 5 metrics        | 10 metrics   | 2 metrics        |
+| Flush Timeout | 1000ms           | 2000ms       | 500ms            |
+| GA Strategy   | afterInteractive | lazyOnload   | afterInteractive |
+| Font Preload  | true             | false        | true             |
+| Source Maps   | false            | true (dev)   | false            |
 
 ## Performance Presets
 
 ### Development Preset
+
 ```typescript
 // next.config.ts
 experimental: {
@@ -297,6 +304,7 @@ productionBrowserSourceMaps: true,
 ```
 
 ### Production Preset (Current)
+
 ```typescript
 // next.config.ts
 experimental: {
@@ -309,6 +317,7 @@ compress: true,
 ```
 
 ### High-Performance Preset
+
 ```typescript
 // next.config.ts
 experimental: {
@@ -325,6 +334,7 @@ swcMinify: true,
 ## Testing Your Configuration
 
 ### 1. Local Development
+
 ```bash
 npm run dev
 # Open http://localhost:3000
@@ -332,6 +342,7 @@ npm run dev
 ```
 
 ### 2. Production Build
+
 ```bash
 npm run build
 npm start
@@ -339,6 +350,7 @@ npm start
 ```
 
 ### 3. API Testing
+
 ```bash
 # Test single metric
 curl -X POST http://localhost:3000/api/analytics/web-vitals \
@@ -357,20 +369,22 @@ curl http://localhost:3000/api/analytics/web-vitals?pathname=/
 ## Common Configurations
 
 ### Disable Analytics in Development
+
 ```tsx
 // components/common/web-vitals.tsx
 function sendToAnalyticsAPI(metric: Metric) {
-  if (process.env.NODE_ENV === 'development') return;
+  if (process.env.NODE_ENV === "development") return;
   // ... rest of the code
 }
 ```
 
 ### Track Custom Events
+
 ```tsx
 // Add custom tracking
-if (metric.name === 'LCP') {
+if (metric.name === "LCP") {
   window.dataLayer?.push({
-    event: 'lcp_measurement',
+    event: "lcp_measurement",
     lcp_value: metric.value,
     lcp_rating: metric.rating,
   });
@@ -378,37 +392,41 @@ if (metric.name === 'LCP') {
 ```
 
 ### Session-Based Tracking
+
 ```tsx
 // Track metrics per session
-const sessionId = sessionStorage.getItem('sessionId') || 
-  crypto.randomUUID();
-sessionStorage.setItem('sessionId', sessionId);
+const sessionId = sessionStorage.getItem("sessionId") || crypto.randomUUID();
+sessionStorage.setItem("sessionId", sessionId);
 
 // Include in metric payload
 const body = JSON.stringify({
   ...metric,
-  sessionId,  // ← Add session tracking
+  sessionId, // ← Add session tracking
 });
 ```
 
 ## Troubleshooting
 
 ### Metrics Not Batching
+
 - Check `metricQueue` is being populated
 - Verify `flushMetrics()` is being called
 - Check network tab for batched requests
 
 ### GA Not Receiving Events
+
 - Verify GA ID is correct
 - Check `window.gtag` exists
 - Enable GA debug mode: `?ga_debug=1`
 
 ### High Memory Usage
+
 - Reduce batch size
 - Decrease flush timeout
 - Clear `metricsStore` periodically
 
 ### Poor Scores Despite Optimizations
+
 - Run Lighthouse for detailed analysis
 - Check for render-blocking resources
 - Optimize images and fonts
@@ -417,4 +435,3 @@ const body = JSON.stringify({
 ---
 
 **Need more help?** Check the [Optimization Guide](./WEB_VITALS_OPTIMIZATION_GUIDE.md)
-

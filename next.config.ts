@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
 
       {
         protocol: "https",
-        hostname: "example.com",
+        hostname: "randomuser.me",
       },
     ],
   },
@@ -41,6 +41,8 @@ const nextConfig: NextConfig = {
       "@radix-ui/*",
       "@platejs/*",
     ],
+
+    // viewTransition: true,
 
     // Better client-side caching for improved navigation
     clientSegmentCache: true,

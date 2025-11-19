@@ -398,3 +398,4 @@ If you're still seeing poor metrics:
 5. Focus on the issues with the biggest impact
 
 Remember: **Small improvements compound!** Even a 100ms improvement in LCP can boost your SEO ranking.
+

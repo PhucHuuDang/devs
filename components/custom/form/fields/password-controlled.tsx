@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { createElement, useState } from "react";
 import z from "zod";
+import { cn } from "@/lib/utils";
 
 type PasswordFieldProps = {
   label: string;
@@ -18,6 +19,9 @@ type PasswordFieldProps = {
   placeholder?: string;
   description?: string | React.ReactNode;
   disabled?: boolean;
+  onBlur?: () => void;
+  className?: string;
+  classNameInput?: string;
 };
 
 export const passwordSchema = z
@@ -49,7 +53,10 @@ export function PasswordControlled({
   label,
   placeholder = "Enter password",
   description,
+  className,
+  classNameInput,
   disabled,
+  onBlur,
 }: PasswordFieldProps) {
   const { control, getFieldState, formState } = useFormContext();
   const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -58,35 +65,49 @@ export function PasswordControlled({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <div className="relative">
-              <Input
-                {...field}
-                type={passwordVisibility ? "text" : "password"}
-                autoComplete="on"
-                placeholder={placeholder}
-                className={`pr-12 ${
-                  getFieldState(name).error && "text-destructive"
-                }`}
-                disabled={disabled || formState.isSubmitting}
-              />
-              <div
-                className="absolute inset-y-0 right-0 flex cursor-pointer items-center p-3 text-muted-foreground"
-                onClick={() => setPasswordVisibility(!passwordVisibility)}
-              >
-                {createElement(passwordVisibility ? EyeOffIcon : EyeIcon, {
-                  className: "h-6 w-6",
-                })}
+      render={({ field }) => {
+        const isDisabled = disabled || field.disabled || formState.isSubmitting;
+
+        return (
+          <FormItem className={className}>
+            <FormLabel>{label}</FormLabel>
+            <FormControl onBlur={onBlur}>
+              <div className="relative">
+                <Input
+                  {...field}
+                  type={passwordVisibility ? "text" : "password"}
+                  autoComplete="on"
+                  placeholder={placeholder}
+                  className={cn(
+                    `pr-12 ${getFieldState(name).error && "text-destructive"}`,
+                    classNameInput
+                  )}
+                  disabled={isDisabled}
+                  aria-invalid={getFieldState(name).error ? "true" : "false"}
+                  aria-describedby={
+                    getFieldState(name).error
+                      ? `${getFieldState(name).error?.message} ${
+                          getFieldState(name).error?.type
+                        }`
+                      : undefined
+                  }
+                  aria-errormessage={getFieldState(name).error?.message}
+                />
+                <div
+                  className="absolute inset-y-0 right-0 flex cursor-pointer items-center p-3 text-muted-foreground"
+                  onClick={() => setPasswordVisibility(!passwordVisibility)}
+                >
+                  {createElement(passwordVisibility ? EyeOffIcon : EyeIcon, {
+                    className: "h-6 w-6",
+                  })}
+                </div>
               </div>
-            </div>
-          </FormControl>
-          <FormMessage />
-          {description && <FormDescription>{description}</FormDescription>}
-        </FormItem>
-      )}
+            </FormControl>
+            <FormMessage />
+            {description && <FormDescription>{description}</FormDescription>}
+          </FormItem>
+        );
+      }}
     />
   );
 }

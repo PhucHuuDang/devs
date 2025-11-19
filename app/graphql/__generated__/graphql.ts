@@ -22,6 +22,24 @@ export type Scalars = {
   JSONObject: { input: any; output: any; }
 };
 
+export type AccountModel = {
+  __typename?: 'AccountModel';
+  accessToken?: Maybe<Scalars['String']['output']>;
+  accessTokenExpiresAt?: Maybe<Scalars['DateTime']['output']>;
+  accountId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  idToken?: Maybe<Scalars['String']['output']>;
+  password?: Maybe<Scalars['String']['output']>;
+  providerId: Scalars['String']['output'];
+  refreshToken?: Maybe<Scalars['String']['output']>;
+  refreshTokenExpiresAt?: Maybe<Scalars['DateTime']['output']>;
+  scope?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  user: UserModel;
+  userId: Scalars['String']['output'];
+};
+
 export type Author = {
   __typename?: 'Author';
   avatarUrl?: Maybe<Scalars['String']['output']>;
@@ -36,16 +54,24 @@ export type Author = {
   isSuspended?: Maybe<Scalars['Boolean']['output']>;
   isVerified?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
-  posts: Array<Post>;
+  posts: Array<PostModel>;
   socialLinks?: Maybe<Scalars['JSONObject']['output']>;
   verified?: Maybe<Scalars['Boolean']['output']>;
 };
 
-export type Category = {
-  __typename?: 'Category';
+export type CategoryModel = {
+  __typename?: 'CategoryModel';
+  createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
-  posts?: Maybe<Array<Post>>;
+  posts?: Maybe<Array<PostModel>>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ChangePasswordInput = {
+  currentPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+  revokeOtherSessions?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type Comment = {
@@ -53,8 +79,8 @@ export type Comment = {
   content: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['Int']['output'];
-  post?: Maybe<Post>;
-  user: User;
+  post?: Maybe<PostModel>;
+  user: UserModel;
 };
 
 export type CreateAuthor = {
@@ -86,23 +112,33 @@ export type CreateUser = {
   password?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type Like = {
-  __typename?: 'Like';
+export type LikeModel = {
+  __typename?: 'LikeModel';
+  createdAt: Scalars['DateTime']['output'];
   id: Scalars['Int']['output'];
-  user: User;
+  post: PostModel;
+  postId: Scalars['String']['output'];
+  user: UserModel;
+  userId: Scalars['String']['output'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changePassword: Scalars['Boolean']['output'];
   createAuthor: Author;
-  createCategory: Category;
-  createPost: Post;
-  createUser: User;
-  deletePost: Post;
-  incrementViews: Post;
-  removeUser: User;
-  updatePost: Post;
-  updateUser: User;
+  createCategory: CategoryModel;
+  createPost: PostModel;
+  createUser: UserModel;
+  deletePost: PostModel;
+  incrementViews: PostModel;
+  signInEmail: SignInEmailUser;
+  signUpEmail: SignUpEmailUser;
+  updatePost: PostModel;
+};
+
+
+export type MutationChangePasswordArgs = {
+  changePasswordInput: ChangePasswordInput;
 };
 
 
@@ -145,8 +181,13 @@ export type MutationIncrementViewsArgs = {
 };
 
 
-export type MutationRemoveUserArgs = {
-  id: Scalars['Int']['input'];
+export type MutationSignInEmailArgs = {
+  signInInput: SignInInput;
+};
+
+
+export type MutationSignUpEmailArgs = {
+  signUpInput: SignUpInput;
 };
 
 
@@ -155,16 +196,11 @@ export type MutationUpdatePostArgs = {
   id: Scalars['String']['input'];
 };
 
-
-export type MutationUpdateUserArgs = {
-  updateUserInput: UpdateUser;
-};
-
-export type Post = {
-  __typename?: 'Post';
+export type PostModel = {
+  __typename?: 'PostModel';
   author: Author;
   authorId: Scalars['String']['output'];
-  category?: Maybe<Category>;
+  category?: Maybe<CategoryModel>;
   categoryId?: Maybe<Scalars['String']['output']>;
   content: Scalars['JSON']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -191,14 +227,13 @@ export type PostPaginationInput = {
 
 export type Query = {
   __typename?: 'Query';
-  allPosts: Array<Post>;
+  allPosts: Array<PostModel>;
   author: Author;
-  findPostById: Post;
-  findPostBySlug: Post;
-  postPaginated: Array<Post>;
-  priorityPosts: Array<Post>;
-  profile: User;
-  user: User;
+  findPostById: PostModel;
+  findPostBySlug: PostModel;
+  getAccounts: Array<AccountModel>;
+  postPaginated: Array<PostModel>;
+  priorityPosts: Array<PostModel>;
 };
 
 
@@ -226,9 +261,65 @@ export type QueryPriorityPostsArgs = {
   limit?: Scalars['Int']['input'];
 };
 
+export type SessionModel = {
+  __typename?: 'SessionModel';
+  createdAt: Scalars['DateTime']['output'];
+  expiresAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  ipAddress: Scalars['String']['output'];
+  token: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  user: UserModel;
+  userAgent: Scalars['String']['output'];
+  userId: Scalars['String']['output'];
+};
 
-export type QueryUserArgs = {
-  id: Scalars['Int']['input'];
+export type SignInEmailUser = {
+  __typename?: 'SignInEmailUser';
+  redirect: Scalars['String']['output'];
+  token: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+  user: SignInEmailUserResponse;
+};
+
+export type SignInEmailUserResponse = {
+  __typename?: 'SignInEmailUserResponse';
+  createdAt: Scalars['DateTime']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type SignInInput = {
+  callbackURL?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  rememberMe?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type SignUpEmailResponse = {
+  __typename?: 'SignUpEmailResponse';
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type SignUpEmailUser = {
+  __typename?: 'SignUpEmailUser';
+  token?: Maybe<Scalars['String']['output']>;
+  user: SignUpEmailResponse;
+};
+
+export type SignUpInput = {
+  callbackURL?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  image?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  password: Scalars['String']['input'];
+  rememberMe?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdatePostInput = {
@@ -245,19 +336,35 @@ export type UpdatePostInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateUser = {
-  id: Scalars['Int']['input'];
+export type UserModel = {
+  __typename?: 'UserModel';
+  accounts: Array<AccountModel>;
+  avatarUrl?: Maybe<Scalars['String']['output']>;
+  comments: Array<Comment>;
+  createdAt: Scalars['DateTime']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  emailVerified: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  likes: Array<LikeModel>;
+  name?: Maybe<Scalars['String']['output']>;
+  sessions: Array<SessionModel>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
-export type User = {
-  __typename?: 'User';
-  avatarUrl?: Maybe<Scalars['String']['output']>;
-  comments?: Maybe<Array<Comment>>;
-  email?: Maybe<Scalars['String']['output']>;
-  id: Scalars['Int']['output'];
-  likes?: Maybe<Array<Like>>;
-  name: Scalars['String']['output'];
-};
+export type SignUpEmailMutationVariables = Exact<{
+  input: SignUpInput;
+}>;
+
+
+export type SignUpEmailMutation = { __typename?: 'Mutation', signUpEmail: { __typename?: 'SignUpEmailUser', token?: string | null, user: { __typename?: 'SignUpEmailResponse', id: string, email?: string | null, name?: string | null } } };
+
+export type SignInEmailMutationVariables = Exact<{
+  input: SignInInput;
+}>;
+
+
+export type SignInEmailMutation = { __typename?: 'Mutation', signInEmail: { __typename?: 'SignInEmailUser', token: string, user: { __typename?: 'SignInEmailUserResponse', id: string, email?: string | null, name?: string | null } } };
 
 export type CreateBlogMutationVariables = Exact<{
   title: Scalars['String']['input'];
@@ -272,7 +379,7 @@ export type CreateBlogMutationVariables = Exact<{
 }>;
 
 
-export type CreateBlogMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, title: string, slug: string, createdAt: any } };
+export type CreateBlogMutation = { __typename?: 'Mutation', createPost: { __typename?: 'PostModel', id: string, title: string, slug: string, createdAt: any } };
 
 export type UpdateBlogMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -280,7 +387,7 @@ export type UpdateBlogMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBlogMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: string, title: string, slug: string, createdAt: any } };
+export type UpdateBlogMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'PostModel', id: string, title: string, slug: string, createdAt: any } };
 
 export type IncrementBlogViewsMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -288,12 +395,12 @@ export type IncrementBlogViewsMutationVariables = Exact<{
 }>;
 
 
-export type IncrementBlogViewsMutation = { __typename?: 'Mutation', incrementViews: { __typename?: 'Post', id: string, views: number } };
+export type IncrementBlogViewsMutation = { __typename?: 'Mutation', incrementViews: { __typename?: 'PostModel', id: string, views: number } };
 
 export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: string, title: string, mainImage?: string | null, description?: string | null, content: any, votes: number, authorId: string, categoryId?: string | null, createdAt: any, updatedAt: any, tags: Array<string>, slug: string, views: number, isPublished: boolean, isPriority: boolean, isPinned: boolean, isDeleted: boolean, author: { __typename?: 'Author', id: string, name: string, avatarUrl?: string | null, bio?: string | null, designation?: string | null }, category?: { __typename?: 'Category', id: string, name: string } | null }> };
+export type GetPostsQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'PostModel', id: string, title: string, mainImage?: string | null, description?: string | null, content: any, votes: number, authorId: string, categoryId?: string | null, createdAt: any, updatedAt: any, tags: Array<string>, slug: string, views: number, isPublished: boolean, isPriority: boolean, isPinned: boolean, isDeleted: boolean, author: { __typename?: 'Author', id: string, name: string, avatarUrl?: string | null, bio?: string | null, designation?: string | null }, category?: { __typename?: 'CategoryModel', id: string, name: string } | null }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -314,6 +421,30 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
+export const SignUpEmailDocument = new TypedDocumentString(`
+    mutation signUpEmail($input: SignUpInput!) {
+  signUpEmail(signUpInput: $input) {
+    token
+    user {
+      id
+      email
+      name
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<SignUpEmailMutation, SignUpEmailMutationVariables>;
+export const SignInEmailDocument = new TypedDocumentString(`
+    mutation signInEmail($input: SignInInput!) {
+  signInEmail(signInInput: $input) {
+    token
+    user {
+      id
+      email
+      name
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<SignInEmailMutation, SignInEmailMutationVariables>;
 export const CreateBlogDocument = new TypedDocumentString(`
     mutation CreateBlog($title: String!, $description: String!, $slug: String!, $mainImage: String!, $categoryId: String!, $tags: [String!]!, $content: JSON!, $authorId: String!, $isPublished: Boolean!) {
   createPost(

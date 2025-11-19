@@ -229,3 +229,4 @@ function calculateSEOScore(metrics: Record<string, Metric>): number {
 
   return Math.round(score);
 }
+

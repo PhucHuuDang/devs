@@ -12,16 +12,17 @@ This project now uses an optimized web vitals tracking system that leverages Nex
 experimental: {
   // Optimizes package imports for smaller bundle sizes
   optimizePackageImports: ["web-vitals", "lucide-react", "@radix-ui/*"],
-  
+
   // Improves navigation performance with client-side caching
   clientSegmentCache: true,
-  
+
   // Faster page rendering
   prerenderEarlyExit: true,
 }
 ```
 
 **Benefits:**
+
 - 🚀 Smaller JavaScript bundles (tree-shaking for web-vitals)
 - ⚡ Faster navigation between pages
 - 📦 Optimized third-party package loading
@@ -31,52 +32,63 @@ experimental: {
 The `WebVitals` component now includes:
 
 #### **Batched Metric Reporting**
+
 Instead of sending individual metrics, we batch them together:
+
 - Reduces network requests by up to 83%
 - Sends metrics after 1 second or when 5 metrics are collected
 - More efficient use of bandwidth
 
 #### **Request Deduplication**
+
 Prevents sending duplicate metrics:
+
 ```typescript
 const reportedMetrics = useRef<Set<string>>(new Set());
 // Each metric is tracked by a unique key: `${name}-${id}`
 ```
 
 #### **Non-Blocking Analytics**
+
 Uses `requestIdleCallback` for Google Analytics:
+
 ```typescript
 requestIdleCallback(() => {
   sendToGoogleAnalytics(enhancedMetric);
 });
 ```
+
 This ensures analytics don't block the main thread.
 
 ### 3. **Optimized Layout (`app/layout.tsx`)**
 
 #### **Font Loading Optimization**
+
 ```typescript
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  display: "swap",    // ← Prevents FOIT (Flash of Invisible Text)
-  preload: true,      // ← Preloads fonts for faster rendering
+  display: "swap", // ← Prevents FOIT (Flash of Invisible Text)
+  preload: true, // ← Preloads fonts for faster rendering
 });
 ```
 
 **Impact on Metrics:**
+
 - ✅ Improves FCP (First Contentful Paint)
 - ✅ Reduces CLS (Cumulative Layout Shift)
 
 #### **Google Analytics Strategy**
+
 ```typescript
 <Script
-  strategy="afterInteractive"  // ← Loads after page becomes interactive
+  strategy="afterInteractive" // ← Loads after page becomes interactive
   src="https://www.googletagmanager.com/gtag/js?id=G-XXX"
 />
 ```
 
 **Why `afterInteractive`?**
+
 - Doesn't block initial page load
 - Better FCP and LCP scores
 - GA loads only after user can interact with page
@@ -107,33 +119,37 @@ POST /api/analytics/web-vitals
 
 ## Core Web Vitals Thresholds
 
-| Metric | Good | Needs Improvement | Poor | Impact on SEO |
-|--------|------|-------------------|------|---------------|
-| **LCP** | ≤ 2.5s | 2.5s - 4.0s | > 4.0s | 🔴 Critical |
-| **FID** | ≤ 100ms | 100ms - 300ms | > 300ms | 🔴 Critical |
-| **CLS** | ≤ 0.1 | 0.1 - 0.25 | > 0.25 | 🔴 Critical |
-| **FCP** | ≤ 1.8s | 1.8s - 3.0s | > 3.0s | 🟡 Moderate |
-| **TTFB** | ≤ 800ms | 800ms - 1.8s | > 1.8s | 🟡 Moderate |
-| **INP** | ≤ 200ms | 200ms - 500ms | > 500ms | 🔴 Critical |
+| Metric   | Good    | Needs Improvement | Poor    | Impact on SEO |
+| -------- | ------- | ----------------- | ------- | ------------- |
+| **LCP**  | ≤ 2.5s  | 2.5s - 4.0s       | > 4.0s  | 🔴 Critical   |
+| **FID**  | ≤ 100ms | 100ms - 300ms     | > 300ms | 🔴 Critical   |
+| **CLS**  | ≤ 0.1   | 0.1 - 0.25        | > 0.25  | 🔴 Critical   |
+| **FCP**  | ≤ 1.8s  | 1.8s - 3.0s       | > 3.0s  | 🟡 Moderate   |
+| **TTFB** | ≤ 800ms | 800ms - 1.8s      | > 1.8s  | 🟡 Moderate   |
+| **INP**  | ≤ 200ms | 200ms - 500ms     | > 500ms | 🔴 Critical   |
 
 ## How It Works
 
 ### 1. **Metric Collection**
+
 ```
 User loads page → Browser measures performance → Next.js reports metrics
 ```
 
 ### 2. **Metric Processing**
+
 ```
 Component receives metric → Calculates rating → Adds to batch queue
 ```
 
 ### 3. **Metric Reporting**
+
 ```
 Queue fills (5 metrics) OR 1 second passes → Batch sent to API → Stored/Analyzed
 ```
 
 ### 4. **Google Analytics Integration**
+
 ```
 Metric received → Queued for idle time → Sent to GA without blocking UI
 ```
@@ -146,10 +162,13 @@ The `<WebVitalsMonitor />` component (development only) provides real-time feedb
 
 ```tsx
 // Add to layout for development
-{process.env.NODE_ENV === 'development' && <WebVitalsMonitor />}
+{
+  process.env.NODE_ENV === "development" && <WebVitalsMonitor />;
+}
 ```
 
 **Features:**
+
 - 📊 Real-time metric display
 - 🎯 Color-coded ratings (green/yellow/red)
 - 💯 SEO impact score
@@ -158,6 +177,7 @@ The `<WebVitalsMonitor />` component (development only) provides real-time feedb
 ### Console Logging
 
 In development, metrics are automatically logged:
+
 ```
 ✅ LCP
   Value: 1500
@@ -174,11 +194,13 @@ In development, metrics are automatically logged:
 ## Performance Impact
 
 ### Before Optimization
+
 - 6 individual network requests for metrics
 - ~500ms delay from synchronous GA calls
 - Larger bundle size due to unoptimized imports
 
 ### After Optimization
+
 - 1-2 batched network requests
 - Non-blocking GA calls
 - 15-20% smaller bundle size
@@ -190,14 +212,17 @@ In development, metrics are automatically logged:
 ## Best Practices
 
 ### 1. **Monitor Your Metrics**
+
 ```typescript
 // View metrics in development
-const metrics = await fetch('/api/analytics/web-vitals?pathname=/');
+const metrics = await fetch("/api/analytics/web-vitals?pathname=/");
 console.log(await metrics.json());
 ```
 
 ### 2. **Set Performance Budgets**
+
 Create alerts for poor metrics:
+
 ```typescript
 if (metric.rating === "poor") {
   await handlePoorMetric(metric);
@@ -206,23 +231,26 @@ if (metric.rating === "poor") {
 ```
 
 ### 3. **Optimize Images**
+
 ```tsx
-import Image from 'next/image';
+import Image from "next/image";
 
 <Image
   src="/hero.jpg"
-  priority  // ← For LCP images
+  priority // ← For LCP images
   sizes="(max-width: 768px) 100vw, 50vw"
-/>
+/>;
 ```
 
 ### 4. **Use Resource Hints**
+
 ```tsx
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="dns-prefetch" href="https://analytics.google.com" />
 ```
 
 ### 5. **Minimize Layout Shifts**
+
 ```css
 /* Reserve space for images */
 .hero-image {
@@ -239,7 +267,7 @@ To persist metrics, update the API route:
 // app/api/analytics/web-vitals/route.ts
 
 // Example with Prisma
-import { prisma } from '@/lib/prisma';
+import { prisma } from "@/lib/prisma";
 
 for (const metric of validMetrics) {
   await prisma.webVital.create({
@@ -262,6 +290,7 @@ for (const metric of validMetrics) {
 ### Google Analytics 4
 
 Already integrated! Metrics are sent automatically to GA4 with:
+
 - Event name: LCP, FID, CLS, FCP, TTFB, INP
 - Event category: "Web Vitals"
 - Custom dimensions: rating, delta
@@ -284,8 +313,8 @@ import { Analytics } from '@vercel/analytics/react';
 // components/common/web-vitals.tsx
 
 function sendToCustomAnalytics(metric: Metric) {
-  fetch('https://your-analytics.com/api/metrics', {
-    method: 'POST',
+  fetch("https://your-analytics.com/api/metrics", {
+    method: "POST",
     body: JSON.stringify(metric),
   });
 }
@@ -353,6 +382,7 @@ npm start
 ## Summary
 
 Your project now has:
+
 - ✅ **Optimized package imports** for smaller bundles
 - ✅ **Batched metric reporting** for fewer network requests
 - ✅ **Non-blocking analytics** for better performance
@@ -363,4 +393,3 @@ Your project now has:
 - ✅ **Production-ready** API endpoint with batch support
 
 These optimizations will improve your Core Web Vitals scores, leading to better SEO rankings and user experience! 🚀
-
