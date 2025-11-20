@@ -125,6 +125,12 @@ export const SignInPage: React.FC<SignInPageProps> = ({
             password: data.password,
           },
         },
+
+        context: {
+          fetchOptions: {
+            credentials: "include",
+          },
+        },
       });
 
       const signInResponse = res.data as any;
