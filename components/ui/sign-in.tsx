@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import React from "react";
 import Image from "next/image";
 import { GoogleIcon } from "../icons/social-icon";
 import {
@@ -17,9 +16,8 @@ import { toast } from "sonner";
 import { isEmpty } from "lodash";
 import { SIGN_IN } from "@/app/graphql/mutaions/auth.mutations";
 import { useMutation } from "@apollo/client/react";
-import { Button } from "./button";
 import { Spinner } from "./spinner";
-import { SignInEmailMutation } from "@/app/graphql/__generated__/graphql";
+import { useAuth } from "@/app/providers/auth-provider";
 
 // --- TYPE DEFINITIONS ---
 
@@ -35,10 +33,7 @@ interface SignInPageProps {
   description?: React.ReactNode;
   heroImageSrc?: string;
   testimonials?: Testimonial[];
-  onSignIn?: (event: React.FormEvent<HTMLFormElement>) => void;
   onGoogleSignIn?: () => void;
-  onResetPassword?: () => void;
-  onCreateAccount?: () => void;
 }
 
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -72,8 +67,6 @@ const TestimonialCard = ({
   </div>
 );
 
-// --- MAIN COMPONENT ---
-
 const sigInSchema = z
   .object({
     email: z.string().email({
@@ -93,10 +86,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   description = "Access your account and continue your journey with us",
   heroImageSrc,
   testimonials = [],
-  // onSignIn,
   onGoogleSignIn,
-  onResetPassword,
-  onCreateAccount,
 }) => {
   const form = useForm<z.infer<typeof sigInSchema>>({
     resolver: zodResolver(sigInSchema),
@@ -105,6 +95,8 @@ export const SignInPage: React.FC<SignInPageProps> = ({
       password: "",
     },
   });
+
+  const { setCookies, getCookies } = useAuth();
 
   const [signInMutation, { loading, client, error, called, data: signInData }] =
     useMutation(SIGN_IN);
@@ -118,7 +110,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
     }
 
     try {
-      const res = await signInMutation({
+      const res: unknown = await signInMutation({
         variables: {
           input: {
             email: data.email,
@@ -133,7 +125,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
         },
       });
 
-      const signInResponse = res.data as any;
+      const signInResponse = (res as any).data.signInEmail as any;
 
       console.log({ signInResponse });
 
@@ -141,12 +133,12 @@ export const SignInPage: React.FC<SignInPageProps> = ({
         console.log({ signInResponse });
         toast.error(`Failed to sign in: ${signInResponse.error}`);
       } else if (signInResponse?.token) {
+        await setCookies(signInResponse.token, "test-refresh-token");
         toast.success("Signed in successfully");
       } else {
         toast.error("Failed to sign in");
       }
     } catch (err: any) {
-      // Lỗi network hoặc Apollo
       toast.error(`Error: ${err.message}`);
     }
   };
@@ -195,7 +187,6 @@ export const SignInPage: React.FC<SignInPageProps> = ({
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    onResetPassword?.();
                   }}
                   className="hover:underline text-violet-400 transition-colors"
                 >
@@ -234,7 +225,6 @@ export const SignInPage: React.FC<SignInPageProps> = ({
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  onCreateAccount?.();
                 }}
                 className="text-violet-400 hover:underline transition-colors"
               >

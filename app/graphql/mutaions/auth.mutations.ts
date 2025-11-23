@@ -25,3 +25,17 @@ export const SIGN_IN = gql`
     }
   }
 `;
+
+export const GITHUB = gql`
+  mutation gitHub {
+    gitHub {
+      token
+      url
+      user {
+        id
+        email
+        name
+      }
+    }
+  }
+`;

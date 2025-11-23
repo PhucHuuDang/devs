@@ -27,10 +27,23 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "randomuser.me",
       },
+      {
+        protocol: "https",
+        hostname: "github.com",
+      },
     ],
   },
 
+  // reactCompiler: true,
+
   bundlePagesRouterDependencies: true,
+
+  logging: {
+    fetches: {
+      fullUrl: true,
+      hmrRefreshes: true,
+    },
+  },
 
   // Optimize web vitals tracking and performance
   experimental: {

@@ -1,135 +1,3 @@
-// import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
-// import { Toaster } from "sonner";
-// import "./globals.css";
-// import { ApolloWrapper } from "./providers/apollo-provider";
-// import { WebVitals } from "@/components/common/web-vitals";
-// import Script from "next/script";
-
-// // Optimized font loading with display swap for better FCP
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-//   display: "swap",
-//   preload: true,
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-//   display: "swap",
-//   preload: true,
-// });
-
-// export const metadata: Metadata = {
-//   title: {
-//     template: "%s | DEVS",
-//     default: "DEVS",
-//   },
-//   icons: {
-//     icon: "/icon.webp",
-//   },
-//   description:
-//     "DEVS is a platform for developers to share their stories and learn from others, grow their skills and network with other developers, and get hired, get freelance work, and more.",
-
-//   authors: [
-//     { name: "Harry Dang", url: "https://www.facebook.com/HP2K2Official" },
-//   ],
-//   facebook: {
-//     appId: "HP2K2Official",
-//   },
-//   creator: "Harry Dang",
-//   keywords: [
-//     "DEVS",
-//     "developers",
-//     "stories",
-//     "knowledge",
-//     "growth",
-//     "network",
-//     "hired",
-//     "freelance",
-//     "work",
-//     "blogs",
-//     "articles",
-//     "tutorials",
-//     "guides",
-//     "tips",
-//     "tricks",
-//     "hacks",
-//     "secrets",
-//   ],
-
-//   metadataBase: new URL("localhost:3000"),
-//   openGraph: {
-//     title: "DEVS",
-//     description:
-//       "DEVS is a platform for developers to share their stories and learn from others, grow their skills and network with other developers, and get hired, get freelance work, and more.",
-//     url: "localhost:3000",
-//     siteName: "DEVS",
-//     // images: ["/og-image.png"],
-//   },
-
-//   category: "technology",
-
-//   publisher: "Vercel",
-
-//   robots: {
-//     index: false,
-//     follow: false,
-//     googleBot: {
-//       index: false,
-//       follow: false,
-//     },
-//   },
-
-//   alternates: {
-//     canonical: "localhost:3000",
-//   },
-// };
-
-// export default function RootLayout({
-//   children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-//   return (
-//     <html lang="en" suppressHydrationWarning>
-//       {/* Google Analytics - Optimized with afterInteractive strategy */}
-//       <Script
-//         strategy="afterInteractive"
-//         src="https://www.googletagmanager.com/gtag/js?id=G-5W28KPED0V"
-//       />
-
-//       <Script
-//         id="gtag-init"
-//         strategy="afterInteractive"
-//         dangerouslySetInnerHTML={{
-//           __html: `
-//             window.dataLayer = window.dataLayer || [];
-//             function gtag(){dataLayer.push(arguments);}
-//             gtag('js', new Date());
-//             gtag('config', 'G-5W28KPED0V', {
-//               send_page_view: true,
-//               page_path: window.location.pathname,
-//             });
-//           `,
-//         }}
-//       />
-
-//       <body
-//         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-//       >
-//         {/* Web Vitals tracking - runs client-side only */}
-//         <WebVitals />
-
-//         <Toaster richColors position="top-right" />
-
-//         <ApolloWrapper>{children}</ApolloWrapper>
-//       </body>
-//     </html>
-//   );
-// }
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
@@ -139,6 +7,8 @@ import { WebVitals } from "@/components/common/web-vitals";
 // import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor"; // For development
 import Script from "next/script";
 import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor";
+import { AuthProvider } from "./providers/auth-provider";
+import { deleteCookies, getAuthCookies, setAuthCookies } from "./utils/cookies";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -327,15 +197,21 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Web Vitals tracking for all users */}
-        <WebVitals />
+        <AuthProvider
+          getCookies={getAuthCookies}
+          setCookies={setAuthCookies}
+          deleteCookies={deleteCookies}
+        >
+          {/* Web Vitals tracking for all users */}
+          <WebVitals />
 
-        {/* Web Vitals Monitor - Only in development */}
-        {process.env.NODE_ENV === "development" && <WebVitalsMonitor />}
+          {/* Web Vitals Monitor - Only in development */}
+          {process.env.NODE_ENV === "development" && <WebVitalsMonitor />}
 
-        <Toaster richColors position="top-right" />
+          <Toaster richColors position="top-right" />
 
-        <ApolloWrapper>{children}</ApolloWrapper>
+          <ApolloWrapper>{children}</ApolloWrapper>
+        </AuthProvider>
       </body>
     </html>
   );

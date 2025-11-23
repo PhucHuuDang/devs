@@ -1,16 +1,18 @@
 "use client";
 
-import { GetPostsQuery, Post } from "@/app/graphql/__generated__/graphql";
+import { GetPostsQuery } from "@/app/graphql/__generated__/graphql";
 import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
 import { BlogCard, BlogCardSkeleton } from "@/components/_blogs/blog-card";
+import { EmptyMediaGroup } from "@/components/empty-state/empty-media-group";
 import { useQuery } from "@apollo/client/react";
+import Link from "next/link";
 
 const BlogsPage = () => {
   const { data, loading, error } = useQuery<GetPostsQuery>(GET_POSTS, {
     ssr: true,
   });
 
-  console.log({ loading });
+  // console.log({ loading });
 
   if (loading) {
     return (
@@ -26,6 +28,19 @@ const BlogsPage = () => {
 
   return (
     <div className="mt-4 p-2 ">
+      {data?.allPosts && data.allPosts.length === 0 && (
+        <EmptyMediaGroup
+          title="No Blogs Found"
+          description="Create a new blog to get started"
+          action={
+            <Link prefetch href={"/create-blog"}>
+              Create Blog
+            </Link>
+          }
+          className="border-2 border-dashed border-gray-200 rounded-lg p-6 shadow-sm"
+        />
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
         {data?.allPosts?.map((post: GetPostsQuery["allPosts"][number]) => {
           const blogCardData = {

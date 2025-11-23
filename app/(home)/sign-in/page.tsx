@@ -1,5 +1,5 @@
-"use client";
-
+import { getAuthCookies } from "@/app/utils/cookies";
+import { redirect } from "next/navigation";
 import {
   SignInPage as SignInPageComponent,
   Testimonial,
@@ -26,37 +26,18 @@ const sampleTestimonials: Testimonial[] = [
   },
 ];
 
-const SignInPage = () => {
-  const handleSignIn = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    console.log("Sign In submitted:", data);
-    alert(`Sign In Submitted! Check the browser console for form data.`);
-  };
+const SignInPage = async () => {
+  const cookies = await getAuthCookies();
 
-  const handleGoogleSignIn = () => {
-    console.log("Continue with Google clicked");
-    alert("Continue with Google clicked");
-  };
-
-  const handleResetPassword = () => {
-    alert("Reset Password clicked");
-  };
-
-  const handleCreateAccount = () => {
-    alert("Create Account clicked");
-  };
+  if (cookies.accessToken) {
+    redirect("/blogs");
+  }
 
   return (
     <div className="bg-background text-foreground">
       <SignInPageComponent
         heroImageSrc="https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80"
         testimonials={sampleTestimonials}
-        onSignIn={handleSignIn}
-        onGoogleSignIn={handleGoogleSignIn}
-        onResetPassword={handleResetPassword}
-        onCreateAccount={handleCreateAccount}
       />
     </div>
   );
