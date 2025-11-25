@@ -16,6 +16,8 @@ interface UploadImageProps {
   className?: string;
 
   classContainer?: string;
+
+  error?: boolean;
 }
 export const UploadImage = ({
   isMultiple,
@@ -23,6 +25,7 @@ export const UploadImage = ({
   classNameIcon,
   className,
   classContainer,
+  error = false,
 }: UploadImageProps) => {
   const [imageUrl, setImageUrl] = useState<string[]>([]);
   const [progress, setProgress] = useState<number>(0);
@@ -88,6 +91,7 @@ export const UploadImage = ({
                   <ImagesIcon
                     className={cn(
                       "size-20 cursor-pointer group-hover:scale-110 transition-all duration-300 group-hover:text-primary/80 ",
+                      error && "text-rose-500",
                       classNameIcon
                     )}
                   />
@@ -96,12 +100,18 @@ export const UploadImage = ({
                     <ImageUpIcon
                       className={cn(
                         "size-20 cursor-pointer group-hover:scale-110 transition-all duration-300 group-hover:text-primary/80 ",
+                        error && "text-rose-500",
                         classNameIcon
                       )}
                     />
                   </>
                 )}
-                <span className="text-sm text-primary/80 font-medium group-hover:text-primary/100 transition-all duration-300">
+                <span
+                  className={cn(
+                    "text-sm text-primary/80 font-medium group-hover:text-primary/100 transition-all duration-300",
+                    error && "text-rose-500"
+                  )}
+                >
                   {isMultiple
                     ? "Click to upload multiple images"
                     : "Click to upload image"}

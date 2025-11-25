@@ -1,3 +1,4 @@
+import { HOME_CONSTANTS } from "@/app/constants/home";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -42,11 +43,11 @@ export const defaultContent: BackgroundContentProps = {
     "Just for fun where we share our stories and trips about our adventures!",
   buttons: {
     primary: {
-      text: "Browsing our stories",
+      text: HOME_CONSTANTS.BROWSE_STORIES,
       onClick: () => console.log("Primary button clicked"),
     },
     secondary: {
-      text: "Continue with Github",
+      text: HOME_CONSTANTS.CONTINUE_WITH_GITHUB,
       onClick: () => console.log("Secondary button clicked"),
     },
   },
@@ -125,7 +126,7 @@ export const BackgroundContent = ({
             )}
             {buttons.secondary && (
               <Link
-                href="/test"
+                href="/sign-in"
                 onClick={buttons.secondary.onClick}
                 prefetch
                 className={cn(

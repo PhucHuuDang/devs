@@ -24,38 +24,12 @@ import {
 import { generateSlug } from "@/lib/generate";
 import { TextareaControlled } from "@/components/custom/form/fields/text-area-controlled";
 import { Button } from "@/components/ui/button";
-import {
-  AlertTriangleIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  CodeIcon,
-  CopyIcon,
-  GlobeIcon,
-  NotepadTextDashedIcon,
-  RocketIcon,
-  ServerIcon,
-  ShareIcon,
-  TrashIcon,
-  UserRoundXIcon,
-  VolumeOffIcon,
-} from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import { SimpleLoading } from "@/components/_loading/simple-loading";
 import dynamic from "next/dynamic";
 import { Value } from "platejs";
-import { ButtonGroup } from "@/components/ui/button-group";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { BlogCard } from "@/components/_blogs/blog-card";
-import {
-  SelectControlled,
-  SelectOption,
-} from "@/components/custom/form/fields/select-controlled";
+
+import { SelectControlled } from "@/components/custom/form/fields/select-controlled";
 import { FormMessage } from "@/components/ui/form";
 import { TAGS } from "@/app/mock/tags";
 import { categoryOptions } from "@/app/mock/category";
@@ -63,6 +37,8 @@ import { CREATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
 import { toast } from "sonner";
 import { CreateBlogMutation } from "@/app/graphql/__generated__/graphql";
 import { useDebounce } from "@/hooks/use-debounce";
+import { PreviewControl } from "./preview-control";
+import { cardStyle } from "@/app/styles";
 
 const PlateEditor = dynamic(
   () =>
@@ -75,17 +51,7 @@ const PlateEditor = dynamic(
   }
 );
 
-const people = [
-  {
-    id: 1,
-    name: "John Doe",
-    designation: "Software Engineer",
-    image:
-      "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80",
-  },
-];
-
-const formSchema = z.object({
+export const formSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 10 characters.",
   }),
@@ -124,8 +90,6 @@ const formSchema = z.object({
   isFeatured: z.boolean().default(false).optional(),
 });
 
-const cardStyle = `hover:border-primary/20 rounded-3xl  transition-all duration-300`;
-
 export const CreateBlog = () => {
   const { data, loading, error } = useQuery(GET_POSTS);
   const [
@@ -150,7 +114,7 @@ export const CreateBlog = () => {
       mainImage: "",
       tags: [TAGS[0]! as TTag],
       categoryId: categoryOptions[0]!.value,
-      authorId: "cmhqi5ks60000gn5l82a3q268",
+      authorId: "cmi5g7m410000gp9lnw00zmbb",
       isPublished: false,
       // isFeatured: false,
     },
@@ -181,6 +145,7 @@ export const CreateBlog = () => {
         // toast.success(JSON);
         console.log({ data });
         toast.success(`${(data as CreateBlogMutation).createPost.title}`);
+        form.reset();
       },
       onError: (error: any) => {
         // toast.error(error.message);
@@ -199,7 +164,7 @@ export const CreateBlog = () => {
   const img = form.watch("mainImage");
 
   const onChangeContent = (value: Value) => {
-    console.log({ value });
+    // console.log({ value });
     setContent(value);
     form.setValue("content", value);
   };
@@ -214,11 +179,11 @@ export const CreateBlog = () => {
   }, [titleDebounced]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-full container mx-auto   ">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 container mx-auto py-6 min-h-screen ">
       <FormWrapper
         form={form}
         onSubmit={onSubmit}
-        className="flex flex-col gap-4 col-span-2"
+        className="flex flex-col gap-4 col-span-2 h-fit"
       >
         <div className="w-full flex flex-col gap-4">
           <Card className={cardStyle}>
@@ -239,7 +204,7 @@ export const CreateBlog = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className={cardStyle}>
             <CardHeader>
               <CardTitle>Slug</CardTitle>
               <CardDescription>
@@ -262,26 +227,16 @@ export const CreateBlog = () => {
             {!img ? (
               <UploadImage
                 onUploadSuccess={handleMainImageUploadSuccess}
-                className="w-full h-full object-cover rounded-2xl max-w-lg mx-auto"
+                className={`${cardStyle} w-full h-full object-cover max-w-lg mx-auto`}
                 classNameIcon="size-16"
-                classContainer={`w-full h-96 object-cover rounded-2xl mx-auto border-2 border-dashed border-primary/20 p-4 ${
+                classContainer={`w-full h-96 object-cover rounded-3xl mx-auto border-2 border-dashed border-primary/20 p-4 ${
                   form.formState.errors["mainImage"]?.message &&
                   "border-rose-500"
                 }`}
+                error={!!form.formState.errors["mainImage"]?.message}
               />
             ) : (
-              <div className="w-full h-96 xl:h-auto aspect-video relative flex justify-center items-center rounded-2xl group overflow-hidden  transition-all duration-300 ease-in-out">
-                {/* <Image
-                  src={img}
-                  alt="main-image-of-the-blog"
-                  layout="fill"
-                  sizes="(max-width: 768px) 100vw,
-                (max-width: 1200px) 80vw,
-                60vw"
-                  className="size-full min-h-20 object-cover rounded-2xl w-full "
-                  loading="lazy"
-                /> */}
-
+              <div className="w-full h-96 xl:h-auto aspect-video relative flex justify-center items-center rounded-3xl group overflow-hidden transition-all duration-300 ease-in-out">
                 <Image
                   src={img}
                   alt="main-image-of-the-blog"
@@ -355,7 +310,7 @@ export const CreateBlog = () => {
             <MultiSelectControlled name="tags" label="Tags" options={TAGS} />
           </div>
 
-          <Card className={cardStyle}>
+          <Card className={`${cardStyle}`}>
             <CardHeader>
               <CardTitle>Content</CardTitle>
               <CardDescription>
@@ -370,105 +325,12 @@ export const CreateBlog = () => {
         </div>
       </FormWrapper>
 
-      <div className="col-span-1 relative border rounded-2xl p-4">
-        <div className="sticky top-28 w-full">
-          <ButtonGroup className="grid grid-cols-3 w-full mb-4">
-            <Button variant="outline" size="icon" className="w-full">
-              <NotepadTextDashedIcon className="size-6 text-primary" />
-              <span>Draft</span>
-            </Button>
-
-            <Button
-              variant="outline"
-              type="submit"
-              size="icon"
-              className="w-full col-span-1"
-              onClick={form.handleSubmit(onSubmit)}
-            >
-              <RocketIcon className="size-6 text-primary" />
-              <span>Publish</span>
-            </Button>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <ChevronDownIcon />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="[--radius:1rem]">
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <VolumeOffIcon />
-                    Mute Conversation
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CheckIcon />
-                    Mark as Read
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <AlertTriangleIcon />
-                    Report Conversation
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <UserRoundXIcon />
-                    Block User
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <ShareIcon />
-                    Share Conversation
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CopyIcon />
-                    Copy Conversation
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem variant="destructive">
-                    <TrashIcon />
-                    Delete Conversation
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </ButtonGroup>
-
-          <div className="my-2 p-1 pl-4 bg-slate-100 rounded-xl">
-            <span className="text-sm text-slate-800 font-medium">
-              https://devs.com/blogs/{form.watch("slug")}
-            </span>
-          </div>
-
-          <BlogCard
-            title={titleDebounced || "Lets make impressive title!"}
-            description={
-              descriptionDebounced ||
-              `Lets make the description interesting and catchy - This will be the
-        first thing people see when they land on your blog post`
-            }
-            mainImage={form.watch("mainImage") || "/image.jpg"}
-            views={100}
-            tags={
-              form.watch("tags")?.map((tag: TTag) => tag.name) || [
-                "Web Development",
-                "JavaScript",
-                "React",
-              ]
-            }
-            createdAt={new Date()}
-            updatedAt={new Date()}
-            author={[
-              {
-                id: "1",
-                name: "John Doe",
-                designation: "Software Engineer",
-                image: "/image.jpg",
-              },
-            ]}
-            isBorderDefault
-          />
-        </div>
-      </div>
+      <PreviewControl
+        form={form}
+        onSubmit={form.handleSubmit(onSubmit)}
+        title={titleDebounced}
+        description={descriptionDebounced}
+      />
     </div>
   );
 };

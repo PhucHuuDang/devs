@@ -83,7 +83,24 @@ export const BlogCard = ({
           </div>
         </div>
 
-        <Image
+        <div className="relative w-full h-[180px] md:h-[220px] xl:h-[220px] 2xl:h-[300px] overflow-hidden rounded-2xl">
+          <Image
+            src={mainImage || "/image.jpg"}
+            alt={title}
+            fill
+            className={cn(
+              "object-cover transition-all duration-500 group-hover:scale-105",
+              classImage
+            )}
+            priority={true} // ưu tiên tải ảnh chính
+            // sizes="(max-width: 768px) 100vw, 50vw"
+            onError={(e) => {
+              e.currentTarget.src = "/image.jpg"; // fallback
+            }}
+          />
+        </div>
+
+        {/* <Image
           src={mainImage}
           alt={title}
           width={500}
@@ -93,7 +110,7 @@ export const BlogCard = ({
             classImage
           )}
           loading="eager"
-        />
+        /> */}
 
         <CardTitle>{title}</CardTitle>
         <CardDescription className=" h-auto min-h-20">

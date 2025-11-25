@@ -15,6 +15,7 @@ import { fetchGraphql } from "@/lib/graph-fetch";
 import Image from "next/image";
 import { isEmpty } from "lodash";
 import { baseUrl } from "@/lib/utils";
+import Link from "next/link";
 interface SlugBlogPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -196,22 +197,30 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
           }}
         />
         <div className="w-full">
-          <h1 className="text-4xl text-center font-semibold mb-10">
-            {findPostBySlug.title}
-          </h1>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-0">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl text-center font-bold mb-8 leading-tight">
+              {findPostBySlug.title}
+            </h1>
+          </div>
 
           <ReadTrack blogId={findPostBySlug.id} />
 
-          <Image
-            src={findPostBySlug.mainImage ?? ""}
-            alt={findPostBySlug.title}
-            width={1200}
-            height={630}
-            priority={true}
-            className="w-full h-full object-cover rounded-3xl mt-4 mx-auto "
-          />
+          {/* Hero Image - Optimized for performance and responsive design */}
+          <div className="relative w-full aspect-video max-w-5xl mx-auto mt-6 overflow-hidden rounded-3xl shadow-lg">
+            <Image
+              src={findPostBySlug.mainImage ?? "/image.jpg"}
+              alt={findPostBySlug.title}
+              fill
+              priority={true}
+              quality={90}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
+              className="object-cover"
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+            />
+          </div>
 
-          <div className="pl-14 mt-4">
+          <div className="max-w-5xl mx-auto mt-6 px-4 sm:px-6 lg:px-0">
             <div className="flex flex-row items-center justify-start gap-2">
               <div className="flex flex-row items-center justify-start gap-2">
                 <AnimatedTooltip items={author} />
@@ -229,10 +238,13 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
             </div>
           </div>
         </div>
-        <BlogDetailWithMode
-          data={findPostBySlug.content || []}
-          forcedMode="viewClient"
-        />
+
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-0">
+          <BlogDetailWithMode
+            data={findPostBySlug.content || []}
+            forcedMode="viewClient"
+          />
+        </div>
       </article>
     </>
   );

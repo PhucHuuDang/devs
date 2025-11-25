@@ -99,7 +99,7 @@ export function WebVitalsMonitor() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-[9999] max-w-md">
+    <div className="fixed bottom-4 right-4 z-[99999] max-w-md">
       <Card className="border-2 border-gray-700 bg-gray-900/95 p-4 shadow-2xl backdrop-blur-sm">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -229,5 +229,3 @@ function calculateSEOScore(metrics: Record<string, Metric>): number {
 
   return Math.round(score);
 }
-
-

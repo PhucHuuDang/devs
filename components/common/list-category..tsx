@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -8,10 +7,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Badge } from "../ui/badge";
 import { CategoryItem } from "../item/category-item";
-import { Home } from "lucide-react";
-import { listCategory } from "@/app/db/list-category";
+import {
+  ListCategory as TListCategory,
+  listCategory,
+} from "@/app/db/list-category";
 
 export function ListCategory() {
   return (
@@ -23,13 +23,11 @@ export function ListCategory() {
       className="w-full"
     >
       <CarouselContent>
-        {listCategory.map((category, index) => (
+        {listCategory.map((category: TListCategory, index: number) => (
           <CarouselItem
             key={index}
             className="basis-1/2 sm:basis-1/3 md:basis-1/5 lg:basis-1/7 xl:basis-1/10 2xl:basis-1/10 3xl:basis-1/12 p-2"
           >
-            {/* <CategoryItem title={`Category ${index + 1}`} icon={Home} /> */}
-
             <CategoryItem title={category.title} icon={category.icon} />
           </CarouselItem>
         ))}
