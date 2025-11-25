@@ -1,17 +1,11 @@
 import HomeBackgroundClient from "@/components/shader/home-background";
 
-const options = ["ripple", "orange", "canvas", "fire", "prims", "lightning"];
-
-const randomKey = options[Math.floor(Math.random() * options.length)];
+// Server component - can be statically generated
 export default function HomePage() {
   return (
     <>
       <div>
-        <HomeBackgroundClient shader={randomKey} />
-
-        {/* <HomeRadialBackground /> */}
-
-        {/* <Navbar /> */}
+        <HomeBackgroundClient />
       </div>
     </>
   );
