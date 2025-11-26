@@ -33,10 +33,6 @@ interface PreviewControlProps {
   onSubmit: () => void;
   title: string;
   description: string;
-  // mainImage: string;
-  // tags: string[];
-  // createdAt: Date;
-  // updatedAt: Date;
 }
 export const PreviewControl = ({
   form,

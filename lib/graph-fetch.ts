@@ -35,6 +35,7 @@ export const fetchGraphql = async <T>(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ query, variables }),
+      credentials: "include",
     });
 
     if (!res.ok) {

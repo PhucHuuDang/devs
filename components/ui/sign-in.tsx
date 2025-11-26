@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
-import { GoogleIcon } from "../icons/social-icon";
 import {
   PasswordControlled,
   passwordSchema,
@@ -14,12 +13,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { InputControlled } from "../custom/form/fields/input-controlled";
 import { toast } from "sonner";
 import { isEmpty } from "lodash";
-import { SIGN_IN } from "@/app/graphql/mutaions/auth.mutations";
+import { GITHUB, SIGN_IN } from "@/app/graphql/mutaions/auth.mutations";
 import { useMutation } from "@apollo/client/react";
 import { Spinner } from "./spinner";
 import { useAuth } from "@/app/providers/auth-provider";
-
-// --- TYPE DEFINITIONS ---
+import { GithubIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { GitHubMutation } from "@/app/graphql/__generated__/graphql";
 
 export interface Testimonial {
   avatarSrc: string;
@@ -88,6 +88,8 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   testimonials = [],
   onGoogleSignIn,
 }) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof sigInSchema>>({
     resolver: zodResolver(sigInSchema),
     defaultValues: {
@@ -100,6 +102,39 @@ export const SignInPage: React.FC<SignInPageProps> = ({
 
   const [signInMutation, { loading, client, error, called, data: signInData }] =
     useMutation(SIGN_IN);
+
+  const [
+    githubMutation,
+    {
+      loading: githubLoading,
+      client: githubClient,
+      error: githubError,
+      called: githubCalled,
+      data: githubData,
+    },
+  ] = useMutation<GitHubMutation>(GITHUB);
+
+  console.log({ githubData });
+
+  const githubSign = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/social/github", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify({ query: GITHUB }),
+      });
+
+      console.log({ res });
+
+      const data = await res.json();
+
+      console.log({ data });
+    } catch (error: any) {
+      toast.error(`Error: ${error.message}`);
+    }
+  };
 
   const onSubmit = async (data: z.infer<typeof sigInSchema>) => {
     console.log(data);
@@ -142,6 +177,12 @@ export const SignInPage: React.FC<SignInPageProps> = ({
       toast.error(`Error: ${err.message}`);
     }
   };
+
+  useEffect(() => {
+    if (githubData?.gitHub?.redirect && githubData.gitHub.url) {
+      router.push(githubData.gitHub.url);
+    }
+  }, [githubData]);
 
   return (
     <div className="h-[100dvh] flex flex-col md:flex-row font-geist w-[100dvw]">
@@ -212,11 +253,21 @@ export const SignInPage: React.FC<SignInPageProps> = ({
             </div>
 
             <button
-              onClick={onGoogleSignIn}
+              onClick={() =>
+                // githubMutation({
+                //   context: {
+                //     fetchOptions: {
+                //       credentials: "include",
+                //     },
+                //   },
+                // })
+                // githubSign()
+                (window.location.href = "http://localhost:3001/social/github")
+              }
               className="animate-element animate-delay-800 w-full flex items-center justify-center gap-3 border border-border rounded-2xl py-4 hover:bg-secondary transition-colors"
             >
-              <GoogleIcon />
-              Continue with Google
+              <GithubIcon />
+              Continue with GitHub
             </button>
 
             <p className="animate-element animate-delay-900 text-center text-sm text-muted-foreground">

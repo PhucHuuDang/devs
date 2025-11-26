@@ -112,6 +112,20 @@ export type CreateUser = {
   password?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type GitHubUserResponse = {
+  __typename?: 'GitHubUserResponse';
+  createdAt: Scalars['DateTime']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  redirect: Scalars['String']['output'];
+  token: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  url: Scalars['String']['output'];
+  user?: Maybe<UserModel>;
+};
+
 export type LikeModel = {
   __typename?: 'LikeModel';
   createdAt: Scalars['DateTime']['output'];
@@ -130,8 +144,10 @@ export type Mutation = {
   createPost: PostModel;
   createUser: UserModel;
   deletePost: PostModel;
+  gitHub: GitHubUserResponse;
   incrementViews: PostModel;
   signInEmail: SignInEmailUser;
+  signOut: Scalars['Boolean']['output'];
   signUpEmail: SignUpEmailUser;
   updatePost: PostModel;
 };
@@ -366,6 +382,11 @@ export type SignInEmailMutationVariables = Exact<{
 
 export type SignInEmailMutation = { __typename?: 'Mutation', signInEmail: { __typename?: 'SignInEmailUser', token: string, user: { __typename?: 'SignInEmailUserResponse', id: string, email?: string | null, name?: string | null } } };
 
+export type GitHubMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GitHubMutation = { __typename?: 'Mutation', gitHub: { __typename?: 'GitHubUserResponse', redirect: string, url: string } };
+
 export type CreateBlogMutationVariables = Exact<{
   title: Scalars['String']['input'];
   description: Scalars['String']['input'];
@@ -445,6 +466,14 @@ export const SignInEmailDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<SignInEmailMutation, SignInEmailMutationVariables>;
+export const GitHubDocument = new TypedDocumentString(`
+    mutation gitHub {
+  gitHub {
+    redirect
+    url
+  }
+}
+    `) as unknown as TypedDocumentString<GitHubMutation, GitHubMutationVariables>;
 export const CreateBlogDocument = new TypedDocumentString(`
     mutation CreateBlog($title: String!, $description: String!, $slug: String!, $mainImage: String!, $categoryId: String!, $tags: [String!]!, $content: JSON!, $authorId: String!, $isPublished: Boolean!) {
   createPost(

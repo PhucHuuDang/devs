@@ -4,15 +4,18 @@ import { GetPostsQuery } from "@/app/graphql/__generated__/graphql";
 import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
 import { BlogCard, BlogCardSkeleton } from "@/components/_blogs/blog-card";
 import { EmptyMediaGroup } from "@/components/empty-state/empty-media-group";
+import { NetworkErrorPage } from "@/components/exceptions/network-error-page";
+import { NetworkStatus } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
 import Link from "next/link";
 
 const BlogsPage = () => {
-  const { data, loading, error } = useQuery<GetPostsQuery>(GET_POSTS, {
-    ssr: true,
-  });
-
-  // console.log({ loading });
+  const { data, loading, error, networkStatus } = useQuery<GetPostsQuery>(
+    GET_POSTS,
+    {
+      ssr: true,
+    }
+  );
 
   if (loading) {
     return (
@@ -24,6 +27,10 @@ const BlogsPage = () => {
         </div>
       </div>
     );
+  }
+
+  if (networkStatus === NetworkStatus.error) {
+    return <NetworkErrorPage errorCode="NETWORK_CONNECTION_FAILED" />;
   }
 
   return (
