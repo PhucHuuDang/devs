@@ -20,6 +20,8 @@ import { useAuth } from "@/app/providers/auth-provider";
 import { GithubIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { GitHubMutation } from "@/app/graphql/__generated__/graphql";
+import { SOCIAL_CONSTANTS } from "@/app/constants";
+import Link from "next/link";
 
 export interface Testimonial {
   avatarSrc: string;
@@ -35,12 +37,6 @@ interface SignInPageProps {
   testimonials?: Testimonial[];
   onGoogleSignIn?: () => void;
 }
-
-const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="rounded-2xl border border-border bg-foreground/5 backdrop-blur-sm transition-colors focus-within:border-violet-400/70 focus-within:bg-violet-500/10">
-    {children}
-  </div>
-);
 
 const TestimonialCard = ({
   testimonial,
@@ -86,7 +82,6 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   description = "Access your account and continue your journey with us",
   heroImageSrc,
   testimonials = [],
-  onGoogleSignIn,
 }) => {
   const router = useRouter();
 
@@ -114,31 +109,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
     },
   ] = useMutation<GitHubMutation>(GITHUB);
 
-  console.log({ githubData });
-
-  const githubSign = async () => {
-    try {
-      const res = await fetch("http://localhost:3001/social/github", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // body: JSON.stringify({ query: GITHUB }),
-      });
-
-      console.log({ res });
-
-      const data = await res.json();
-
-      console.log({ data });
-    } catch (error: any) {
-      toast.error(`Error: ${error.message}`);
-    }
-  };
-
   const onSubmit = async (data: z.infer<typeof sigInSchema>) => {
-    console.log(data);
-
     if (isEmpty(data)) {
       toast.warning("Please fill in all fields");
       return;
@@ -253,34 +224,34 @@ export const SignInPage: React.FC<SignInPageProps> = ({
             </div>
 
             <button
-              onClick={() =>
-                // githubMutation({
-                //   context: {
-                //     fetchOptions: {
-                //       credentials: "include",
-                //     },
-                //   },
-                // })
-                // githubSign()
-                (window.location.href = "http://localhost:3001/social/github")
+              onClick={
+                () =>
+                  githubMutation({
+                    context: {
+                      fetchOptions: {
+                        credentials: "include",
+                      },
+                    },
+                  })
+                // window.location.href = "http://localhost:3001/social/github"
               }
               className="animate-element animate-delay-800 w-full flex items-center justify-center gap-3 border border-border rounded-2xl py-4 hover:bg-secondary transition-colors"
             >
               <GithubIcon />
-              Continue with GitHub
+              {SOCIAL_CONSTANTS.SIGN_IN_WITH_GITHUB}
             </button>
 
             <p className="animate-element animate-delay-900 text-center text-sm text-muted-foreground">
               New to our platform?{" "}
-              <a
+              <Link
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
                 }}
                 className="text-violet-400 hover:underline transition-colors"
               >
-                Create Account
-              </a>
+                {SOCIAL_CONSTANTS.CREATE_ACCOUNT}
+              </Link>
             </p>
           </div>
         </div>

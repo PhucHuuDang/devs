@@ -83,7 +83,7 @@ export const BlogCard = ({
           </div>
         </div>
 
-        <div className="relative w-full h-[180px] md:h-[220px] xl:h-[220px] 2xl:h-[300px] overflow-hidden rounded-2xl">
+        <div className="relative w-full aspect-video  overflow-hidden rounded-2xl">
           <Image
             src={mainImage || "/image.jpg"}
             alt={title}
@@ -100,19 +100,7 @@ export const BlogCard = ({
           />
         </div>
 
-        {/* <Image
-          src={mainImage}
-          alt={title}
-          width={500}
-          height={500}
-          className={cn(
-            `w-full h-full max-h-[500px] object-cover rounded-2xl`,
-            classImage
-          )}
-          loading="eager"
-        /> */}
-
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="mt-4">{title}</CardTitle>
         <CardDescription className=" h-auto min-h-20">
           {truncate(description, options)}
         </CardDescription>
