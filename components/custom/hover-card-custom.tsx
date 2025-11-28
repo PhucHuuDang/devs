@@ -27,7 +27,7 @@ export const HoverCardCustom = ({
   React.ComponentProps<typeof HoverCardPrimitive.Content>) => {
   return (
     <HoverCard openDelay={openDelay}>
-      <HoverCardTrigger asChild={asChild} className="cursor-pointer">
+      <HoverCardTrigger asChild={asChild} className="cursor-pointer p-0">
         {trigger}
       </HoverCardTrigger>
       <HoverCardContent className={cn("w-fit", className)} {...props}>

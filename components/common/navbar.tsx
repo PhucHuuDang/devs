@@ -3,9 +3,9 @@ import dynamic from "next/dynamic";
 
 const GlassSurface = dynamic(() => import("../GlassSurface"), { ssr: false });
 import { Logo } from "./logo";
-import { SettingsSheet } from "./settings-sheet";
 import { useGetSettings } from "@/hooks/use-get-settings";
 import { ThemeToggleButtonStyles } from "../theme/theme-toggle-button";
+import { UserControl } from "./user-control";
 
 export const Navbar = () => {
   const settings = useGetSettings();
@@ -21,7 +21,8 @@ export const Navbar = () => {
         <Logo />
         <div className="flex items-center justify-center gap-2">
           <ThemeToggleButtonStyles />
-          <SettingsSheet />
+          {/* <SettingsSheet /> */}
+          <UserControl />
         </div>
       </GlassSurface>
     </div>

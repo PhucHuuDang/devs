@@ -1,13 +1,6 @@
+import { getAuthCookies } from "@/app/utils/cookies";
 import { betterAuth } from "better-auth";
-
-/**
- * Better Auth Server Configuration
- * 
- * This is the server-side auth handler.
- * Configure your authentication providers, database, and settings here.
- * 
- * Documentation: https://www.better-auth.com/docs
- */
+import { headers } from "next/headers";
 
 export const auth = betterAuth({
   // Database configuration
@@ -16,7 +9,7 @@ export const auth = betterAuth({
     // Example with Prisma:
     // provider: "prisma",
     // url: process.env.DATABASE_URL,
-    
+
     // For now, using in-memory (development only)
     provider: "memory",
   },
@@ -57,3 +50,12 @@ export const auth = betterAuth({
  */
 export type Session = typeof auth.$Infer.Session;
 
+export const isAuthenticated = async () => {
+  const cookies = await getAuthCookies();
+
+  if (!cookies.accessToken) {
+    return false;
+  }
+
+  return true;
+};

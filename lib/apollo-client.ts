@@ -7,6 +7,12 @@ export const client = new ApolloClient({
       "http://localhost:3001/graphql",
 
     credentials: "include",
+    // headers: Object.fromEntries((await headers()).entries()),
   }),
   cache: new InMemoryCache(),
+
+  devtools: {
+    enabled: process.env.NODE_ENV === "development",
+  },
+  // ssrMode: true,
 });

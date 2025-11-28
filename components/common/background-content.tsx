@@ -1,4 +1,4 @@
-import { HOME_CONSTANTS } from "@/app/constants/home";
+import { HOME_CONSTANTS } from "@/app/constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 

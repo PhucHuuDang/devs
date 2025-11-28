@@ -80,13 +80,10 @@ const SHADER_OPTIONS = [
 type ShaderOption = (typeof SHADER_OPTIONS)[number];
 
 export default function HomeBackgroundClient({ shader }: { shader?: string }) {
-  // Random selection happens on client-side, allowing the page to be statically generated
-  // Using lazy initializer to ensure random selection only happens once on mount
   const [selectedShader] = useState<ShaderOption>(() => {
     if (shader && SHADER_OPTIONS.includes(shader as ShaderOption)) {
       return shader as ShaderOption;
     }
-    // Generate random shader only once per component mount
     return SHADER_OPTIONS[Math.floor(Math.random() * SHADER_OPTIONS.length)];
   });
 

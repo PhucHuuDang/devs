@@ -118,8 +118,6 @@ export const CreateBlog = () => {
       isPublished: false,
       // isFeatured: false,
     },
-    // mode: "onChange",
-    // reValidateMode: "onChange",
   });
 
   // console.log(form.formState.errors);
@@ -148,7 +146,6 @@ export const CreateBlog = () => {
         form.reset();
       },
       onError: (error: any) => {
-        // toast.error(error.message);
         console.error({ error });
         toast.error("Failed to create blog");
       },

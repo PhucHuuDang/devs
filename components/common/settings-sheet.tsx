@@ -58,6 +58,12 @@ import {
 } from "../ui/card";
 import { useGetSettings } from "@/hooks/use-get-settings";
 import GlassIconWrapper from "@/app/icons/glass-icon-wrapper";
+import { cn } from "@/lib/utils";
+import { HoverCardItem } from "../ui/hover-card";
+
+interface SettingsSheetProps {
+  classNameTrigger?: string;
+}
 
 const triggerStyle =
   "border rounded-lg p-2 bg-slate-500/10 hover:bg-slate-500/20 transition-all duration-300 cursor-pointer";
@@ -82,7 +88,7 @@ const Trigger = ({
   );
 };
 
-export function SettingsSheet() {
+export function SettingsSheet({ classNameTrigger }: SettingsSheetProps) {
   const isOpen = useOpenSheetSelectors.use.isOpen();
   const onOpen = useOpenSheetSelectors.use.onOpen();
   const onClose = useOpenSheetSelectors.use.onClose();
@@ -132,8 +138,17 @@ export function SettingsSheet() {
       <HoverCardCustom
         trigger={
           <SheetTrigger asChild>
-            <div>
-              <EllipsisVerticalIcon className="size-8 shadow-lg bg-slate-200 cursor-pointer  p-1 rounded-lg hover:scale-105 transition-all duration-300 hover:p-0.5 hover:bg-slate-400/20 dark:bg-slate-800 dark:hover:bg-slate-700" />
+            <div
+              className="flex items-center p-0.5 gap-1  text-base font-medium rounded-md cursor-pointer border border-transparent  hover:border-primary/80 transition-all duration-300 hover:bg-primary/10"
+              onClick={() => onOpen(true)}
+            >
+              <EllipsisVerticalIcon
+                className={cn(
+                  "size-8 shadow-lg bg-slate-200 cursor-pointer p-1 rounded-lg hover:scale-105 transition-all duration-300 hover:p-0.5 hover:bg-slate-400/20 dark:bg-slate-800 dark:hover:bg-slate-700",
+                  classNameTrigger
+                )}
+              />
+              Settings
             </div>
           </SheetTrigger>
         }
