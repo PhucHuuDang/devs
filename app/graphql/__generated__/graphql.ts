@@ -112,6 +112,12 @@ export type CreateUser = {
   password?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type GetSessionResponse = {
+  __typename?: 'GetSessionResponse';
+  session: SessionModel;
+  user: UserModel;
+};
+
 export type GitHubUserResponse = {
   __typename?: 'GitHubUserResponse';
   createdAt: Scalars['DateTime']['output'];
@@ -248,6 +254,7 @@ export type Query = {
   findPostById: PostModel;
   findPostBySlug: PostModel;
   getAccounts: Array<AccountModel>;
+  getSession: GetSessionResponse;
   postPaginated: Array<PostModel>;
   priorityPosts: Array<PostModel>;
 };
@@ -387,6 +394,11 @@ export type GitHubMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type GitHubMutation = { __typename?: 'Mutation', gitHub: { __typename?: 'GitHubUserResponse', redirect: string, url: string } };
 
+export type GetSessionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSessionQuery = { __typename?: 'Query', getSession: { __typename?: 'GetSessionResponse', session: { __typename?: 'SessionModel', token: string, expiresAt: any, userId: string, ipAddress: string, userAgent: string, createdAt: any, updatedAt: any }, user: { __typename?: 'UserModel', id: string, email?: string | null, name?: string | null, avatarUrl?: string | null, createdAt: any, updatedAt?: any | null, image?: string | null } } };
+
 export type CreateBlogMutationVariables = Exact<{
   title: Scalars['String']['input'];
   description: Scalars['String']['input'];
@@ -474,6 +486,30 @@ export const GitHubDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GitHubMutation, GitHubMutationVariables>;
+export const GetSessionDocument = new TypedDocumentString(`
+    query getSession {
+  getSession {
+    session {
+      token
+      expiresAt
+      userId
+      ipAddress
+      userAgent
+      createdAt
+      updatedAt
+    }
+    user {
+      id
+      email
+      name
+      avatarUrl
+      createdAt
+      updatedAt
+      image
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetSessionQuery, GetSessionQueryVariables>;
 export const CreateBlogDocument = new TypedDocumentString(`
     mutation CreateBlog($title: String!, $description: String!, $slug: String!, $mainImage: String!, $categoryId: String!, $tags: [String!]!, $content: JSON!, $authorId: String!, $isPublished: Boolean!) {
   createPost(

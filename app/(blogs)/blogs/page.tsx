@@ -1,6 +1,7 @@
 "use client";
 
 import { GetPostsQuery } from "@/app/graphql/__generated__/graphql";
+
 import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
 import { BlogCard, BlogCardSkeleton } from "@/components/_blogs/blog-card";
 import { EmptyMediaGroup } from "@/components/empty-state/empty-media-group";

@@ -3,6 +3,7 @@ import { ThemeProvider } from "../providers/next-theme-provider";
 import { Navbar } from "@/components/common/navbar";
 import { ListCategory } from "@/components/common/list-category.";
 import { AppleFloatingDock } from "@/components/common/apple-floating-dock";
+import { getSessionData } from "../utils/cookies";
 
 interface BlogsLayoutProps {
   children: React.ReactNode;
@@ -30,7 +31,11 @@ export const metadata: Metadata = {
   publisher: "Vercel",
 };
 
-const BlogsLayout = ({ children }: BlogsLayoutProps) => {
+const BlogsLayout = async ({ children }: BlogsLayoutProps) => {
+  const { sessionData, sessionToken } = await getSessionData();
+
+  console.log({ sessionData, sessionToken });
+
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <section className="relative h-screen w-full overflow-y-auto">

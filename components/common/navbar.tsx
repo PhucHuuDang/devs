@@ -6,7 +6,6 @@ import { Logo } from "./logo";
 import { useGetSettings } from "@/hooks/use-get-settings";
 import { ThemeToggleButtonStyles } from "../theme/theme-toggle-button";
 import { UserControl } from "./user-control";
-
 export const Navbar = () => {
   const settings = useGetSettings();
 

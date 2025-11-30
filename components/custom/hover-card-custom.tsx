@@ -14,6 +14,7 @@ interface HoverCardCustomProps {
   asChild?: boolean;
 
   openDelay?: number;
+  classNameTrigger?: string;
 }
 
 export const HoverCardCustom = ({
@@ -22,12 +23,13 @@ export const HoverCardCustom = ({
   className,
   asChild = true,
   openDelay = 300,
+  classNameTrigger = "cursor-pointer p-0",
   ...props
 }: HoverCardCustomProps &
   React.ComponentProps<typeof HoverCardPrimitive.Content>) => {
   return (
     <HoverCard openDelay={openDelay}>
-      <HoverCardTrigger asChild={asChild} className="cursor-pointer p-0">
+      <HoverCardTrigger asChild={asChild} className={classNameTrigger}>
         {trigger}
       </HoverCardTrigger>
       <HoverCardContent className={cn("w-fit", className)} {...props}>
