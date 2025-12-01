@@ -153,7 +153,7 @@ export type Mutation = {
   gitHub: GitHubUserResponse;
   incrementViews: PostModel;
   signInEmail: SignInEmailUser;
-  signOut: Scalars['Boolean']['output'];
+  signOut: SignOutResponse;
   signUpEmail: SignUpEmailUser;
   updatePost: PostModel;
 };
@@ -322,6 +322,11 @@ export type SignInInput = {
   rememberMe?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type SignOutResponse = {
+  __typename?: 'SignOutResponse';
+  success: Scalars['Boolean']['output'];
+};
+
 export type SignUpEmailResponse = {
   __typename?: 'SignUpEmailResponse';
   email?: Maybe<Scalars['String']['output']>;
@@ -340,7 +345,7 @@ export type SignUpInput = {
   callbackURL?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
   password: Scalars['String']['input'];
   rememberMe?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -388,6 +393,11 @@ export type SignInEmailMutationVariables = Exact<{
 
 
 export type SignInEmailMutation = { __typename?: 'Mutation', signInEmail: { __typename?: 'SignInEmailUser', token: string, user: { __typename?: 'SignInEmailUserResponse', id: string, email?: string | null, name?: string | null } } };
+
+export type SignOutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SignOutMutation = { __typename?: 'Mutation', signOut: { __typename?: 'SignOutResponse', success: boolean } };
 
 export type GitHubMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -478,6 +488,13 @@ export const SignInEmailDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<SignInEmailMutation, SignInEmailMutationVariables>;
+export const SignOutDocument = new TypedDocumentString(`
+    mutation signOut {
+  signOut {
+    success
+  }
+}
+    `) as unknown as TypedDocumentString<SignOutMutation, SignOutMutationVariables>;
 export const GitHubDocument = new TypedDocumentString(`
     mutation gitHub {
   gitHub {

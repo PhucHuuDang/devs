@@ -2,7 +2,9 @@
 
 import {
   EllipsisVerticalIcon,
+  FileUserIcon,
   FingerprintPattern,
+  LogOut,
   NotebookTextIcon,
   UserIcon,
 } from "lucide-react";
@@ -15,39 +17,43 @@ import { HoverCardCustom } from "../custom/hover-card-custom";
 import { cn } from "@/lib/utils";
 import { HoverCardItem } from "../ui/hover-card";
 import { getSessionData } from "@/app/utils/cookies";
-import { useQuery } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 import {
   GetSessionQuery,
   GetSessionResponse,
+  SignOutMutation,
 } from "@/app/graphql/__generated__/graphql";
-import { GET_SESSION } from "@/app/graphql/mutaions/auth.mutations";
+import { GET_SESSION, SIGN_OUT } from "@/app/graphql/mutaions/auth.mutations";
 
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
+import { useAuthClient } from "@/hooks/use-auth-client";
+import { toast } from "sonner";
 
 type TriggerProps = {
   avatarUrl: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const Trigger = forwardRef<HTMLDivElement, TriggerProps>(
-  (
-    { avatarUrl = "https://github.com/shadcn.png", className, ...props },
-    ref
-  ) => {
+  ({ avatarUrl = "", className, ...props }, ref) => {
     return (
       <div
         ref={ref}
         {...props}
         className={cn(
-          "flex items-center gap-2  rounded-full cursor-pointer border border-primary hover:border-primary/80 transition-all duration-300",
+          "flex items-center gap-2  rounded-full cursor-pointer border border-primary hover:border-primary/80 transition-all duration-300 group transition-all duration-300",
           className
         )}
       >
-        <EllipsisVerticalIcon className="size-5 bg-primary/90 text-primary-foreground rounded-md hover:scale-105 hover:bg-primary/80 transition-transform duration-300" />
+        <EllipsisVerticalIcon className="size-5 bg-primary/90 text-primary-foreground rounded-md hover:scale-105 hover:bg-primary/80 transition-transform duration-300 group-hover:bg-primary/80" />
 
         <Avatar className="size-6">
-          <AvatarImage src={avatarUrl} />
+          {avatarUrl ? (
+            <AvatarImage src={avatarUrl} />
+          ) : (
+            <UserIcon className="size-5 group-hover:text-primary/80 transition-colors duration-300" />
+          )}
           <AvatarFallback>
-            <UserIcon className="size-4" />
+            <UserIcon className="size-5 group-hover:text-primary/80 transition-colors duration-300" />
           </AvatarFallback>
         </Avatar>
       </div>
@@ -59,7 +65,28 @@ Trigger.displayName = "Trigger";
 
 export const UserControl = () => {
   const { data: sessionData } = useQuery<GetSessionQuery>(GET_SESSION);
-  console.log({ sessionData });
+
+  const [
+    signOutMutation,
+    { loading, client, error, called, data: signOutData },
+  ] = useMutation<SignOutMutation>(SIGN_OUT, {
+    context: {
+      fetchOptions: {
+        credentials: "include",
+      },
+    },
+
+    async onCompleted(data, clientOptions) {
+      toast.success("Signed out successfully");
+      await client.resetStore();
+    },
+
+    onError(error, clientOptions) {
+      toast.error("Failed to sign out");
+    },
+  });
+
+  const { isAuth } = useAuthClient();
 
   return (
     <HoverCardCustom
@@ -74,49 +101,66 @@ export const UserControl = () => {
       className="p-2"
     >
       <div className="w-[200px]">
-        <Link href="/sign-in" prefetch>
-          <HoverCardItem className="" onClick={() => {}}>
-            <div className="flex items-center gap-1">
-              <FingerprintPattern className="size-4" />
-              Sign In
-            </div>
-            <KbdGroup>
-              <Kbd>⌘b</Kbd>
-            </KbdGroup>
-          </HoverCardItem>
-        </Link>
-
-        {/* <HoverCardItem className="">
-          <KbdGroup>
-            <Kbd>⌘b</Kbd>
-          </KbdGroup>
-        </HoverCardItem> */}
-
-        <SettingsSheet classNameTrigger="size-5 p-0" />
-
-        {sessionData?.getSession.user && (
-          <Link href="/create-blog" prefetch>
+        {!isAuth && (
+          <Link href="/auth" prefetch>
             <HoverCardItem className="" onClick={() => {}}>
               <div className="flex items-center gap-1">
-                <NotebookTextIcon className="size-4" />
-                Cooking Story
+                <FingerprintPattern className="size-4" />
+                Sign In
               </div>
               <KbdGroup>
-                <Kbd>⌘</Kbd>
+                <Kbd>⌘b</Kbd>
               </KbdGroup>
             </HoverCardItem>
           </Link>
         )}
 
-        <HoverCardItem className="" onClick={() => {}}>
-          <div className="flex items-center gap-1">
-            <FingerprintPattern className="size-4" />
-            Sign In
-          </div>
-          <KbdGroup>
-            <Kbd>⌘</Kbd>
-          </KbdGroup>
-        </HoverCardItem>
+        <SettingsSheet classNameTrigger="size-5 p-0" />
+
+        {isAuth && (
+          <>
+            <Link href="/create-blog" prefetch>
+              <HoverCardItem className="" onClick={() => {}}>
+                <div className="flex items-center gap-1">
+                  <NotebookTextIcon className="size-4" />
+                  Cooking Story
+                </div>
+                <KbdGroup>
+                  <Kbd>⌘</Kbd>
+                </KbdGroup>
+              </HoverCardItem>
+            </Link>
+
+            <Link href="/profile" prefetch>
+              <HoverCardItem className="" onClick={() => {}}>
+                <div className="flex items-center gap-1">
+                  <FileUserIcon className="size-4" />
+                  Profile
+                </div>
+                <KbdGroup>
+                  <Kbd>⌘</Kbd>
+                </KbdGroup>
+              </HoverCardItem>
+            </Link>
+          </>
+        )}
+
+        {isAuth && (
+          <HoverCardItem
+            className=""
+            onClick={() => {
+              signOutMutation();
+            }}
+          >
+            <div className="flex items-center gap-1">
+              <LogOut className="size-4" />
+              Sign Out
+            </div>
+            <KbdGroup>
+              <Kbd>⌘</Kbd>
+            </KbdGroup>
+          </HoverCardItem>
+        )}
       </div>
     </HoverCardCustom>
   );

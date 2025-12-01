@@ -1,27 +1,19 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  PasswordControlled,
-  passwordSchema,
-} from "../custom/form/fields/password-controlled";
-import FormWrapper from "../custom/form/form-wrapper";
-import z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { InputControlled } from "../custom/form/fields/input-controlled";
-import { toast } from "sonner";
-import { isEmpty } from "lodash";
-import { GITHUB, SIGN_IN } from "@/app/graphql/mutaions/auth.mutations";
-import { useMutation } from "@apollo/client/react";
-import { Spinner } from "./spinner";
+
+import { GET_SESSION, GITHUB } from "@/app/graphql/mutaions/auth.mutations";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { useAuth } from "@/app/providers/auth-provider";
 import { GithubIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { GitHubMutation } from "@/app/graphql/__generated__/graphql";
 import { SOCIAL_CONSTANTS } from "@/app/constants";
 import Link from "next/link";
+import { SignInForm } from "../_auth/sign-in-form";
+import { SignUpForm } from "../_auth/sign-up-form";
+import { AnimatePresence, motion } from "framer-motion";
 
 export interface Testimonial {
   avatarSrc: string;
@@ -63,17 +55,11 @@ const TestimonialCard = ({
   </div>
 );
 
-const sigInSchema = z
-  .object({
-    email: z.string().email({
-      message: "Invalid email address",
-    }),
-    password: passwordSchema,
-  })
-  .refine((data) => data.password.length >= 8, {
-    message: "Password must be at least 8 characters",
-    path: ["password"],
-  });
+const formMotion = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, x: -20 },
+};
 
 export const SignInPage: React.FC<SignInPageProps> = ({
   title = (
@@ -85,18 +71,17 @@ export const SignInPage: React.FC<SignInPageProps> = ({
 }) => {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof sigInSchema>>({
-    resolver: zodResolver(sigInSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const { setCookies, getCookies } = useAuth();
 
-  const [signInMutation, { loading, client, error, called, data: signInData }] =
-    useMutation(SIGN_IN);
+  const { data: sessionData } = useQuery(GET_SESSION, {
+    context: {
+      fetchOptions: {
+        credentials: "include",
+      },
+    },
+  });
 
   const [
     githubMutation,
@@ -109,45 +94,9 @@ export const SignInPage: React.FC<SignInPageProps> = ({
     },
   ] = useMutation<GitHubMutation>(GITHUB);
 
-  const onSubmit = async (data: z.infer<typeof sigInSchema>) => {
-    if (isEmpty(data)) {
-      toast.warning("Please fill in all fields");
-      return;
-    }
-
-    try {
-      const res: unknown = await signInMutation({
-        variables: {
-          input: {
-            email: data.email,
-            password: data.password,
-          },
-        },
-
-        context: {
-          fetchOptions: {
-            credentials: "include",
-          },
-        },
-      });
-
-      const signInResponse = (res as any).data.signInEmail as any;
-
-      console.log({ signInResponse });
-
-      if (signInResponse?.error) {
-        console.log({ signInResponse });
-        toast.error(`Failed to sign in: ${signInResponse.error}`);
-      } else if (signInResponse?.token) {
-        await setCookies(signInResponse.token, "test-refresh-token");
-        toast.success("Signed in successfully");
-      } else {
-        toast.error("Failed to sign in");
-      }
-    } catch (err: any) {
-      toast.error(`Error: ${err.message}`);
-    }
-  };
+  const handleToggleSignUp = useCallback(() => {
+    setIsSignUp((prev) => !prev);
+  }, [setIsSignUp]);
 
   useEffect(() => {
     if (githubData?.gitHub?.redirect && githubData.gitHub.url) {
@@ -168,53 +117,28 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               {description}
             </p>
 
-            <FormWrapper form={form} className="space-y-5" onSubmit={onSubmit}>
-              <InputControlled
-                label="Email"
-                placeholder="@example.com"
-                name="email"
-                type="email"
-                classNameInput="h-12"
-              />
-
-              <div className="animate-element animate-delay-400">
-                <PasswordControlled
-                  name="password"
-                  label="Password"
-                  placeholder="Enter your password"
-                  classNameInput="h-12"
-                />
-              </div>
-
-              <div className="animate-element animate-delay-500 flex items-center justify-between text-sm">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="rememberMe"
-                    className="custom-checkbox"
-                  />
-                  <span className="text-foreground/90">Keep me signed in</span>
-                </label>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                  className="hover:underline text-violet-400 transition-colors"
-                >
-                  Reset password
-                </a>
-              </div>
-
+            <div className="w-full flex items-center justify-end">
               <button
-                type="submit"
-                className="animate-element animate-delay-600 w-full rounded-2xl bg-primary py-4 font-medium text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer flex items-center justify-center gap-2"
-                disabled={loading}
+                className="text-sm text-violet-400 hover:underline transition-all duration-300 cursor-pointer"
+                onClick={() => setIsSignUp(!isSignUp)}
               >
-                {loading ? <Spinner /> : "Sign In"}
-                {/* Sign In */}
+                {isSignUp
+                  ? "Already have an account?"
+                  : "Don't have an account?"}
               </button>
-            </FormWrapper>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {isSignUp ? (
+                <motion.div key="sign-up" {...formMotion}>
+                  <SignUpForm toggleSignUp={handleToggleSignUp} />
+                </motion.div>
+              ) : (
+                <motion.div key="sign-in" {...formMotion}>
+                  <SignInForm toggleSignIn={handleToggleSignUp} />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div className="animate-element animate-delay-700 relative flex items-center justify-center">
               <span className="w-full border-t border-border"></span>

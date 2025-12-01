@@ -4,6 +4,7 @@ import { Navbar } from "@/components/common/navbar";
 import { ListCategory } from "@/components/common/list-category.";
 import { AppleFloatingDock } from "@/components/common/apple-floating-dock";
 import { getSessionData } from "../utils/cookies";
+import { LayoutTransition } from "@/components/common/layout-transition";
 
 interface BlogsLayoutProps {
   children: React.ReactNode;
@@ -45,7 +46,7 @@ const BlogsLayout = async ({ children }: BlogsLayoutProps) => {
             <ListCategory />
           </div>
 
-          {children}
+          <LayoutTransition>{children}</LayoutTransition>
         </div>
         <AppleFloatingDock />
       </section>
