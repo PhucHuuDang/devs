@@ -1,26 +1,7 @@
-// export const fetchGraphql = async <T>(
-//   query: string,
-//   variables = {}
-// ): Promise<T> => {
-//   const res = await fetch(process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ query, variables }),
-//   });
-
-//   if (!res.ok) {
-//     console.error("GraphQL request failed:", res.status, res.statusText);
-//     return [] as unknown as T;
-//   }
-
-//   return res.json().then((r: any) => r.data as T);
-// };
-
 export const fetchGraphql = async <T>(
   query: string,
-  variables: Record<string, any> = {}
+  variables: Record<string, any> = {},
+  init: RequestInit = {}
 ): Promise<T> => {
   const endpoint = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
   if (!endpoint) {
@@ -30,12 +11,12 @@ export const fetchGraphql = async <T>(
 
   try {
     const res = await fetch(endpoint, {
+      ...init,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ query, variables }),
-      credentials: "include",
     });
 
     if (!res.ok) {

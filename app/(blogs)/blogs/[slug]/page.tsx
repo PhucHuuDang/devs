@@ -15,12 +15,14 @@ import { fetchGraphql } from "@/lib/graph-fetch";
 import Image from "next/image";
 import { isEmpty } from "lodash";
 import { baseUrl } from "@/lib/utils";
-import Link from "next/link";
+import { notFound } from "next/navigation";
 interface SlugBlogPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const dynamicParams = true;
 export const revalidate = 300;
+export const dynamic = "force-static";
 
 export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
   try {
@@ -89,7 +91,13 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
 };
 
 export async function generateSitemaps() {
-  const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
+  const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(
+    GET_POSTS_STRING,
+    {},
+    {
+      cache: "force-cache",
+    }
+  );
 
   if (allPosts.length === 0) {
     return [];
@@ -127,7 +135,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
     });
 
   if (isEmpty(findPostBySlug)) {
-    return <NotFoundPage endpoint="/blogs" />;
+    return notFound();
   }
 
   // console.log({ baseUrl });
