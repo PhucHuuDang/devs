@@ -82,14 +82,14 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
         },
       });
 
-      console.log({ res });
+      // console.log({ res });
 
       const signUpResponse = (res as any).data.signUpEmail as any;
 
-      console.log({ signUpResponse });
+      // console.log({ signUpResponse });
 
       if (signUpResponse?.error) {
-        console.log({ signUpResponse });
+        // console.log({ signUpResponse });
         toast.error(`Failed to sign in: ${signUpResponse.error}`);
       } else if (signUpResponse?.token) {
         // await setCookies(signInResponse.token, "test-refresh-token");

@@ -3,7 +3,10 @@ export const fetchGraphql = async <T>(
   variables: Record<string, any> = {},
   init: RequestInit = {}
 ): Promise<T> => {
-  const endpoint = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
+  const endpoint =
+    process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT_PRODUCTION
+      : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
   if (!endpoint) {
     console.error("GraphQL endpoint is not defined");
     return {} as T; // fallback khi chưa config endpoint

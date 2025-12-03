@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
   const apiKey = key || process.env.AI_GATEWAY_API_KEY;
 
-  console.log({ key });
+  // console.log({ key });
   if (!apiKey) {
     return NextResponse.json(
       { error: "Missing ai gateway API key." },

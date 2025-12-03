@@ -44,11 +44,11 @@ export const defaultContent: BackgroundContentProps = {
   buttons: {
     primary: {
       text: HOME_CONSTANTS.BROWSE_STORIES,
-      onClick: () => console.log("Primary button clicked"),
+      onClick: () => {},
     },
     secondary: {
       text: HOME_CONSTANTS.CONTINUE_WITH_GITHUB,
-      onClick: () => console.log("Secondary button clicked"),
+      onClick: () => {},
     },
   },
 };

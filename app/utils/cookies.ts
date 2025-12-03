@@ -18,19 +18,12 @@ export async function getSessionData() {
   const sessionData = store.get("")?.value ?? null;
   const sessionToken = store.get("devs.session_token")?.value ?? null;
 
-  console.log({ sessionToken });
-
   if (!sessionData || !sessionToken) {
     return {
       sessionData,
       sessionToken,
     };
   }
-
-  console.log({ sessionData, sessionToken });
-
-  const decoded = decodeData(sessionData);
-  // const userId = decoded.id;
 
   return {
     sessionData,

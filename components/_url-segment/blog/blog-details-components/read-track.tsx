@@ -33,7 +33,7 @@ export const ReadTrack = ({ blogId }: ReadTrackProps) => {
             },
           });
 
-          console.log("View tracked:", result.data?.views);
+          // console.log("View tracked:", result.data?.views);
 
           hasTracked.current = true;
         } catch (error) {

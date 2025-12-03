@@ -6,7 +6,6 @@ import {
 import { formatDate } from "@/app/utils/date";
 import { BlogDetailWithMode } from "@/components/_url-segment/blog/blog-details-components/blog-detail-with-mode";
 import { ReadTrack } from "@/components/_url-segment/blog/blog-details-components/read-track";
-import { NotFoundPage } from "@/components/exceptions/404-page-not-found";
 import {
   AnimatedItemsProps,
   AnimatedTooltip,

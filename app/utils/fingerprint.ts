@@ -21,7 +21,7 @@ export const getFingerprint = async (visitorId = false) => {
   const fp = await FingerprintJS.load();
   const result = await fp.get();
 
-  console.log({ result });
+  // console.log({ result });
 
   return result.visitorId;
 };

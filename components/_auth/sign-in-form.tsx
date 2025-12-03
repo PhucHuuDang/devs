@@ -53,7 +53,6 @@ export const SignInForm = memo<SignInFormProps>(({ toggleSignIn }) => {
   const router = useRouter();
 
   const onSignIn = async (data: z.infer<typeof sigInSchema>) => {
-    console.log({ data });
     if (isEmpty(data)) {
       toast.warning("Please fill in all fields");
       return;

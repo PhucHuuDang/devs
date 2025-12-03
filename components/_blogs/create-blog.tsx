@@ -141,7 +141,7 @@ export const CreateBlog = () => {
       },
       onCompleted: (data: CreateBlogMutation | unknown) => {
         // toast.success(JSON);
-        console.log({ data });
+        // console.log({ data });
         toast.success(`${(data as CreateBlogMutation).createPost.title}`);
         form.reset();
       },
