@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+
 export const fetchGraphql = async <T>(
   query: string,
   variables: Record<string, any> = {},
@@ -11,15 +13,19 @@ export const fetchGraphql = async <T>(
     console.error("GraphQL endpoint is not defined");
     return {} as T; // fallback khi chưa config endpoint
   }
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString(); // ✅ QUAN TRỌNG
 
   try {
     const res = await fetch(endpoint, {
-      ...init,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Cookie: cookieHeader,
       },
       body: JSON.stringify({ query, variables }),
+      credentials: "include",
+      ...init,
     });
 
     if (!res.ok) {

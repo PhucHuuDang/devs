@@ -85,8 +85,6 @@ const nextConfig: NextConfig = {
   compress: true,
 
   trailingSlash: false,
-
-  // cacheComponents: true,
 };
 
 export default nextConfig;

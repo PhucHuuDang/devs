@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 export default async function HomePage() {
   const cookies = await getAuthCookies();
 
-  if (cookies.accessToken) {
+  if (!cookies.accessToken || !cookies.sessionToken || !cookies.refreshToken) {
     redirect("/blogs");
   }
   return (

@@ -29,7 +29,9 @@ const sampleTestimonials: Testimonial[] = [
 const SignInPage = async () => {
   const cookies = await getAuthCookies();
 
-  if (cookies.accessToken) {
+  // console.log({ cookies });
+
+  if (!cookies.accessToken || !cookies.sessionToken || !cookies.refreshToken) {
     redirect("/blogs");
   }
 

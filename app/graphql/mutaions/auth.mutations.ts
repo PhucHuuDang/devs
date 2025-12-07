@@ -67,3 +67,28 @@ export const GET_SESSION = gql`
     }
   }
 `;
+
+export const GET_SESSION_STRING = `
+  query getSession {
+    getSession {
+      session {
+        token
+        expiresAt
+        userId
+        ipAddress
+        userAgent
+        createdAt
+        updatedAt
+      }
+      user {
+        id
+        email
+        name
+        avatarUrl
+        createdAt
+        updatedAt
+        image
+      }
+    }
+  }
+`;

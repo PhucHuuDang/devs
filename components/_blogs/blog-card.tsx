@@ -83,7 +83,7 @@ export const BlogCard = ({
           </div>
         </div>
 
-        <div className="relative w-full aspect-video  overflow-hidden rounded-2xl">
+        <div className="relative w-full aspect-video overflow-hidden rounded-2xl">
           <Image
             src={mainImage || "/image.jpg"}
             alt={title}

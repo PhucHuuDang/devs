@@ -4,12 +4,18 @@ import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import { decodeData } from "./decode";
 
+import { GetSessionQuery } from "@/app/graphql/__generated__/graphql";
+import { GET_SESSION_STRING } from "@/app/graphql/mutaions/auth.mutations";
+import { fetchGraphql } from "@/lib/graph-fetch";
+import { redirect } from "next/navigation";
+
 export async function getAuthCookies() {
   const store = await cookies();
 
   return {
-    accessToken: store.get("devs:access-token")?.value ?? null,
-    refreshToken: store.get("devs:refresh-token")?.value ?? null,
+    accessToken: store.get("devs:access_token")?.value ?? null,
+    sessionToken: store.get("devs.session_token")?.value ?? null,
+    refreshToken: store.get("devs:refresh_token")?.value ?? null,
   };
 }
 
@@ -48,4 +54,19 @@ export async function deleteCookies() {
   const store = await cookies();
   store.delete("devs:access-token");
   store.delete("devs:refresh-token");
+}
+
+export async function getSession() {
+  const data = await fetchGraphql<GetSessionQuery>(GET_SESSION_STRING);
+  return data?.getSession ?? null;
+}
+
+export async function requireAuth() {
+  const data = await getSession();
+
+  if (!data?.user) {
+    redirect("/auth");
+  }
+
+  return data;
 }

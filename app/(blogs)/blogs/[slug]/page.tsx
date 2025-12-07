@@ -122,11 +122,7 @@ export async function generateStaticParams() {
 const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
   const { slug } = await params;
 
-  const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
-
   const url = new URL(process.env.NEXT_PUBLIC_CLIENT_URL as string);
-
-  // console.log({ allPosts });
 
   const { findPostBySlug = {} as Query["findPostBySlug"] } =
     await fetchGraphql<Query>(GET_POST_BY_SLUG, {

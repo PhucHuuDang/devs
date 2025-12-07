@@ -73,8 +73,6 @@ export const SignInPage: React.FC<SignInPageProps> = ({
 
   const [isSignUp, setIsSignUp] = useState(false);
 
-  const { setCookies, getCookies } = useAuth();
-
   const { data: sessionData } = useQuery(GET_SESSION, {
     context: {
       fetchOptions: {
@@ -148,16 +146,15 @@ export const SignInPage: React.FC<SignInPageProps> = ({
             </div>
 
             <button
-              onClick={
-                () =>
-                  githubMutation({
-                    context: {
-                      fetchOptions: {
-                        credentials: "include",
-                      },
-                    },
-                  })
-                // window.location.href = "http://localhost:3001/social/github"
+              onClick={() =>
+                // githubMutation({
+                //   context: {
+                //     fetchOptions: {
+                //       credentials: "include",
+                //     },
+                //   },
+                // })
+                (window.location.href = "http://localhost:3001/social/github")
               }
               className="animate-element animate-delay-800 w-full flex items-center justify-center gap-3 border border-border rounded-2xl py-4 hover:bg-secondary transition-colors"
             >

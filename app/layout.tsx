@@ -208,7 +208,7 @@ export default function RootLayout({
           {/* Web Vitals Monitor - Only in development */}
           {process.env.NODE_ENV === "development" && <WebVitalsMonitor />}
 
-          <Toaster richColors position="top-right" />
+          <Toaster richColors position="top-right" closeButton />
 
           <ApolloWrapper>{children}</ApolloWrapper>
         </AuthProvider>

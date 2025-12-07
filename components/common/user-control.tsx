@@ -86,6 +86,8 @@ export const UserControl = () => {
     },
   });
 
+  console.log({ sessionData });
+
   const { isAuth } = useAuthClient();
 
   return (
@@ -120,7 +122,7 @@ export const UserControl = () => {
         {isAuth && (
           <>
             <Link href="/create-blog" prefetch>
-              <HoverCardItem className="" onClick={() => {}}>
+              <HoverCardItem className="">
                 <div className="flex items-center gap-1">
                   <NotebookTextIcon className="size-4" />
                   Cooking Story
@@ -132,7 +134,7 @@ export const UserControl = () => {
             </Link>
 
             <Link href="/profile" prefetch>
-              <HoverCardItem className="" onClick={() => {}}>
+              <HoverCardItem className="">
                 <div className="flex items-center gap-1">
                   <FileUserIcon className="size-4" />
                   Profile

@@ -26,7 +26,7 @@ export const HoverCardItem = ({
 }: {
   children: React.ReactNode;
   className?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }) => {
   return (
     <div

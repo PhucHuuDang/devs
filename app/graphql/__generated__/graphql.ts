@@ -112,6 +112,12 @@ export type CreateUser = {
   password?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type GetProfileResponse = {
+  __typename?: 'GetProfileResponse';
+  data?: Maybe<Scalars['JSON']['output']>;
+  user: OAuth2UserInfoModel;
+};
+
 export type GetSessionResponse = {
   __typename?: 'GetSessionResponse';
   session: SessionModel;
@@ -218,6 +224,15 @@ export type MutationUpdatePostArgs = {
   id: Scalars['String']['input'];
 };
 
+export type OAuth2UserInfoModel = {
+  __typename?: 'OAuth2UserInfoModel';
+  email?: Maybe<Scalars['String']['output']>;
+  emailVerified?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
 export type PostModel = {
   __typename?: 'PostModel';
   author: Author;
@@ -254,6 +269,7 @@ export type Query = {
   findPostById: PostModel;
   findPostBySlug: PostModel;
   getAccounts: Array<AccountModel>;
+  getProfile: GetProfileResponse;
   getSession: GetSessionResponse;
   postPaginated: Array<PostModel>;
   priorityPosts: Array<PostModel>;

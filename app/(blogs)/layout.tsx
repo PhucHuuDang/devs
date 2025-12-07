@@ -41,7 +41,9 @@ const BlogsLayout = async ({ children }: BlogsLayoutProps) => {
             <ListCategory />
           </div>
 
-          <LayoutTransition>{children}</LayoutTransition>
+          {children}
+
+          {/* <LayoutTransition>{children}</LayoutTransition> */}
         </div>
         <AppleFloatingDock />
       </section>

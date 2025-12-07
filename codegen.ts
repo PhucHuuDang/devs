@@ -1,7 +1,8 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-  schema: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+  schema:
+    process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "http://localhost:3001/graphql",
   documents: ["app/**/*.ts", "app/**/*.tsx"],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
@@ -16,5 +17,8 @@ const config: CodegenConfig = {
   allowPartialOutputs: true,
   watch: true,
 };
-
+// console.log(
+//   "NEXT_PUBLIC_GRAPHQL_ENDPOINT",
+//   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
+// );
 export default config;
