@@ -15,11 +15,13 @@ import {
   EllipsisVerticalIcon,
   HomeIcon,
   LucideIcon,
+  NavigationIcon,
   OptionIcon,
   PaletteIcon,
   RotateCwIcon,
   Settings2Icon,
   SettingsIcon,
+  ToggleLeftIcon,
   UserIcon,
   ZapIcon,
 } from "lucide-react";
@@ -49,20 +51,21 @@ import {
 import { shallow } from "zustand/shallow";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
 import { useGetSettings } from "@/hooks/use-get-settings";
 import GlassIconWrapper from "@/app/icons/glass-icon-wrapper";
 import { cn } from "@/lib/utils";
-import { HoverCardItem } from "../ui/hover-card";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
 
 interface SettingsSheetProps {
   classNameTrigger?: string;
+  isHover?: boolean;
+  inDock?: boolean;
 }
 
 const triggerStyle =
@@ -88,7 +91,10 @@ const Trigger = ({
   );
 };
 
-export function SettingsSheet({ classNameTrigger }: SettingsSheetProps) {
+export function SettingsSheet({
+  classNameTrigger,
+  isHover = false,
+}: SettingsSheetProps) {
   const isOpen = useOpenSheetSelectors.use.isOpen();
   const onOpen = useOpenSheetSelectors.use.onOpen();
   const onClose = useOpenSheetSelectors.use.onClose();
@@ -124,6 +130,12 @@ export function SettingsSheet({ classNameTrigger }: SettingsSheetProps) {
   const setDefaultSize = useSettingsGlassSurfaceSelectors.use.setDefaultSize();
   const setHoveredSize = useSettingsGlassSurfaceSelectors.use.setHoveredSize();
 
+  // navbar & dock
+  const isDockOpen = useSettingsGlassSurfaceSelectors.use.isDockOpen();
+  const isNavbarOpen = useSettingsGlassSurfaceSelectors.use.isNavbarOpen();
+  const onToggleDock = useSettingsGlassSurfaceSelectors.use.onToggleDock();
+  const onToggleNavbar = useSettingsGlassSurfaceSelectors.use.onToggleNavbar();
+
   const distortionTrigger = (
     <div className="flex items-center gap-2  w-full">
       <div className="flex items-center gap-1">
@@ -135,29 +147,45 @@ export function SettingsSheet({ classNameTrigger }: SettingsSheetProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpen}>
-      <HoverCardCustom
-        trigger={
-          <SheetTrigger asChild>
-            <div
-              className="flex items-center p-0.5 gap-1  text-base font-medium rounded-md cursor-pointer border border-transparent  hover:border-primary/80 transition-all duration-300 hover:bg-primary/10"
-              onClick={() => onOpen(true)}
-            >
-              <EllipsisVerticalIcon
-                className={cn(
-                  "size-8 shadow-lg bg-slate-200 cursor-pointer p-1 rounded-lg hover:scale-105 transition-all duration-300 hover:p-0.5 hover:bg-slate-400/20 dark:bg-slate-800 dark:hover:bg-slate-700",
-                  classNameTrigger
-                )}
-              />
-              Settings
-            </div>
-          </SheetTrigger>
-        }
-      >
-        <div className="flex items-center gap-1">
-          <SettingsIcon className="size-4" />
-          <p className="text-sm font-medium">Settings</p>
-        </div>
-      </HoverCardCustom>
+      {isHover ? (
+        <HoverCardCustom
+          trigger={
+            <SheetTrigger asChild>
+              <div
+                className="flex items-center p-0.5 gap-1  text-base font-medium rounded-md cursor-pointer border border-transparent  hover:border-primary/80 transition-all duration-300 hover:bg-primary/10"
+                onClick={() => onOpen(true)}
+              >
+                <EllipsisVerticalIcon
+                  className={cn(
+                    "size-8 shadow-lg bg-slate-200 cursor-pointer p-1 rounded-lg hover:scale-105 transition-all duration-300 hover:p-0.5 hover:bg-slate-400/20 dark:bg-slate-800 dark:hover:bg-slate-700",
+                    classNameTrigger
+                  )}
+                />
+                Settings
+              </div>
+            </SheetTrigger>
+          }
+        >
+          <div className="flex items-center gap-1">
+            <SettingsIcon className="size-4" />
+            <p className="text-sm font-medium">Settings</p>
+          </div>
+        </HoverCardCustom>
+      ) : (
+        <SheetTrigger asChild>
+          <div
+            className="flex items-center p-0.5 gap-1  text-base font-medium rounded-md cursor-pointer border border-transparent  transition-all duration-300 hover:scale-105"
+            onClick={() => onOpen(true)}
+          >
+            <EllipsisVerticalIcon
+              className={cn(
+                "size-9 shadow-lg bg-slate-200 cursor-pointer p-1 rounded-lg hover:scale-105 transition-all duration-300  hover:bg-slate-400/20 dark:bg-slate-800 dark:hover:bg-slate-700",
+                classNameTrigger
+              )}
+            />
+          </div>
+        </SheetTrigger>
+      )}
 
       <SheetContent
         className=" w-full sm:w-[600px] md:w-[700px] lg:min-w-[750px] xl:min-w-[800px] mr-0 md:mr-2 rounded-3xl
@@ -394,6 +422,58 @@ export function SettingsSheet({ classNameTrigger }: SettingsSheetProps) {
                   }}
                   value={String(settings.mixBlendMode) as MixBlendMode}
                 />
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="navbar-dock-settings">
+              <AccordionTrigger className={triggerStyle}>
+                <Trigger
+                  title="Navbar and Dock Settings"
+                  icon={ToggleLeftIcon}
+                />
+              </AccordionTrigger>
+              <AccordionContent
+                className={"flex flex-col gap-2 " + accordionContentStyle}
+              >
+                <div className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none cursor-pointer transition-all duration-300">
+                  <Switch
+                    id="dock"
+                    className="order-1 h-4 w-6 after:absolute after:inset-0 [&_span]:size-3 data-[state=checked]:[&_span]:translate-x-2.5 data-[state=checked]:[&_span]:rtl:-translate-x-2.5"
+                    aria-describedby={`dock-description`}
+                    checked={isDockOpen}
+                    onCheckedChange={onToggleDock}
+                  />
+
+                  <div className="flex grow items-center gap-3">
+                    <DockIcon className="size-5" />
+                    <div className="grid grow gap-2">
+                      <Label htmlFor="dock">Dock</Label>
+                      <p id={`dock`} className="text-muted-foreground text-xs">
+                        Show the dock in the bottom of the screen.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none cursor-pointer transition-all duration-300">
+                  <Switch
+                    id="navbar"
+                    className="order-1 h-4 w-6 after:absolute after:inset-0 [&_span]:size-3 data-[state=checked]:[&_span]:translate-x-2.5 data-[state=checked]:[&_span]:rtl:-translate-x-2.5"
+                    aria-describedby={`navbar-description`}
+                    checked={isNavbarOpen}
+                    onCheckedChange={onToggleNavbar}
+                  />
+
+                  <div className="flex grow items-center gap-3">
+                    <NavigationIcon className="size-5" />
+                    <div className="grid grow gap-2">
+                      <Label htmlFor="navbar">Navbar</Label>
+                      <p id={`dock`} className="text-muted-foreground text-xs">
+                        Show the navbar in the top of the screen.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>

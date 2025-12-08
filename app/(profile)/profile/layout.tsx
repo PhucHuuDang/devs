@@ -7,6 +7,7 @@ import {
   GET_SESSION,
   GET_SESSION_STRING,
 } from "@/app/graphql/mutaions/auth.mutations";
+import { ThemeProvider } from "@/app/providers/next-theme-provider";
 import { getAuthCookies, getSession } from "@/app/utils/cookies";
 import { fetchGraphql } from "@/lib/graph-fetch";
 import { isEmpty } from "lodash";
@@ -55,9 +56,11 @@ const ProfileLayout = async ({ children }: ProfileLayoutProps) => {
   console.log({ user });
 
   return (
-    <div className="min-h-screen w-full ">
-      <div className="container mx-auto p-10">{children}</div>
-    </div>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <div className="min-h-screen w-full ">
+        <div className="container mx-auto p-10">{children}</div>
+      </div>
+    </ThemeProvider>
   );
 };
 

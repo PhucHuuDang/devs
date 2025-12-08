@@ -67,6 +67,7 @@ const nextConfig: NextConfig = {
       "@platejs/autoformat",
       "@platejs/basic-nodes",
       "@platejs/basic-styles",
+      "motion",
     ],
 
     // viewTransition: true,

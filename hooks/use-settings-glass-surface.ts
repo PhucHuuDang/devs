@@ -18,6 +18,14 @@ export interface UseDockSizeProps {
   onReset: () => void;
 }
 
+export interface UseNavbarDockProps {
+  isDockOpen: boolean;
+  isNavbarOpen: boolean;
+
+  onToggleDock: () => void;
+  onToggleNavbar: () => void;
+}
+
 export type MixBlendMode =
   | "normal"
   | "multiply"
@@ -38,7 +46,8 @@ export type MixBlendMode =
   | "plus-darker"
   | "plus-lighter";
 
-interface SettingsActions {
+export interface SettingsActions
+  extends Pick<UseNavbarDockProps, "onToggleNavbar" | "onToggleDock"> {
   getSettings: () => SettingStates;
   setBrightness: (brightness: number) => void;
   setOpacity: (opacity: number) => void;
@@ -83,7 +92,8 @@ export type SettingStates = Omit<
   GlassSurfaceProps,
   "children" | "className" | "style" | "childClassName" | "width" | "height"
 > &
-  Pick<UseDockSizeProps, "defaultSize" | "hoveredSize">;
+  Pick<UseDockSizeProps, "defaultSize" | "hoveredSize"> &
+  Pick<UseNavbarDockProps, "isDockOpen" | "isNavbarOpen">;
 
 export const defaultSettings: SettingStates = {
   borderRadius: 20,
@@ -106,6 +116,10 @@ export const defaultSettings: SettingStates = {
 
   defaultSize: 28,
   hoveredSize: 100,
+
+  // navbar & dock
+  isDockOpen: false,
+  isNavbarOpen: true,
 };
 
 export const useSettingsGlassSurface = createWithEqualityFn<
@@ -191,6 +205,16 @@ export const useSettingsGlassSurface = createWithEqualityFn<
             state.hoveredSize = value;
           });
         },
+
+        onToggleDock: () =>
+          set((state) => {
+            state.isDockOpen = !state.isDockOpen;
+          }),
+
+        onToggleNavbar: () =>
+          set((state) => {
+            state.isNavbarOpen = !state.isNavbarOpen;
+          }),
       };
     }),
     {

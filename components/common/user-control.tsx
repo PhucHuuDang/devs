@@ -86,7 +86,7 @@ export const UserControl = () => {
     },
   });
 
-  console.log({ sessionData });
+  // console.log({ sessionData });
 
   const { isAuth } = useAuthClient();
 
@@ -95,7 +95,6 @@ export const UserControl = () => {
       classNameTrigger="p-1"
       trigger={
         <Trigger avatarUrl={sessionData?.getSession?.user?.image ?? ""} />
-        // test
       }
       asChild={true}
       openDelay={200}
@@ -117,7 +116,7 @@ export const UserControl = () => {
           </Link>
         )}
 
-        <SettingsSheet classNameTrigger="size-5 p-0" />
+        <SettingsSheet classNameTrigger="size-5 p-0" isHover />
 
         {isAuth && (
           <>

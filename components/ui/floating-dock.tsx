@@ -11,22 +11,107 @@ import {
   useTransform,
 } from "motion/react";
 
+import {
+  IconBrandX,
+  IconExchange,
+  IconHome,
+  IconNewSection,
+  IconTerminal2,
+} from "@tabler/icons-react";
+
 import { useRef, useState } from "react";
 import { useGetSettings } from "@/hooks/use-get-settings";
+import Image from "next/image";
+import { SettingsSheet } from "../common/settings-sheet";
+
+export interface IconContainerProps {
+  mouseX: MotionValue;
+  title: string;
+  icon: React.ReactNode;
+  href: string;
+
+  isSettings?: boolean;
+  onClick?: () => void;
+}
+
+const links: Omit<IconContainerProps, "mouseX">[] = [
+  {
+    title: "Home",
+    icon: (
+      <IconHome className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+    ),
+    href: "#",
+  },
+
+  {
+    title: "Products",
+    icon: (
+      <IconTerminal2 className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+    ),
+    href: "#",
+  },
+  {
+    title: "Components",
+    icon: (
+      <IconNewSection className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+    ),
+    href: "#",
+  },
+  {
+    title: "Aceternity UI",
+    icon: (
+      <Image
+        src="https://assets.aceternity.com/logo-dark.png"
+        width={20}
+        height={20}
+        className="h-full w-full"
+        alt="Aceternity Logo"
+      />
+    ),
+    href: "#",
+  },
+  {
+    title: "Changelog",
+    icon: (
+      <IconExchange className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+    ),
+    href: "#",
+  },
+
+  {
+    title: "Twitter",
+    icon: (
+      <IconBrandX className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+    ),
+    href: "#",
+  },
+  {
+    title: "ComponentsTest",
+    icon: (
+      <IconNewSection className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+    ),
+    href: "#",
+  },
+
+  {
+    title: "Settings",
+    icon: <SettingsSheet inDock={true} />,
+    href: "#",
+  },
+];
 
 export const FloatingDock = ({
-  items,
   desktopClassName,
   mobileClassName,
 }: {
-  items: { title: string; icon: React.ReactNode; href: string }[];
+  items?: Omit<IconContainerProps, "mouseX">[];
   desktopClassName?: string;
   mobileClassName?: string;
 }) => {
   return (
     <>
-      <FloatingDockDesktop items={items} className={desktopClassName} />
-      <FloatingDockMobile items={items} className={mobileClassName} />
+      <FloatingDockDesktop items={links} className={desktopClassName} />
+      <FloatingDockMobile items={links} className={mobileClassName} />
     </>
   );
 };
@@ -94,33 +179,58 @@ const FloatingDockDesktop = ({
   className?: string;
 }) => {
   const mouseX = useMotionValue(Infinity);
+
+  const { isDockOpen, isNavbarOpen } = useGetSettings();
+
+  const visibleItems = isNavbarOpen
+    ? items.filter((i) => i.title !== "Settings")
+    : items;
+
   return (
-    <motion.div
-      onMouseMove={(e) => mouseX.set(e.pageX)}
-      onMouseLeave={() => mouseX.set(Infinity)}
-      className={cn(
-        "mx-auto hidden h-16 items-end gap-2 rounded-2xl bg-gray-50 px-4 pb-3 md:flex dark:bg-neutral-900",
-        className
+    <AnimatePresence>
+      {isDockOpen && (
+        <motion.div
+          onMouseMove={(e) => mouseX.set(e.pageX)}
+          onMouseLeave={() => mouseX.set(Infinity)}
+          className={cn(
+            "mx-auto hidden h-16 items-end gap-2 rounded-2xl bg-gray-50 px-4 pb-3 md:flex dark:bg-neutral-900",
+            className
+          )}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{
+            opacity: 0,
+            y: 10,
+          }}
+          transition={{
+            duration: 0.3,
+            delay: 0.3,
+            // type: "spring",
+            stiffness: 260,
+            damping: 10,
+          }}
+        >
+          <>
+            {items.map((item) => (
+              <IconContainer mouseX={mouseX} key={item.title} {...item} />
+            ))}
+
+            {/* <SettingsSheet /> */}
+          </>
+        </motion.div>
       )}
-    >
-      {items.map((item) => (
-        <IconContainer mouseX={mouseX} key={item.title} {...item} />
-      ))}
-    </motion.div>
+    </AnimatePresence>
   );
 };
 
-function IconContainer({
+export function IconContainer({
   mouseX,
   title,
   icon,
   href,
-}: {
-  mouseX: MotionValue;
-  title: string;
-  icon: React.ReactNode;
-  href: string;
-}) {
+  isSettings = false,
+  onClick,
+}: IconContainerProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   const distance = useTransform(mouseX, (val) => {
@@ -177,33 +287,15 @@ function IconContainer({
 
   const [hovered, setHovered] = useState(false);
 
-  return (
+  return !isSettings ? (
     <a href={href}>
       <motion.div
         ref={ref}
         style={{ width, height }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="relative flex aspect-square items-center justify-center rounded-full "
-        // className="flex items-center justify-center aspect-square rounded-full bg-gray-200 dark:bg-neutral-800 "
+        className="relative flex aspect-square items-center justify-center rounded-full"
       >
-        {/* <GlassSurface
-          {...settings}
-          width={undefined} // bỏ cố định width
-          height={undefined}
-          style={{
-            backgroundColor: "red",
-            width: "100%",
-            height: "100%",
-          }}
-          borderRadius={100}
-          childClassName={cn(
-            "relative flex items-center justify-center rounded-full transition-all duration-300 w-full h-full",
-            hovered
-              ? "shadow-lg shadow-gray-300/20 dark:shadow-neutral-700/30"
-              : ""
-          )}
-        > */}
         <AnimatePresence>
           {hovered && (
             <motion.div
@@ -226,8 +318,39 @@ function IconContainer({
         >
           {icon}
         </motion.div>
-        {/* </GlassSurface> */}
       </motion.div>
     </a>
+  ) : (
+    <motion.div
+      ref={ref}
+      style={{ width, height }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="relative flex aspect-square items-center justify-center rounded-full cursor-pointer"
+      onClick={onClick}
+    >
+      <AnimatePresence>
+        {hovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: 2, x: "-50%" }}
+            className="absolute -top-8 left-1/2 w-fit rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs whitespace-pre text-neutral-700 dark:border-neutral-900 dark:bg-neutral-800 dark:text-white"
+          >
+            {title}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        style={{
+          width: widthIcon,
+          height: heightIcon,
+        }}
+        className="flex items-center justify-center transition duration-300"
+      >
+        {icon}
+      </motion.div>
+    </motion.div>
   );
 }

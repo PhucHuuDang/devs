@@ -9,6 +9,7 @@ import {
   IconTerminal2,
 } from "@tabler/icons-react";
 import Image from "next/image";
+import { Settings2Icon } from "lucide-react";
 
 export function AppleFloatingDock() {
   const links = [
@@ -63,15 +64,15 @@ export function AppleFloatingDock() {
       href: "#",
     },
     {
-      title: "GitHub",
+      title: "Components",
       icon: (
-        <IconBrandGithub className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+        <IconNewSection className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
       href: "#",
     },
   ];
   return (
-    <div className="fixed bottom-4 left-0 right-0    flex items-center justify-center w-full">
+    <div className="fixed bottom-4 left-0 right-0 flex items-center justify-center w-full">
       <FloatingDock
         mobileClassName="translate-y-20" // only for demo, remove for production
         items={links}

@@ -21,6 +21,9 @@ export const useGetSettings = () => {
 
     defaultSize: useSettingsGlassSurfaceSelectors.use.defaultSize?.(),
     hoveredSize: useSettingsGlassSurfaceSelectors.use.hoveredSize?.(),
+
+    isDockOpen: useSettingsGlassSurfaceSelectors.use.isDockOpen?.(),
+    isNavbarOpen: useSettingsGlassSurfaceSelectors.use.isNavbarOpen?.(),
   };
 
   return settings;
