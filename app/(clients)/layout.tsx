@@ -5,7 +5,7 @@ import { ListCategory } from "@/components/common/list-category.";
 import { AppleFloatingDock } from "@/components/common/apple-floating-dock";
 import { LayoutTransition } from "@/components/common/layout-transition";
 
-interface BlogsLayoutProps {
+interface ClientsLayoutProps {
   children: React.ReactNode;
 }
 export const metadata: Metadata = {
@@ -31,15 +31,15 @@ export const metadata: Metadata = {
   publisher: "Vercel",
 };
 
-const BlogsLayout = async ({ children }: BlogsLayoutProps) => {
+const ClientsLayout = async ({ children }: ClientsLayoutProps) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <section className="relative h-screen w-full overflow-y-auto">
         <Navbar />
         <div className="pt-28 px-10 w-full">
-          <div className="w-full px-2">
+          {/* <div className="w-full px-2">
             <ListCategory />
-          </div>
+          </div> */}
 
           {children}
 
@@ -51,4 +51,4 @@ const BlogsLayout = async ({ children }: BlogsLayoutProps) => {
   );
 };
 
-export default BlogsLayout;
+export default ClientsLayout;

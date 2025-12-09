@@ -203,10 +203,10 @@ export default function RootLayout({
           deleteCookies={deleteCookies}
         >
           {/* Web Vitals tracking for all users */}
-          <WebVitals />
+          {/* <WebVitals /> */}
 
           {/* Web Vitals Monitor - Only in development */}
-          {process.env.NODE_ENV === "development" && <WebVitalsMonitor />}
+          {/* {process.env.NODE_ENV === "development" && <WebVitalsMonitor />} */}
 
           <Toaster richColors position="top-right" closeButton />
 

@@ -7,11 +7,19 @@ import { Logo } from "./logo";
 import { useGetSettings } from "@/hooks/use-get-settings";
 import { ThemeToggleButtonStyles } from "../theme/theme-toggle-button";
 import { UserControl } from "./user-control";
+import { useEffect } from "react";
+import { useSettingsGlassSurfaceSelectors } from "@/hooks/use-settings-glass-surface";
 
 export const Navbar = () => {
   const settings = useGetSettings();
 
-  const { isNavbarOpen } = settings;
+  const onToggleNavbar = useSettingsGlassSurfaceSelectors.use.onToggleNavbar();
+
+  const { isNavbarOpen, isDockOpen } = settings;
+
+  useEffect(() => {
+    if (!isNavbarOpen && !isDockOpen) onToggleNavbar();
+  }, [isNavbarOpen, isDockOpen, onToggleNavbar]);
 
   return (
     <AnimatePresence>
