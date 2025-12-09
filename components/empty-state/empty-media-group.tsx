@@ -26,7 +26,7 @@ export const EmptyMediaGroup = ({
   className,
 }: EmptyMediaGroupProps) => {
   return (
-    <Empty className={cn("min-h-[500px] ", className)}>
+    <Empty className={cn("aspect-video h-full w-full ", className)}>
       <EmptyHeader>
         <EmptyMedia>
           <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:size-12 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">

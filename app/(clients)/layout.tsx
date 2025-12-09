@@ -34,9 +34,9 @@ export const metadata: Metadata = {
 const ClientsLayout = async ({ children }: ClientsLayoutProps) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <section className="relative h-screen w-full overflow-y-auto">
+      <section className="h-screen w-full">
         <Navbar />
-        <div className="pt-28 px-10 w-full">
+        <div className="pt-28 px-10 w-full h-full">
           {/* <div className="w-full px-2">
             <ListCategory />
           </div> */}

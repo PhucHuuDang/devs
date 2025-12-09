@@ -61,7 +61,7 @@ export function NetworkErrorPage({
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-6">
+    <main className=" aspect-video h-full w-full flex items-center justify-center px-6 ">
       <div className="max-w-md w-full text-center">
         {/* Icon */}
         <div className="mb-8 flex justify-center">

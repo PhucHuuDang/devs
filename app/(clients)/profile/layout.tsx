@@ -35,7 +35,7 @@ import {
 } from "@/components/animate-ui/components/radix/sidebar";
 import { SidebarProfile } from "@/components/_url-segment/profile/sidebar-profile";
 
-interface ProfilePageProps {
+interface BlogLayoutProps {
   children: React.ReactNode;
 }
 
@@ -65,22 +65,18 @@ interface ProfilePageProps {
 //   };
 // }
 
-const ProfilePage = async () => {
-  const data = await getSession();
-  const user = data?.user;
-
-  // if (!user?.id) {
-  //   redirect("/auth");
-  // }
-
-  console.log({ user });
+const BlogLayout = ({ children }: BlogLayoutProps) => {
   return (
-    <div className="bg-red-500 h-full p-2 md:p-4 lg:p-6 xl:p-8">
-      {/* <div className=" w-full h-full p-4 rounded-sm"> */}
-      <SidebarProfile />
-      {/* </div> */}
+    <div>
+      <div className="bg-red-500 h-full p-2 md:p-4 lg:p-6 xl:p-8">
+        {/* <div className=" w-full h-full p-4 rounded-sm"> */}
+        <SidebarProfile />
+        {/* </div> */}
+      </div>
+
+      {children}
     </div>
   );
 };
 
-export default ProfilePage;
+export default BlogLayout;
