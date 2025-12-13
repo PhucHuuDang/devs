@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
     // viewTransition: true,
 
     // Better client-side caching for improved navigation
-    clientSegmentCache: true,
+    // clientSegmentCache: true,
 
     // Optimize navigation and rendering
     prerenderEarlyExit: true,
