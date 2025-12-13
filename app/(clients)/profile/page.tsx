@@ -34,6 +34,7 @@ import {
   SidebarProvider,
 } from "@/components/animate-ui/components/radix/sidebar";
 import { SidebarProfile } from "@/components/_url-segment/profile/sidebar-profile";
+import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
 
 interface ProfilePageProps {
   children: React.ReactNode;
@@ -73,14 +74,8 @@ const ProfilePage = async () => {
   //   redirect("/auth");
   // }
 
-  console.log({ user });
-  return (
-    <div className="bg-red-500 h-full p-2 md:p-4 lg:p-6 xl:p-8">
-      {/* <div className=" w-full h-full p-4 rounded-sm"> */}
-      <SidebarProfile />
-      {/* </div> */}
-    </div>
-  );
+  // console.log({ user });
+  return <SidebarInsetContent />;
 };
 
 export default ProfilePage;

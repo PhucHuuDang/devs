@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ChevronRight,
   ChevronsUpDown,
@@ -53,20 +55,21 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { DynamicBreadcrumbs } from "./dynamic-breadcrumbs";
 
-interface UserProps {
+export interface UserProps {
   name: string;
   email: string;
   avatarUrl: string;
 }
 
-interface TeamProps {
+export interface TeamProps {
   name: string;
   logo: LucideIcon;
   plan: string;
 }
 
-interface NavMainProps {
+export interface NavMainProps {
   title: string;
   url: string;
   icon: LucideIcon;
@@ -93,15 +96,21 @@ interface ProjectProps {
   }[];
 }
 
-interface DataProps {
+export interface DataProps {
   user?: UserProps;
-  teams?: TeamProps[];
+  teams?: {
+    label: string;
+    items: TeamProps[];
+  };
 
-  navMain: {
+  navMain?: {
     label: string;
     items: NavMainProps[];
   };
-  projects?: ProjectProps[];
+  projects?: {
+    label: string;
+    items: ProjectProps[];
+  };
 }
 
 export const SidebarInsetHeader = ({
@@ -132,10 +141,7 @@ export const SidebarHeaderChunk = ({
   isMobile: boolean;
   activeTeam: TeamProps;
   setActiveTeam: (team: TeamProps) => void;
-  teams: {
-    label: string;
-    items: TeamProps[];
-  };
+  teams: DataProps["teams"];
 }) => {
   return (
     <SidebarHeader>
@@ -166,9 +172,9 @@ export const SidebarHeaderChunk = ({
               sideOffset={4}
             >
               <DropdownMenuLabel className="text-xs text-muted-foreground">
-                {teams.label}
+                {teams?.label}
               </DropdownMenuLabel>
-              {teams.items.map((team, index) => (
+              {teams?.items.map((team, index) => (
                 <DropdownMenuItem
                   key={team.name}
                   onClick={() => setActiveTeam(team)}
@@ -207,10 +213,10 @@ export const SidebarGroupCollapseChunk = ({
 }) => {
   return (
     <SidebarGroup className={className} {...props}>
-      <SidebarGroupLabel>{navMain.label}</SidebarGroupLabel>
+      <SidebarGroupLabel>{navMain?.label}</SidebarGroupLabel>
 
       <SidebarMenu>
-        {navMain.items.map((item) => {
+        {navMain?.items.map((item) => {
           return (
             <Collapsible
               key={item.title}
@@ -259,20 +265,17 @@ export const SidebarGroupProjectChunk = ({
   ...props
 }: React.ComponentProps<"div"> & {
   isMobile: boolean;
-  projects: {
-    label: string;
-    items: ProjectProps[];
-  };
+  projects: DataProps["projects"];
 }) => {
   return (
     <SidebarGroup
       className={cn("group-data-[collapsible=icon]:hidden", className)}
       {...props}
     >
-      <SidebarGroupLabel>{projects.label}</SidebarGroupLabel>
+      <SidebarGroupLabel>{projects?.label}</SidebarGroupLabel>
 
       <SidebarMenu>
-        {projects.items.map((item) => {
+        {projects?.items.map((item) => {
           return (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
@@ -323,39 +326,48 @@ export const SidebarGroupProjectChunk = ({
   );
 };
 
-export const SidebarInsetContent = ({ user }: { user: UserProps }) => {
+export const SidebarInsetContent = () => {
   return (
     <SidebarInset>
       <SidebarInsetHeader>
-        <div className="flex flex-col gap-4">
-          <div className="flex  gap-2">
-            <Avatar className="size-15">
-              <AvatarImage
-                src={user?.avatarUrl ?? "/image.jpg"}
-                alt={user?.name ?? "N/A"}
-              />
-              <AvatarFallback>{user?.name?.charAt(0) ?? "N/A"}</AvatarFallback>
-            </Avatar>
-            <div>
-              <h2 className="text-2xl font-bold text-primary">
-                {user?.name ?? "N/A"}
-              </h2>
-              <p className="text-sm text-primary font-semibold">
-                Your personal account
-              </p>
-            </div>
+        <div className="">
+          <div className="flex items-center gap-2 px-4">
+            {/* <div className="mb-4 " /> */}
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            {/* <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">
+                    Building Your Application
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb> */}
+
+            <DynamicBreadcrumbs />
           </div>
         </div>
       </SidebarInsetHeader>
 
       {/* Skeleton */}
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-          <div className="aspect-video rounded-xl bg-muted/50" />
-          <div className="aspect-video rounded-xl bg-muted/50" />
-          <div className="aspect-video rounded-xl bg-muted/50" />
-        </div>
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+        {Array.from({ length: 10 }).map((_, index) => {
+          return (
+            <div key={index}>
+              <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+                <div className="aspect-video rounded-xl bg-muted/50" />
+                <div className="aspect-video rounded-xl bg-muted/50" />
+                <div className="aspect-video rounded-xl bg-muted/50" />
+              </div>
+              <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+            </div>
+          );
+        })}
       </div>
     </SidebarInset>
   );

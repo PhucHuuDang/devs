@@ -68,13 +68,11 @@ interface BlogLayoutProps {
 const BlogLayout = ({ children }: BlogLayoutProps) => {
   return (
     <div>
-      <div className="bg-red-500 h-full p-2 md:p-4 lg:p-6 xl:p-8">
-        {/* <div className=" w-full h-full p-4 rounded-sm"> */}
-        <SidebarProfile />
-        {/* </div> */}
+      <div className="h-full p-2 md:p-4 lg:p-6">
+        <SidebarProfile>{children}</SidebarProfile>
       </div>
 
-      {children}
+      {/* {children} */}
     </div>
   );
 };
