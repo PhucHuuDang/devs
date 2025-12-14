@@ -8,10 +8,9 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Home, HomeIcon, LucideIcon, SlashIcon } from "lucide-react";
-import { div } from "motion/react-client";
-import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { HomeIcon, LucideIcon, SlashIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import React, { useMemo } from "react";
 
 import {
   DropdownMenu,
@@ -38,11 +37,15 @@ export const DynamicBreadcrumbs = ({ icons = [] }: BreadcrumbProps) => {
         icon: HomeIcon,
       },
 
-      ...paths.map((path, i) => ({
-        href: `/${paths.slice(0, i + 1).join("/")}`,
-        label: path.charAt(0).toUpperCase() + path.slice(1),
-        icon: icons?.[i],
-      })),
+      ...paths.map((path, i) => {
+        const label = path.includes("-") ? path.replace("-", " ") : path;
+
+        return {
+          href: `/${paths.slice(0, i + 1).join("/")}`,
+          label: label.charAt(0).toUpperCase() + label.slice(1),
+          icon: icons?.[i],
+        };
+      }),
     ];
   }, [pathname, icons]);
 
@@ -69,17 +72,17 @@ export const DynamicBreadcrumbs = ({ icons = [] }: BreadcrumbProps) => {
                 {first.icon && <first.icon className="size-4" />}
                 {first.label}
               </BreadcrumbLink>
-              <BreadcrumbSeparator>
-                <SlashIcon />
-              </BreadcrumbSeparator>
             </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <SlashIcon />
+            </BreadcrumbSeparator>
 
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <BreadcrumbEllipsis className="size-4 cursor-pointer" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="flex flex-col gap-2 cursor-pointer">
-                {middle.map((bread, index) => {
+                {middle.map((bread) => {
                   return (
                     <DropdownMenuItem
                       key={bread.href}
@@ -108,22 +111,25 @@ export const DynamicBreadcrumbs = ({ icons = [] }: BreadcrumbProps) => {
           </>
         ) : (
           breadcrumbs.map((bread, index) => {
+            const isLast = index === breadcrumbs.length - 1;
             return (
-              <BreadcrumbItem key={bread.href}>
-                <BreadcrumbLink
-                  href={bread.href}
-                  className="flex items-center gap-1"
-                >
-                  {bread.icon && <bread.icon className="size-4" />}
+              <React.Fragment key={bread.href}>
+                <BreadcrumbItem key={bread.href}>
+                  <BreadcrumbLink
+                    href={bread.href}
+                    className="flex items-center gap-1"
+                  >
+                    {bread.icon && <bread.icon className="size-4" />}
 
-                  {bread.label}
-                </BreadcrumbLink>
-                {index !== breadcrumbs.length - 1 && (
-                  <BreadcrumbSeparator>
+                    {bread.label}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                {!isLast && (
+                  <BreadcrumbSeparator key={`separator-${bread.href}`}>
                     <SlashIcon />
                   </BreadcrumbSeparator>
                 )}
-              </BreadcrumbItem>
+              </React.Fragment>
             );
           })
         )}

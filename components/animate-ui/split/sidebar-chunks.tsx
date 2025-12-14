@@ -1,11 +1,16 @@
 "use client";
 
 import {
+  BadgeCheckIcon,
+  BellIcon,
   ChevronRight,
   ChevronsUpDown,
+  CreditCardIcon,
+  LogOutIcon,
   LucideIcon,
   MoreHorizontal,
   Plus,
+  SparklesIcon,
 } from "lucide-react";
 import {
   SidebarProvider,
@@ -42,20 +47,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/animate-ui/components/radix/dropdown-menu";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { DynamicBreadcrumbs } from "./dynamic-breadcrumbs";
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export interface UserProps {
   name: string;
@@ -239,10 +235,10 @@ export const SidebarGroupCollapseChunk = ({
                       return (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
+                            <Link prefetch href={subItem.url}>
                               {subItem.logo && <subItem.logo />}
                               <span>{subItem.title}</span>
-                            </a>
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       );
@@ -279,10 +275,10 @@ export const SidebarGroupProjectChunk = ({
           return (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
-                <a href={item.url}>
+                <Link prefetch href={item.url}>
                   <item.icon />
                   <span>{item.name}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
 
               <DropdownMenu>
@@ -326,49 +322,113 @@ export const SidebarGroupProjectChunk = ({
   );
 };
 
-export const SidebarInsetContent = () => {
+export const SidebarInsetContent = ({
+  isSidebarInset = true,
+  children,
+}: {
+  isSidebarInset: boolean;
+  children: React.ReactNode;
+}) => {
   return (
     <SidebarInset>
       <SidebarInsetHeader>
         <div className="">
           <div className="flex items-center gap-2 px-4">
             {/* <div className="mb-4 " /> */}
-            <SidebarTrigger className="-ml-1" />
+            {isSidebarInset && <SidebarTrigger className="-ml-1" />}
             <Separator orientation="vertical" className="mr-2 h-4" />
-            {/* <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb> */}
 
             <DynamicBreadcrumbs />
           </div>
         </div>
       </SidebarInsetHeader>
 
-      {/* Skeleton */}
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        {Array.from({ length: 10 }).map((_, index) => {
-          return (
-            <div key={index}>
-              <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div className="aspect-video rounded-xl bg-muted/50" />
-                <div className="aspect-video rounded-xl bg-muted/50" />
-                <div className="aspect-video rounded-xl bg-muted/50" />
-              </div>
-              <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-            </div>
-          );
-        })}
-      </div>
+      {children}
     </SidebarInset>
+  );
+};
+
+export const SidebarFooterChunk = ({
+  user,
+  isMobile,
+}: {
+  user: DataProps["user"];
+  isMobile: boolean;
+}) => {
+  if (!user) return null;
+
+  return (
+    <SidebarFooter>
+      {/* Nav User */}
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={user?.avatarUrl} alt={user?.name} />
+                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">{user?.name}</span>
+                  <span className="truncate text-xs">{user?.email}</span>
+                </div>
+                <ChevronsUpDown className="ml-auto size-4" />
+              </SidebarMenuButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              side={isMobile ? "bottom" : "right"}
+              align="end"
+              sideOffset={4}
+            >
+              <DropdownMenuLabel className="p-0 font-normal">
+                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage src={user?.avatarUrl} alt={user?.name} />
+                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">{user?.name}</span>
+                    <span className="truncate text-xs">{user?.email}</span>
+                  </div>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <SparklesIcon />
+                  Upgrade to Pro
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <BadgeCheckIcon />
+                  Account
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <CreditCardIcon />
+                  Billing
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <BellIcon />
+                  Notifications
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <LogOutIcon />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
+      {/* Nav User */}
+    </SidebarFooter>
   );
 };

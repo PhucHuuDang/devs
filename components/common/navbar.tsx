@@ -2,7 +2,10 @@
 import dynamic from "next/dynamic";
 
 import { AnimatePresence, motion } from "motion/react";
-const GlassSurface = dynamic(() => import("../GlassSurface"), { ssr: false });
+const GlassSurface = dynamic(() => import("../GlassSurface"), {
+  ssr: false,
+  loading: () => <div className="w-full h-16 bg-muted/50 animate-pulse" />,
+});
 import { Logo } from "./logo";
 import { useGetSettings } from "@/hooks/use-get-settings";
 import { ThemeToggleButtonStyles } from "../theme/theme-toggle-button";

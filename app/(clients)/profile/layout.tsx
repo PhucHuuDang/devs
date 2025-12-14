@@ -71,8 +71,6 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
       <div className="h-full p-2 md:p-4 lg:p-6">
         <SidebarProfile>{children}</SidebarProfile>
       </div>
-
-      {/* {children} */}
     </div>
   );
 };

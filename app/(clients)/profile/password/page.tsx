@@ -1,16 +1,15 @@
+import { PasswordContainer } from "@/components/_url-segment/password/password-container";
 import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
 import React, { Suspense } from "react";
 
-const ActivitiesPage = () => {
+const PasswordPage = () => {
   return (
     <Suspense>
       <SidebarInsetContent isSidebarInset={false}>
-        <div>
-          <h1>Activities</h1>
-        </div>
+        <PasswordContainer />
       </SidebarInsetContent>
     </Suspense>
   );
 };
 
-export default ActivitiesPage;
+export default PasswordPage;

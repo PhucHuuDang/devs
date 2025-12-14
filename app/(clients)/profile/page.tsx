@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 import {
   GetSessionQuery,
@@ -75,7 +75,13 @@ const ProfilePage = async () => {
   // }
 
   // console.log({ user });
-  return <SidebarInsetContent />;
+  return (
+    <Suspense>
+      <SidebarInsetContent>
+        <h1>Profile</h1>
+      </SidebarInsetContent>
+    </Suspense>
+  );
 };
 
 export default ProfilePage;
