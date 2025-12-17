@@ -9,6 +9,7 @@ import Script from "next/script";
 import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor";
 import { AuthProvider } from "./providers/auth-provider";
 import { deleteCookies, getAuthCookies, setAuthCookies } from "./utils/cookies";
+import { KEYWORDS } from "./constants/keywords";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,25 +54,7 @@ export const metadata: Metadata = {
   publisher: siteConfig.name,
 
   // Keywords for SEO
-  keywords: [
-    "DEVS",
-    "developers",
-    "programming",
-    "coding",
-    "web development",
-    "software engineering",
-    "tech blog",
-    "developer community",
-    "stories",
-    "knowledge",
-    "tutorials",
-    "guides",
-    "tips",
-    "best practices",
-    "career",
-    "freelance",
-    "hire developers",
-  ],
+  keywords: [...KEYWORDS],
 
   // Category
   category: "technology",

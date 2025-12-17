@@ -52,6 +52,7 @@ import { Separator } from "@/components/ui/separator";
 import { DynamicBreadcrumbs } from "./dynamic-breadcrumbs";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { usePathname } from "next/navigation";
 
 export interface UserProps {
   name: string;
@@ -207,12 +208,15 @@ export const SidebarGroupCollapseChunk = ({
 }: React.ComponentProps<"div"> & {
   navMain: DataProps["navMain"];
 }) => {
+  const pathName = usePathname();
+
   return (
     <SidebarGroup className={className} {...props}>
       <SidebarGroupLabel>{navMain?.label}</SidebarGroupLabel>
 
       <SidebarMenu>
         {navMain?.items.map((item) => {
+          const isActive = pathName === item.url;
           return (
             <Collapsible
               key={item.title}
@@ -222,7 +226,13 @@ export const SidebarGroupCollapseChunk = ({
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton tooltip={item.title}>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    className={cn(
+                      isActive &&
+                        "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background"
+                    )}
+                  >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
                     <ChevronRight className="ml-auto transition-transform duration-300 group-data-[state=open]/collapsible:rotate-90" />
@@ -232,9 +242,16 @@ export const SidebarGroupCollapseChunk = ({
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     {item.items.map((subItem) => {
+                      const isActiveChild = pathName === subItem.url;
                       return (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
+                          <SidebarMenuSubButton
+                            asChild
+                            className={cn(
+                              isActiveChild &&
+                                "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background"
+                            )}
+                          >
                             <Link prefetch href={subItem.url}>
                               {subItem.logo && <subItem.logo />}
                               <span>{subItem.title}</span>
@@ -263,6 +280,8 @@ export const SidebarGroupProjectChunk = ({
   isMobile: boolean;
   projects: DataProps["projects"];
 }) => {
+  const pathName = usePathname();
+
   return (
     <SidebarGroup
       className={cn("group-data-[collapsible=icon]:hidden", className)}
@@ -272,9 +291,16 @@ export const SidebarGroupProjectChunk = ({
 
       <SidebarMenu>
         {projects?.items.map((item) => {
+          const isActive = pathName === item.url;
           return (
             <SidebarMenuItem key={item.name}>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton
+                asChild
+                className={cn(
+                  isActive &&
+                    "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background"
+                )}
+              >
                 <Link prefetch href={item.url}>
                   <item.icon />
                   <span>{item.name}</span>
@@ -295,10 +321,15 @@ export const SidebarGroupProjectChunk = ({
                   align={isMobile ? "end" : "start"}
                 >
                   {item?.dropdownItems?.map((dropdownItem) => {
+                    const isActiveChild = pathName === dropdownItem.url;
                     return (
                       <DropdownMenuItem
                         key={dropdownItem.title}
                         onClick={dropdownItem?.onClick}
+                        className={cn(
+                          isActiveChild &&
+                            "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background"
+                        )}
                       >
                         {<dropdownItem.icon />}
                         <span>{dropdownItem.title}</span>
@@ -326,7 +357,7 @@ export const SidebarInsetContent = ({
   isSidebarInset = true,
   children,
 }: {
-  isSidebarInset: boolean;
+  isSidebarInset?: boolean;
   children: React.ReactNode;
 }) => {
   return (

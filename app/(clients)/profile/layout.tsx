@@ -35,7 +35,7 @@ import {
 } from "@/components/animate-ui/components/radix/sidebar";
 import { SidebarProfile } from "@/components/_url-segment/profile/sidebar-profile";
 
-interface BlogLayoutProps {
+interface ProfileLayoutProps {
   children: React.ReactNode;
 }
 
@@ -65,7 +65,7 @@ interface BlogLayoutProps {
 //   };
 // }
 
-const BlogLayout = ({ children }: BlogLayoutProps) => {
+const ProfileLayout = ({ children }: ProfileLayoutProps) => {
   return (
     <div>
       <div className="h-full p-2 md:p-4 lg:p-6">
@@ -75,4 +75,4 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
   );
 };
 
-export default BlogLayout;
+export default ProfileLayout;
