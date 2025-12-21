@@ -11,7 +11,7 @@ import { InputControlled } from "@/components/custom/form/fields/input-controlle
 import { MultiSelectControlled } from "@/components/custom/form/fields/multi-select-controlled";
 import { TTag } from "@/components/ui/multiple-select";
 
-import { UploadImage } from "@/components/_images/upload-image";
+import { UploadImage } from "@/components/images/upload-image";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
@@ -25,7 +25,7 @@ import { generateSlug } from "@/lib/generate";
 import { TextareaControlled } from "@/components/custom/form/fields/text-area-controlled";
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
-import { SimpleLoading } from "@/components/_loading/simple-loading";
+import { SimpleLoading } from "@/components/loading-components/simple-loading";
 import dynamic from "next/dynamic";
 import { Value } from "platejs";
 
@@ -38,7 +38,7 @@ import { toast } from "sonner";
 import { CreateBlogMutation } from "@/app/graphql/__generated__/graphql";
 import { useDebounce } from "@/hooks/use-debounce";
 import { PreviewControl } from "./preview-control";
-import { cardStyle } from "@/app/styles";
+import { cardStyle } from "@/app/styles/common-style";
 
 const PlateEditor = dynamic(
   () =>

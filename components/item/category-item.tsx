@@ -1,8 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import GlareHover from "../react-bits/glare-hover";
-import { Badge } from "@/components/ui/badge";
+import GlareHover from "@/components/react-bits/glare-hover";
 import { motion } from "framer-motion";
 import { LucideIcon, TagIcon } from "lucide-react";
 import { useTheme } from "next-themes";

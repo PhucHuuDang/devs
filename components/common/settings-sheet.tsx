@@ -41,7 +41,7 @@ import {
   MixBlendMode,
   useSettingsGlassSurfaceSelectors,
   xChannel,
-} from "@/hooks/use-settings-glass-surface";
+} from "@/hooks/zustand/use-settings-glass-surface";
 import { SelectOptions } from "../custom/select-options";
 import {
   mixBlendModeOptions,
@@ -56,7 +56,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { useGetSettings } from "@/hooks/use-get-settings";
+import { useGetSettings } from "@/hooks/zustand/use-get-settings";
 import GlassIconWrapper from "@/app/icons/glass-icon-wrapper";
 import { cn } from "@/lib/utils";
 import { Switch } from "../ui/switch";

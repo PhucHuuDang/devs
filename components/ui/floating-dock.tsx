@@ -20,7 +20,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useRef, useState } from "react";
-import { useGetSettings } from "@/hooks/use-get-settings";
+import { useGetSettings } from "@/hooks/zustand/use-get-settings";
 import Image from "next/image";
 import { SettingsSheet } from "../common/settings-sheet";
 

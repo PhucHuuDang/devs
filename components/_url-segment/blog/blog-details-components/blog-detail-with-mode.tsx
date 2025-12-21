@@ -11,8 +11,8 @@ import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
 import { PostModel } from "@/app/graphql/__generated__/graphql";
-import { SimpleLoading } from "@/components/_loading/simple-loading";
-import { useEditorMode } from "@/hooks/use-editor-mode";
+import { SimpleLoading } from "@/components/loading-components/simple-loading";
+import { useEditorMode } from "@/hooks/zustand/use-editor-mode";
 
 // Uncomment and use your actual auth hook
 // import { useSession } from "next-auth/react";

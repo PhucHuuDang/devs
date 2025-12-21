@@ -1,6 +1,6 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 import { createWithEqualityFn } from "zustand/traditional";
-import createSelectors from "../auto-selector";
+import createSelectors from "./auto-selector";
 import { immer } from "zustand/middleware/immer";
 
 interface EditorContentLocalProps {

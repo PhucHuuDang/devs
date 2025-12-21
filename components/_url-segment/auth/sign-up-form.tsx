@@ -3,12 +3,12 @@
 import {
   PasswordControlled,
   passwordSchema,
-} from "../custom/form/fields/password-controlled";
-import FormWrapper from "../custom/form/form-wrapper";
+} from "@/components/custom/form/fields/password-controlled";
+import FormWrapper from "@/components/custom/form/form-wrapper";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputControlled } from "../custom/form/fields/input-controlled";
+import { InputControlled } from "@/components/custom/form/fields/input-controlled";
 import { toast } from "sonner";
 import { isEmpty } from "lodash";
 import {
@@ -17,7 +17,7 @@ import {
   SIGN_UP,
 } from "@/app/graphql/mutaions/auth.mutations";
 import { useMutation } from "@apollo/client/react";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 import { SignUpEmailMutation } from "@/app/graphql/__generated__/graphql";
 import { memo } from "react";
 

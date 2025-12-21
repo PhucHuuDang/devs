@@ -1,7 +1,7 @@
 "use client";
 
 import { useMounted } from "@/hooks/use-mounted";
-import { MixBlendMode } from "@/hooks/use-settings-glass-surface";
+import { MixBlendMode } from "@/hooks/zustand/use-settings-glass-surface";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState, useId } from "react";
 

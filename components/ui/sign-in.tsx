@@ -5,14 +5,13 @@ import Image from "next/image";
 
 import { GET_SESSION, GITHUB } from "@/app/graphql/mutaions/auth.mutations";
 import { useMutation, useQuery } from "@apollo/client/react";
-import { useAuth } from "@/app/providers/auth-provider";
 import { GithubIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { GitHubMutation } from "@/app/graphql/__generated__/graphql";
 import { SOCIAL_CONSTANTS } from "@/app/constants";
 import Link from "next/link";
-import { SignInForm } from "../_auth/sign-in-form";
-import { SignUpForm } from "../_auth/sign-up-form";
+import { SignInForm } from "@/components/_url-segment/auth/sign-in-form";
+import { SignUpForm } from "@/components/_url-segment/auth/sign-up-form";
 import { AnimatePresence, motion } from "framer-motion";
 
 export interface Testimonial {

@@ -7,11 +7,11 @@ const GlassSurface = dynamic(() => import("../GlassSurface"), {
   loading: () => <div className="w-full h-16 bg-muted/50 animate-pulse" />,
 });
 import { Logo } from "./logo";
-import { useGetSettings } from "@/hooks/use-get-settings";
+import { useGetSettings } from "@/hooks/zustand/use-get-settings";
 import { ThemeToggleButtonStyles } from "../theme/theme-toggle-button";
 import { UserControl } from "./user-control";
 import { useEffect } from "react";
-import { useSettingsGlassSurfaceSelectors } from "@/hooks/use-settings-glass-surface";
+import { useSettingsGlassSurfaceSelectors } from "@/hooks/zustand/use-settings-glass-surface";
 
 export const Navbar = () => {
   const settings = useGetSettings();

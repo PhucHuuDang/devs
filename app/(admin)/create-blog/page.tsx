@@ -1,5 +1,5 @@
-import { CreateBlog } from "@/components/_blogs/create-blog";
 import { Metadata } from "next";
+import { CreateBlog } from "@/components/_url-segment/blog/blog-details-components/create-blog";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

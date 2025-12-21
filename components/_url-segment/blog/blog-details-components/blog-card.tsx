@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "@/components/ui/card";
 import Image from "next/image";
 import { truncate, TruncateOptions } from "lodash";
 import {
@@ -15,14 +15,17 @@ import {
   MessageCircleIcon,
   Shield,
 } from "lucide-react";
-import { RichBadge } from "../ui/badge-1";
-import { HoverCardCustom } from "../custom/hover-card-custom";
-import { AnimatedTooltip, AnimatedItemsProps } from "../ui/animated-tooltip";
-import { BorderBeam } from "../ui/border-beam";
+import { RichBadge } from "@/components/ui/badge-1";
+import { HoverCardCustom } from "@/components/custom/hover-card-custom";
+import {
+  AnimatedTooltip,
+  AnimatedItemsProps,
+} from "@/components/ui/animated-tooltip";
+import { BorderBeam } from "@/components/ui/border-beam";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { generateSlug } from "@/lib/generate";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export interface BlogCardProps {
   title: string;

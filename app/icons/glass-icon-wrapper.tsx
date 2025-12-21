@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import GlassSurface, { GlassSurfaceProps } from "@/components/GlassSurface";
-import { useGetSettings } from "@/hooks/use-get-settings";
+import { useGetSettings } from "@/hooks/zustand/use-get-settings";
 
 type GlassIconWrapperProps = GlassSurfaceProps & {
   icon: React.ElementType;

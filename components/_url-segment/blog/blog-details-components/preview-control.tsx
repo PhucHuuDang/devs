@@ -10,9 +10,9 @@ import {
   UserRoundXIcon,
   VolumeOffIcon,
 } from "lucide-react";
-import { Button } from "../ui/button";
-import { ButtonGroup } from "../ui/button-group";
-import { TTag } from "../ui/multiple-select";
+import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { TTag } from "@/components/ui/multiple-select";
 import { BlogCard } from "./blog-card";
 import {
   DropdownMenu,
@@ -21,12 +21,12 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { UseFormReturn } from "react-hook-form";
 import { formSchema } from "./create-blog";
 import z from "zod";
-import { Card, CardHeader } from "../ui/card";
-import { cardStyle } from "@/app/styles";
+import { Card, CardHeader } from "@/components/ui/card";
+import { cardStyle } from "@/app/styles/common-style";
 
 interface PreviewControlProps {
   form: UseFormReturn<z.infer<typeof formSchema>>;
