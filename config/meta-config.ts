@@ -1,4 +1,4 @@
-import { KEYWORDS } from "@/app/constants/keywords";
+import { KEYWORDS } from "@/constants/keywords";
 
 const siteConfig = {
   name: "DEVS",

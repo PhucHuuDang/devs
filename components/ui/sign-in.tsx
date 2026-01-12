@@ -10,11 +10,11 @@ import { useMutation, useQuery } from "@apollo/client/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { GithubIcon } from "lucide-react";
 
-import { SOCIAL_CONSTANTS } from "@/app/constants";
 import { GitHubMutation } from "@/app/graphql/__generated__/graphql";
 import { GET_SESSION, GITHUB } from "@/app/graphql/mutaions/auth.mutations";
 import { SignInForm } from "@/components/_url-segment/auth/sign-in-form";
 import { SignUpForm } from "@/components/_url-segment/auth/sign-up-form";
+import { SOCIAL_CONSTANTS } from "@/constants";
 
 export interface Testimonial {
   avatarSrc: string;

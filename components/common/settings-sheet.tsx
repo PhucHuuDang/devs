@@ -24,7 +24,6 @@ import {
 } from "@/lib/options";
 import { cn } from "@/lib/utils";
 
-import GlassIconWrapper from "@/app/icons/glass-icon-wrapper";
 import {
   Sheet,
   SheetClose,
@@ -35,6 +34,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import GlassIconWrapper from "@/icons/glass-icon-wrapper";
 import { useGetSettings } from "@/stores/use-get-settings";
 import { useOpenSheetSelectors } from "@/stores/use-open-sheet";
 import {

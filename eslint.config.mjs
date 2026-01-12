@@ -75,6 +75,8 @@ const eslintConfig = defineConfig([
       ],
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-require-imports": "off",
+      // "@typescript-eslint/exhaustive-deps": "off",
     },
   },
 

@@ -1,5 +1,10 @@
 "use client";
 
+import { forwardRef, useEffect, useState } from "react";
+
+import Link from "next/link";
+
+import { useMutation, useQuery } from "@apollo/client/react";
 import {
   EllipsisVerticalIcon,
   FileUserIcon,
@@ -8,26 +13,25 @@ import {
   NotebookTextIcon,
   UserIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { toast } from "sonner";
 
-import { Kbd, KbdGroup } from "../ui/kbd";
-import { SettingsSheet } from "./settings-sheet";
-import Link from "next/link";
-import { HoverCardCustom } from "../custom/hover-card-custom";
 import { cn } from "@/lib/utils";
-import { HoverCardItem } from "../ui/hover-card";
-import { getSessionData } from "@/app/utils/cookies";
-import { useMutation, useQuery } from "@apollo/client/react";
+
 import {
   GetSessionQuery,
   GetSessionResponse,
   SignOutMutation,
 } from "@/app/graphql/__generated__/graphql";
 import { GET_SESSION, SIGN_OUT } from "@/app/graphql/mutaions/auth.mutations";
-
-import { forwardRef, useEffect, useState } from "react";
+import { getSessionData } from "@/app/utils/cookies";
 import { useAuthClient } from "@/hooks/use-auth-client";
-import { toast } from "sonner";
+
+import { HoverCardCustom } from "../custom/hover-card-custom";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { HoverCardItem } from "../ui/hover-card";
+import { Kbd, KbdGroup } from "../ui/kbd";
+
+import { SettingsSheet } from "./settings-sheet";
 
 type TriggerProps = {
   avatarUrl: string;
@@ -41,7 +45,7 @@ const Trigger = forwardRef<HTMLDivElement, TriggerProps>(
         {...props}
         className={cn(
           "flex items-center gap-2  rounded-full cursor-pointer border border-primary hover:border-primary/80 transition-all duration-300 group transition-all duration-300",
-          className
+          className,
         )}
       >
         <EllipsisVerticalIcon className="size-5 bg-primary/90 text-primary-foreground rounded-md hover:scale-105 hover:bg-primary/80 transition-transform duration-300 group-hover:bg-primary/80" />
@@ -58,7 +62,7 @@ const Trigger = forwardRef<HTMLDivElement, TriggerProps>(
         </Avatar>
       </div>
     );
-  }
+  },
 );
 
 Trigger.displayName = "Trigger";

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
-import { HOME_CONSTANTS } from "@/app/constants";
+import { HOME_CONSTANTS } from "@/constants";
 
 export interface BackgroundContentProps {
   trustBadge?: {

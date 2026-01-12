@@ -2,7 +2,6 @@
 
 import * as React from "react";
 
-import { SIDEBAR_ROUTES } from "@/app/constants/sidebar-routes";
 import {
   SidebarProvider,
   Sidebar,
@@ -14,6 +13,7 @@ import {
   SidebarGroupProjectChunk,
   SidebarHeaderChunk,
 } from "@/components/animate-ui/split/sidebar-chunks";
+import { SIDEBAR_ROUTES } from "@/constants/sidebar-routes";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SidebarProfileProps {
