@@ -24,6 +24,7 @@ import {
   GET_SESSION_STRING,
 } from "@/app/graphql/mutaions/auth.mutations";
 import { getAuthCookies, getSession } from "@/app/utils/cookies";
+import { ProfileClient } from "@/components/_url-segment/profile/profile-client";
 import { SidebarProfile } from "@/components/_url-segment/profile/sidebar-profile";
 import {
   Sidebar,
@@ -70,8 +71,8 @@ interface ProfilePageProps {
 // }
 
 const ProfilePage = async () => {
-  const data = await getSession();
-  const user = data?.user;
+  // const data = await getSession();
+  // const user = data?.user;
 
   // if (!user?.id) {
   //   redirect("/auth");
@@ -80,8 +81,8 @@ const ProfilePage = async () => {
   // console.log({ user });
   return (
     <Suspense>
-      <SidebarInsetContent>
-        <h1>Profile</h1>
+      <SidebarInsetContent className="">
+        <ProfileClient />
       </SidebarInsetContent>
     </Suspense>
   );

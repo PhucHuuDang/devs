@@ -1,3 +1,13 @@
+import { IconForbid } from "@tabler/icons-react";
+import { FieldValues, Path, useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/animate-ui/components/animate/tooltip";
 import {
   FormControl,
   FormDescription,
@@ -7,8 +17,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { FieldValues, Path, useFormContext } from "react-hook-form";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
 
 interface InputControlledProps<T extends FieldValues> {
   name: Path<T>;
@@ -20,8 +35,10 @@ interface InputControlledProps<T extends FieldValues> {
   onBlur?: () => void;
   description?: string;
   className?: string;
-
   classNameInput?: string;
+  classNameLabel?: string;
+
+  isGroup?: boolean;
 }
 export const InputControlled = <T extends FieldValues>({
   name,
@@ -33,6 +50,8 @@ export const InputControlled = <T extends FieldValues>({
   description,
   className,
   classNameInput,
+  classNameLabel,
+  isGroup,
 }: InputControlledProps<T>) => {
   const { control, getFieldState } = useFormContext();
 
@@ -44,8 +63,10 @@ export const InputControlled = <T extends FieldValues>({
       render={({ field, fieldState, formState }) => {
         const isDisabled = disabled || field.disabled || formState.isSubmitting;
         return (
-          <FormItem className={className}>
-            <FormLabel>{label}</FormLabel>
+          <FormItem className={cn("w-full", className)}>
+            <FormLabel className={cn("text-sm font-medium", classNameLabel)}>
+              {label}
+            </FormLabel>
             <FormControl onBlur={onBlur}>
               <Input
                 {...field}
@@ -57,7 +78,7 @@ export const InputControlled = <T extends FieldValues>({
                     isDisabled &&
                     "bg-gray-100 text-sm font-semibold cursor-not-allowed"
                   }  ${getFieldState(name).error && "text-destructive"}`,
-                  classNameInput
+                  classNameInput,
                 )}
                 aria-invalid={getFieldState(name).error ? "true" : "false"}
               />

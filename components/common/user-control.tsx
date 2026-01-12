@@ -44,18 +44,16 @@ const Trigger = forwardRef<HTMLDivElement, TriggerProps>(
         ref={ref}
         {...props}
         className={cn(
-          "flex items-center gap-2  rounded-full cursor-pointer border border-primary hover:border-primary/80 transition-all duration-300 group transition-all duration-300",
+          "flex items-center gap-2  rounded-full cursor-pointer border border-primary hover:border-primary/80 transition-all duration-300 group",
           className,
         )}
       >
         <EllipsisVerticalIcon className="size-5 bg-primary/90 text-primary-foreground rounded-md hover:scale-105 hover:bg-primary/80 transition-transform duration-300 group-hover:bg-primary/80" />
 
         <Avatar className="size-6">
-          {avatarUrl ? (
-            <AvatarImage src={avatarUrl} />
-          ) : (
-            <UserIcon className="size-5 group-hover:text-primary/80 transition-colors duration-300" />
-          )}
+          {/* {avatarUrl ? <AvatarImage src={avatarUrl} /> : null} */}
+
+          <AvatarImage src={avatarUrl ?? ""} />
           <AvatarFallback>
             <UserIcon className="size-5 group-hover:text-primary/80 transition-colors duration-300" />
           </AvatarFallback>

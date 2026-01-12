@@ -1,3 +1,7 @@
+import { FieldValues, Path, useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
+
 import {
   FormControl,
   FormDescription,
@@ -14,8 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
-import { FieldValues, Path, useFormContext } from "react-hook-form";
 
 export interface SelectOption {
   label: string;
@@ -77,7 +79,9 @@ export const SelectControlled = <T extends FieldValues>({
                   >
                     <div className="flex items-center gap-2">
                       {option.icon && option.icon}
-                      {option.label}
+                      <span className="text-sm font-medium">
+                        {option.label}
+                      </span>
                     </div>
                   </SelectItem>
                 ))}

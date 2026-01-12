@@ -1,5 +1,11 @@
+import { createElement, useState } from "react";
+
 import { EyeOffIcon, EyeIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import z from "zod";
+
+import { cn } from "@/lib/utils";
+
 import {
   FormField,
   FormItem,
@@ -9,9 +15,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createElement, useState } from "react";
-import z from "zod";
-import { cn } from "@/lib/utils";
 
 type PasswordFieldProps = {
   label: string;
@@ -80,7 +83,7 @@ export function PasswordControlled({
                   placeholder={placeholder}
                   className={cn(
                     `pr-12 ${getFieldState(name).error && "text-destructive"}`,
-                    classNameInput
+                    classNameInput,
                   )}
                   disabled={isDisabled}
                   aria-invalid={getFieldState(name).error ? "true" : "false"}

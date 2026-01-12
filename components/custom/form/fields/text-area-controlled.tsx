@@ -1,3 +1,7 @@
+import { FieldValues, Path, useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
+
 import {
   FormControl,
   FormDescription,
@@ -7,8 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { FieldValues, Path, useFormContext } from "react-hook-form";
 
 interface TextareaControlledProps<T extends FieldValues> {
   name: Path<T>;
@@ -53,7 +55,7 @@ export const TextareaControlled = <T extends FieldValues>({
                     isDisabled &&
                     "bg-gray-100 text-sm font-semibold cursor-not-allowed"
                   }  ${getFieldState(name).error && "text-destructive"}`,
-                  classNameTextarea
+                  classNameTextarea,
                 )}
                 aria-invalid={getFieldState(name).error ? "true" : "false"}
               />
