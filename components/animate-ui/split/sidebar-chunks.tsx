@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import {
   BadgeCheckIcon,
   BellIcon,
@@ -11,16 +14,16 @@ import {
   MoreHorizontal,
   Plus,
   SparklesIcon,
+  UserIcon,
 } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
 import {
-  SidebarProvider,
   SidebarInset,
   SidebarTrigger,
-  Sidebar,
   SidebarHeader,
-  SidebarContent,
   SidebarFooter,
-  SidebarRail,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
@@ -30,6 +33,7 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
   SidebarMenuAction,
+  SidebarSeparator,
 } from "@/components/animate-ui/components/radix/sidebar";
 import {
   Collapsible,
@@ -45,14 +49,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/animate-ui/components/radix/dropdown-menu";
-
-import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
-import { DynamicBreadcrumbs } from "./dynamic-breadcrumbs";
-import Link from "next/link";
+} from "@/components/animate-ui/primitives/radix/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { usePathname } from "next/navigation";
+import { CinematicThemeSwitcher } from "@/components/ui/cinematic-theme-switcher";
+import { Separator } from "@/components/ui/separator";
+
+import { DynamicBreadcrumbs } from "./dynamic-breadcrumbs";
 
 export interface UserProps {
   name: string;
@@ -120,8 +122,8 @@ export const SidebarInsetHeader = ({
   return (
     <header
       className={cn(
-        "flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12",
-        className
+        "flex h-16  shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12",
+        className,
       )}
     >
       {children}
@@ -153,45 +155,49 @@ export const SidebarHeaderChunk = ({
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <activeTeam.logo className="size-4" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
+                <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                   <span className="truncate font-semibold">
                     {activeTeam.name}
                   </span>
                   <span className="truncate text-xs">{activeTeam.plan}</span>
                 </div>
-                <ChevronsUpDown className="ml-auto" />
+                <ChevronsUpDown className="ml-auto group-data-[collapsible=icon]:hidden" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg bg-sidebar-accent"
               align="start"
               side={isMobile ? "bottom" : "right"}
-              sideOffset={4}
+              sideOffset={14}
             >
-              <DropdownMenuLabel className="text-xs text-muted-foreground">
+              <DropdownMenuLabel className="text-sm font-semibold text-center text-muted-foreground flex items-center gap-1 justify-center">
+                <UserIcon className="size-4" />
                 {teams?.label}
               </DropdownMenuLabel>
               {teams?.items.map((team, index) => (
                 <DropdownMenuItem
                   key={team.name}
                   onClick={() => setActiveTeam(team)}
-                  className="gap-2 p-2"
+                  className="gap-2 p-2 flex items-center justify-between"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-sm border">
-                    <team.logo className="size-4 shrink-0" />
+                  <div className="flex items-center gap-2">
+                    <div className="flex size-6 items-center justify-center rounded-sm border">
+                      <team.logo className="size-4 shrink-0" />
+                    </div>
+                    {team.name}
                   </div>
-                  {team.name}
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-2 p-2">
+              <DropdownMenuItem className="gap-2 p-2 flex items-centers">
                 <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                   <Plus className="size-4" />
                 </div>
-                <div className="font-medium text-muted-foreground">
+                <span className="font-medium text-muted-foreground">
                   Add team
-                </div>
+                </span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -230,7 +236,7 @@ export const SidebarGroupCollapseChunk = ({
                     tooltip={item.title}
                     className={cn(
                       isActive &&
-                        "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background"
+                        "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
                     )}
                   >
                     {item.icon && <item.icon />}
@@ -249,7 +255,7 @@ export const SidebarGroupCollapseChunk = ({
                             asChild
                             className={cn(
                               isActiveChild &&
-                                "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background"
+                                "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
                             )}
                           >
                             <Link prefetch href={subItem.url}>
@@ -283,10 +289,7 @@ export const SidebarGroupProjectChunk = ({
   const pathName = usePathname();
 
   return (
-    <SidebarGroup
-      className={cn("group-data-[collapsible=icon]:hidden", className)}
-      {...props}
-    >
+    <SidebarGroup className={className} {...props}>
       <SidebarGroupLabel>{projects?.label}</SidebarGroupLabel>
 
       <SidebarMenu>
@@ -296,9 +299,10 @@ export const SidebarGroupProjectChunk = ({
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton
                 asChild
+                tooltip={item.name}
                 className={cn(
                   isActive &&
-                    "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background"
+                    "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
                 )}
               >
                 <Link prefetch href={item.url}>
@@ -316,32 +320,40 @@ export const SidebarGroupProjectChunk = ({
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent
-                  className="w-48 rounded-lg"
+                  className="min-w-52 rounded-lg bg-sidebar-accent p-1"
                   side={isMobile ? "bottom" : "right"}
                   align={isMobile ? "end" : "start"}
+                  sideOffset={14}
                 >
-                  {item?.dropdownItems?.map((dropdownItem) => {
+                  {item?.dropdownItems?.map((dropdownItem, index) => {
                     const isActiveChild = pathName === dropdownItem.url;
                     return (
                       <DropdownMenuItem
                         key={dropdownItem.title}
                         onClick={dropdownItem?.onClick}
                         className={cn(
+                          "flex justify-between items-center p-1 hover:bg-primary cursor-pointer",
                           isActiveChild &&
-                            "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background"
+                            "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
                         )}
                       >
-                        {<dropdownItem.icon />}
-                        <span>{dropdownItem.title}</span>
+                        <div className="flex items-center gap-2">
+                          {<dropdownItem.icon />}
+                          <span>{dropdownItem.title}</span>
+                        </div>
+                        <DropdownMenuShortcut>
+                          ⌘{index + 1}
+                        </DropdownMenuShortcut>
                       </DropdownMenuItem>
                     );
                   })}
+                  <SidebarSeparator className="my-2" />
 
-                  <SidebarMenuItem>
-                    <SidebarMenuButton className="text-sidebar-foreground/70">
-                      <MoreHorizontal className="text-sidebar-foreground/70" />
-                      <span>More</span>
-                    </SidebarMenuButton>
+                  <SidebarMenuItem className="flex gap-2">
+                    {/* <SidebarMenuButton className=""> */}
+                    <MoreHorizontal className="ml-2" />
+                    <span>More</span>
+                    {/* </SidebarMenuButton> */}
                   </SidebarMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -356,25 +368,49 @@ export const SidebarGroupProjectChunk = ({
 export const SidebarInsetContent = ({
   isSidebarInset = true,
   children,
+  className,
+  classNameContainer,
+  isShowSidebarInsetHeader = true,
+  isShowToggleTheme = true,
 }: {
   isSidebarInset?: boolean;
   children: React.ReactNode;
+  className?: string;
+  classNameContainer?: string;
+  isShowSidebarInsetHeader?: boolean;
+  isShowToggleTheme?: boolean;
 }) => {
   return (
     <SidebarInset>
-      <SidebarInsetHeader>
-        <div className="">
-          <div className="flex items-center gap-2 px-4">
-            {/* <div className="mb-4 " /> */}
-            {isSidebarInset && <SidebarTrigger className="-ml-1" />}
-            <Separator orientation="vertical" className="mr-2 h-4" />
+      {isShowSidebarInsetHeader && (
+        <SidebarInsetHeader>
+          <div
+            className={cn(
+              "flex items-center justify-between w-full px-1 ",
+              classNameContainer,
+            )}
+          >
+            <div className="flex items-center gap-2 px-4">
+              {isSidebarInset && (
+                <SidebarTrigger className="-ml-1 cursor-pointer" />
+              )}
+              <Separator
+                orientation="vertical"
+                className="mr-2 h-4 hover:text-accent-foreground"
+              />
+              <DynamicBreadcrumbs />
+            </div>
 
-            <DynamicBreadcrumbs />
+            {isShowToggleTheme && (
+              <div className="transition-colors z-20 duration-700 ease-in-out ">
+                <CinematicThemeSwitcher size="sm" className="cursor-pointer" />
+              </div>
+            )}
           </div>
-        </div>
-      </SidebarInsetHeader>
+        </SidebarInsetHeader>
+      )}
 
-      {children}
+      <div className={cn("p-4", className)}>{children}</div>
     </SidebarInset>
   );
 };
@@ -403,15 +439,15 @@ export const SidebarFooterChunk = ({
                   <AvatarImage src={user?.avatarUrl} alt={user?.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
+                <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                   <span className="truncate font-semibold">{user?.name}</span>
                   <span className="truncate text-xs">{user?.email}</span>
                 </div>
-                <ChevronsUpDown className="ml-auto size-4" />
+                <ChevronsUpDown className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg "
               side={isMobile ? "bottom" : "right"}
               align="end"
               sideOffset={4}

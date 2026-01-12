@@ -1,5 +1,19 @@
 import React, { Suspense } from "react";
 
+import { redirect } from "next/navigation";
+
+import { isEmpty } from "lodash";
+import {
+  BookIcon,
+  BookmarkIcon,
+  HeartIcon,
+  MessageSquareIcon,
+  UsersIcon,
+} from "lucide-react";
+import { Metadata } from "next";
+
+import { fetchGraphql } from "@/lib/graph-fetch";
+
 import {
   GetSessionQuery,
   SessionModel,
@@ -9,21 +23,8 @@ import {
   GET_SESSION,
   GET_SESSION_STRING,
 } from "@/app/graphql/mutaions/auth.mutations";
-import { ThemeProvider } from "@/app/providers/next-theme-provider";
 import { getAuthCookies, getSession } from "@/app/utils/cookies";
-import { fetchGraphql } from "@/lib/graph-fetch";
-import { isEmpty } from "lodash";
-import { Metadata } from "next";
-import { redirect } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { VercelTabs } from "@/components/ui/vercel-tabs";
-import {
-  BookIcon,
-  BookmarkIcon,
-  HeartIcon,
-  MessageSquareIcon,
-  UsersIcon,
-} from "lucide-react";
+import { SidebarProfile } from "@/components/_url-segment/profile/sidebar-profile";
 import {
   Sidebar,
   SidebarContent,
@@ -33,8 +34,10 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@/components/animate-ui/components/radix/sidebar";
-import { SidebarProfile } from "@/components/_url-segment/profile/sidebar-profile";
 import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { VercelTabs } from "@/components/ui/vercel-tabs";
+import { ThemeProvider } from "@/providers/next-theme-provider";
 
 interface ProfilePageProps {
   children: React.ReactNode;

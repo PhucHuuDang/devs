@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 export const fetchGraphql = async <T>(
   query: string,
   variables: Record<string, any> = {},
-  init: RequestInit = {}
+  init: RequestInit & { withCookies?: boolean } = {},
 ): Promise<T> => {
   const endpoint =
     process.env.NODE_ENV === "production"
@@ -13,16 +13,27 @@ export const fetchGraphql = async <T>(
     console.error("GraphQL endpoint is not defined");
     return {} as T; // fallback khi chưa config endpoint
   }
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString(); // ✅ QUAN TRỌNG
+
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+
+  // const cookieStore = await cookies();
+  // const cookieHeader = cookieStore.toString(); // ✅ QUAN TRỌNG
+
+  if (init?.withCookies) {
+    const cookieStore = cookies(); // ✅ CHỈ gọi khi có request
+    headers["Cookie"] = cookieStore.toString();
+  }
 
   try {
     const res = await fetch(endpoint, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookieHeader,
-      },
+      // headers: {
+      //   "Content-Type": "application/json",
+      //   Cookie: cookieHeader,
+      // },
+      headers,
       body: JSON.stringify({ query, variables }),
       credentials: "include",
       ...init,

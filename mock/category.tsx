@@ -1,5 +1,6 @@
-import { SelectOption } from "@/components/custom/form/fields/select-controlled";
 import { CodeIcon, GlobeIcon, ServerIcon } from "lucide-react";
+
+import { SelectOption } from "@/components/custom/form/fields/select-controlled";
 
 export const categoryOptions: SelectOption[] = [
   {

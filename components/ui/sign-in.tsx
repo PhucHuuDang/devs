@@ -1,18 +1,20 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
 
-import { GET_SESSION, GITHUB } from "@/app/graphql/mutaions/auth.mutations";
-import { useMutation, useQuery } from "@apollo/client/react";
-import { GithubIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { GitHubMutation } from "@/app/graphql/__generated__/graphql";
-import { SOCIAL_CONSTANTS } from "@/app/constants";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { useMutation, useQuery } from "@apollo/client/react";
+import { AnimatePresence, motion } from "framer-motion";
+import { GithubIcon } from "lucide-react";
+
+import { SOCIAL_CONSTANTS } from "@/app/constants";
+import { GitHubMutation } from "@/app/graphql/__generated__/graphql";
+import { GET_SESSION, GITHUB } from "@/app/graphql/mutaions/auth.mutations";
 import { SignInForm } from "@/components/_url-segment/auth/sign-in-form";
 import { SignUpForm } from "@/components/_url-segment/auth/sign-up-form";
-import { AnimatePresence, motion } from "framer-motion";
 
 export interface Testimonial {
   avatarSrc: string;

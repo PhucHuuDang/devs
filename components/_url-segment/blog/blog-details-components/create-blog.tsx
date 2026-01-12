@@ -1,19 +1,31 @@
 "use client";
 
-import { useMutation, useQuery } from "@apollo/client/react";
-import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
-import FormWrapper from "@/components/custom/form/form-wrapper";
-import z from "zod";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
+import dynamic from "next/dynamic";
+import Image from "next/image";
+
+import { useMutation, useQuery } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TrashIcon } from "lucide-react";
+import { Value } from "platejs";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+
+import { generateSlug } from "@/lib/generate";
+
+import { CreateBlogMutation } from "@/app/graphql/__generated__/graphql";
+import { CREATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
+import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
 import { MultiSelectControlled } from "@/components/custom/form/fields/multi-select-controlled";
-import { TTag } from "@/components/ui/multiple-select";
-
+import { SelectControlled } from "@/components/custom/form/fields/select-controlled";
+import { TextareaControlled } from "@/components/custom/form/fields/text-area-controlled";
+import FormWrapper from "@/components/custom/form/form-wrapper";
 import { UploadImage } from "@/components/images/upload-image";
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { SimpleLoading } from "@/components/loading-components/simple-loading";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -21,24 +33,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { generateSlug } from "@/lib/generate";
-import { TextareaControlled } from "@/components/custom/form/fields/text-area-controlled";
-import { Button } from "@/components/ui/button";
-import { TrashIcon } from "lucide-react";
-import { SimpleLoading } from "@/components/loading-components/simple-loading";
-import dynamic from "next/dynamic";
-import { Value } from "platejs";
-
-import { SelectControlled } from "@/components/custom/form/fields/select-controlled";
 import { FormMessage } from "@/components/ui/form";
-import { TAGS } from "@/app/mock/tags";
-import { categoryOptions } from "@/app/mock/category";
-import { CREATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
-import { toast } from "sonner";
-import { CreateBlogMutation } from "@/app/graphql/__generated__/graphql";
-import { useDebounce } from "@/hooks/use-debounce";
+import { TTag } from "@/components/ui/multiple-select";
+import { categoryOptions } from "@/mock/category";
+import { TAGS } from "@/mock/tags";
+import { useDebounce } from "@/stores/use-debounce";
+import { cardStyle } from "@/styles/common-style";
+
 import { PreviewControl } from "./preview-control";
-import { cardStyle } from "@/app/styles/common-style";
 
 const PlateEditor = dynamic(
   () =>
@@ -48,7 +50,7 @@ const PlateEditor = dynamic(
     loading() {
       return <SimpleLoading />;
     },
-  }
+  },
 );
 
 export const formSchema = z.object({
@@ -67,7 +69,7 @@ export const formSchema = z.object({
       z.object({
         key: z.string(),
         name: z.string(),
-      })
+      }),
     )
     .min(1, {
       message: "At least one tag is required.",

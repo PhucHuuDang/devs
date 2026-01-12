@@ -1,6 +1,8 @@
-import HomeBackgroundClient from "@/components/shader/home-background";
-import { getAuthCookies } from "../utils/cookies";
 import { redirect } from "next/navigation";
+
+import HomeBackgroundClient from "@/shader/home-background";
+
+import { getAuthCookies } from "../utils/cookies";
 
 // Server component - can be statically generated
 export default async function HomePage() {

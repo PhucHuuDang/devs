@@ -1,4 +1,4 @@
-import { SHADER_SRC, ShaderCanvas } from "../ui/radial-shader";
+import { SHADER_SRC, ShaderCanvas } from "@/components/ui/radial-shader";
 
 interface HomeRadialBackgroundProps {
   children?: React.ReactNode;

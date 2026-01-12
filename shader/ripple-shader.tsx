@@ -3,8 +3,8 @@
 import {
   BackgroundContent,
   defaultContent,
-} from "../common/background-content";
-import { ShaderAnimation } from "../ui/shader-animation";
+} from "@/components/common/background-content";
+import { ShaderAnimation } from "@/components/ui/shader-animation";
 
 export const RippleShader = () => {
   return (

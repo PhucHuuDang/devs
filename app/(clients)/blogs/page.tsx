@@ -1,7 +1,11 @@
 "use client";
 
-import { GetPostsQuery } from "@/app/graphql/__generated__/graphql";
+import Link from "next/link";
 
+import { NetworkStatus } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
+
+import { GetPostsQuery } from "@/app/graphql/__generated__/graphql";
 import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
 import {
   BlogCard,
@@ -10,16 +14,13 @@ import {
 import { ListCategory } from "@/components/common/list-category.";
 import { EmptyMediaGroup } from "@/components/empty-state/empty-media-group";
 import { NetworkErrorPage } from "@/components/exceptions/network-error-page";
-import { NetworkStatus } from "@apollo/client";
-import { useQuery } from "@apollo/client/react";
-import Link from "next/link";
 
 const BlogsPage = () => {
   const { data, loading, error, networkStatus } = useQuery<GetPostsQuery>(
     GET_POSTS,
     {
       ssr: true,
-    }
+    },
   );
 
   if (loading) {
@@ -57,7 +58,7 @@ const BlogsPage = () => {
           />
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 ">
           {data?.allPosts?.map((post: GetPostsQuery["allPosts"][number]) => {
             const blogCardData = {
               title: post.title,

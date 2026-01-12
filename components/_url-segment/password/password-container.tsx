@@ -1,13 +1,26 @@
 "use client";
 
+import { useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  FacebookIcon,
+  GithubIcon,
+  LucideIcon,
+  RectangleEllipsisIcon,
+  ShieldUser,
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+
 import {
   PasswordControlled,
   passwordSchema,
 } from "@/components/custom/form/fields/password-controlled";
 import FormWrapper from "@/components/custom/form/form-wrapper";
-import { GoogleIcon } from "@/components/icons/social-icon";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Item,
   ItemActions,
@@ -18,19 +31,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  FacebookIcon,
-  GithubIcon,
-  LucideIcon,
-  RectangleEllipsisIcon,
-  ShieldUser,
-} from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import z from "zod";
+import { GoogleIcon } from "@/icons/social-icon";
 
 interface AuthenticateItemProps {
   title: string;
@@ -101,7 +102,7 @@ export const PasswordContainer = () => {
   });
 
   const onChangePassword = async (
-    values: z.infer<typeof changePasswordSchema>
+    values: z.infer<typeof changePasswordSchema>,
   ) => {
     toast.success(JSON.stringify(values));
   };

@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useEditorMode } from "@/hooks/zustand/use-editor-mode";
+
+import { useEditorMode } from "@/stores/use-editor-mode";
 
 interface FeatureGuardProps {
   children: React.ReactNode;

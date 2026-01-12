@@ -26,5 +26,5 @@ export const useEditorMode = createWithEqualityFn<EditorModeState>(
       const mode = get().mode;
       return mode === "editing" || mode === "viewing" || mode === "suggestion";
     },
-  })
+  }),
 );

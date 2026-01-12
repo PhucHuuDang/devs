@@ -1,7 +1,4 @@
-import {
-  MixBlendMode,
-  xChannel,
-} from "@/hooks/zustand/use-settings-glass-surface";
+import { MixBlendMode, xChannel } from "@/stores/use-settings-glass-surface";
 
 export const mixBlendModeOptions = [
   { label: "Normal", value: "normal" as MixBlendMode },

@@ -1,9 +1,11 @@
 import { Metadata } from "next";
-import { ThemeProvider } from "../providers/next-theme-provider";
-import { Navbar } from "@/components/common/navbar";
-import { ListCategory } from "@/components/common/list-category.";
+
 import { AppleFloatingDock } from "@/components/common/apple-floating-dock";
 import { LayoutTransition } from "@/components/common/layout-transition";
+import { ListCategory } from "@/components/common/list-category.";
+import { Navbar } from "@/components/common/navbar";
+
+import { ThemeProvider } from "../../providers/next-theme-provider";
 
 interface ClientsLayoutProps {
   children: React.ReactNode;

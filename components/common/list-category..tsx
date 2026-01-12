@@ -7,11 +7,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { CategoryItem } from "../item/category-item";
 import {
   ListCategory as TListCategory,
   listCategory,
-} from "@/app/db/list-category";
+} from "@/db/list-category";
+
+import { CategoryItem } from "../item/category-item";
 
 export function ListCategory() {
   return (

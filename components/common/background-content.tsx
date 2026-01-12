@@ -1,6 +1,8 @@
-import { HOME_CONSTANTS } from "@/app/constants";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
+
+import { cn } from "@/lib/utils";
+
+import { HOME_CONSTANTS } from "@/app/constants";
 
 export interface BackgroundContentProps {
   trustBadge?: {
@@ -64,7 +66,7 @@ export const BackgroundContent = ({
     <div
       className={cn(
         "absolute inset-0 z-10 flex flex-col items-center justify-center text-white",
-        className
+        className,
       )}
     >
       {/* Trust Badge */}
@@ -118,7 +120,7 @@ export const BackgroundContent = ({
                 onClick={buttons.primary.onClick}
                 className={cn(
                   "px-8 py-4 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-black rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-500/25 cursor-pointer",
-                  buttons.primary.className
+                  buttons.primary.className,
                 )}
               >
                 {buttons.primary.text}
@@ -131,7 +133,7 @@ export const BackgroundContent = ({
                 prefetch
                 className={cn(
                   "px-8 py-4 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-300/30 hover:border-orange-300/50 text-orange-100 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 backdrop-blur-sm cursor-pointer",
-                  buttons.secondary.className
+                  buttons.secondary.className,
                 )}
               >
                 {buttons.secondary.text}

@@ -23,7 +23,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useEditorMode } from "@/hooks/zustand/use-editor-mode";
+import { useEditorMode } from "@/stores/use-editor-mode";
 
 import { ToolbarButton } from "../control/toolbar";
 

@@ -1,16 +1,6 @@
 "use client";
 
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
   DockIcon,
   EllipsisVerticalIcon,
   HomeIcon,
@@ -25,10 +15,37 @@ import {
   UserIcon,
   ZapIcon,
 } from "lucide-react";
-import { Button } from "../ui/button";
-import { useOpenSheetSelectors } from "@/hooks/zustand/use-open-sheet";
-import { BorderBeam } from "../ui/border-beam";
+import { shallow } from "zustand/shallow";
+
+import {
+  mixBlendModeOptions,
+  xChannelOptions,
+  yChannelOptions,
+} from "@/lib/options";
+import { cn } from "@/lib/utils";
+
+import GlassIconWrapper from "@/app/icons/glass-icon-wrapper";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { useGetSettings } from "@/stores/use-get-settings";
+import { useOpenSheetSelectors } from "@/stores/use-open-sheet";
+import {
+  defaultSettings,
+  MixBlendMode,
+  useSettingsGlassSurfaceSelectors,
+  xChannel,
+} from "@/stores/use-settings-glass-surface";
+
 import { HoverCardCustom } from "../custom/hover-card-custom";
+import { SelectOptions } from "../custom/select-options";
 import DualRangeSliderSingle from "../spectrumui/dual-range-slider-single";
 import {
   Accordion,
@@ -36,19 +53,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import {
-  defaultSettings,
-  MixBlendMode,
-  useSettingsGlassSurfaceSelectors,
-  xChannel,
-} from "@/hooks/zustand/use-settings-glass-surface";
-import { SelectOptions } from "../custom/select-options";
-import {
-  mixBlendModeOptions,
-  xChannelOptions,
-  yChannelOptions,
-} from "@/lib/options";
-import { shallow } from "zustand/shallow";
+import { BorderBeam } from "../ui/border-beam";
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
@@ -56,11 +62,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { useGetSettings } from "@/hooks/zustand/use-get-settings";
-import GlassIconWrapper from "@/app/icons/glass-icon-wrapper";
-import { cn } from "@/lib/utils";
-import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
+import { Switch } from "../ui/switch";
 
 interface SettingsSheetProps {
   classNameTrigger?: string;
@@ -158,7 +161,7 @@ export function SettingsSheet({
                 <EllipsisVerticalIcon
                   className={cn(
                     "size-8 shadow-lg bg-slate-200 cursor-pointer p-1 rounded-lg hover:scale-105 transition-all duration-300 hover:p-0.5 hover:bg-slate-400/20 dark:bg-slate-800 dark:hover:bg-slate-700",
-                    classNameTrigger
+                    classNameTrigger,
                   )}
                 />
                 Settings
@@ -180,7 +183,7 @@ export function SettingsSheet({
             <EllipsisVerticalIcon
               className={cn(
                 "size-9 shadow-lg bg-slate-200 cursor-pointer p-1 rounded-lg hover:scale-105 transition-all duration-300  hover:bg-slate-400/20 dark:bg-slate-800 dark:hover:bg-slate-700",
-                classNameTrigger
+                classNameTrigger,
               )}
             />
           </div>

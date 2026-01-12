@@ -1,8 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useState } from "react";
-import { BellLoader } from "../ui/bell-glow-loader";
+
+import dynamic from "next/dynamic";
+
+import { BellLoader } from "@/components/ui/bell-glow-loader";
 
 // Dynamic imports with loading states - reduces initial bundle size
 const RippleShader = dynamic(
@@ -11,7 +13,7 @@ const RippleShader = dynamic(
   {
     loading: () => <BellLoader />,
     ssr: false,
-  }
+  },
 );
 
 const OrangeCloudShader = dynamic(
@@ -22,7 +24,7 @@ const OrangeCloudShader = dynamic(
   {
     loading: () => <BellLoader />,
     ssr: false,
-  }
+  },
 );
 
 const ShaderCanvasContent = dynamic(
@@ -33,40 +35,40 @@ const ShaderCanvasContent = dynamic(
   {
     loading: () => <BellLoader />,
     ssr: false,
-  }
+  },
 );
 
 const FireSphereContent = dynamic(
   () =>
-    import("../common/fire-sphere-content").then((mod) => ({
+    import("@/components/common/fire-sphere-content").then((mod) => ({
       default: mod.FireSphereContent,
     })),
   {
     loading: () => <BellLoader />,
     ssr: false,
-  }
+  },
 );
 
 const PrimsContent = dynamic(
   () =>
-    import("../common/prims-content").then((mod) => ({
+    import("@/components/common/prims-content").then((mod) => ({
       default: mod.PrimsContent,
     })),
   {
     loading: () => <BellLoader />,
     ssr: false,
-  }
+  },
 );
 
 const LightningContent = dynamic(
   () =>
-    import("../common/lightning-content").then((mod) => ({
+    import("@/components/common/lightning-content").then((mod) => ({
       default: mod.LightningContent,
     })),
   {
     loading: () => <BellLoader />,
     ssr: false,
-  }
+  },
 );
 
 const SHADER_OPTIONS = [

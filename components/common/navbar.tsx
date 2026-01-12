@@ -1,17 +1,21 @@
 "use client";
+
+import { useEffect } from "react";
+
 import dynamic from "next/dynamic";
 
 import { AnimatePresence, motion } from "motion/react";
+
 const GlassSurface = dynamic(() => import("../GlassSurface"), {
   ssr: false,
   loading: () => <div className="w-full h-16 bg-muted/50 animate-pulse" />,
 });
+import { useGetSettings } from "@/stores/use-get-settings";
+import { useSettingsGlassSurfaceSelectors } from "@/stores/use-settings-glass-surface";
+import { ThemeToggleButtonStyles } from "@/theme/theme-toggle-button";
+
 import { Logo } from "./logo";
-import { useGetSettings } from "@/hooks/zustand/use-get-settings";
-import { ThemeToggleButtonStyles } from "../theme/theme-toggle-button";
 import { UserControl } from "./user-control";
-import { useEffect } from "react";
-import { useSettingsGlassSurfaceSelectors } from "@/hooks/zustand/use-settings-glass-surface";
 
 export const Navbar = () => {
   const settings = useGetSettings();

@@ -1,9 +1,11 @@
 "use client";
 
-import { useMounted } from "@/hooks/use-mounted";
-import { MixBlendMode } from "@/hooks/zustand/use-settings-glass-surface";
-import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState, useId } from "react";
+
+import { cn } from "@/lib/utils";
+
+import { useMounted } from "@/hooks/use-mounted";
+import { MixBlendMode } from "@/stores/use-settings-glass-surface";
 
 export interface GlassSurfaceProps {
   children?: React.ReactNode;
@@ -115,10 +117,10 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${redGradId})" />
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${blueGradId})" style="mix-blend-mode: ${mixBlendMode}" />
         <rect x="${edgeSize}" y="${edgeSize}" width="${
-      actualWidth - edgeSize * 2
-    }" height="${
-      actualHeight - edgeSize * 2
-    }" rx="${borderRadius}" fill="hsl(0 0% ${brightness}% / ${opacity})" style="filter:blur(${blur}px)" />
+          actualWidth - edgeSize * 2
+        }" height="${
+          actualHeight - edgeSize * 2
+        }" rx="${borderRadius}" fill="hsl(0 0% ${brightness}% / ${opacity})" style="filter:blur(${blur}px)" />
       </svg>
     `;
 
@@ -139,7 +141,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
       if (ref.current) {
         ref.current.setAttribute(
           "scale",
-          (distortionScale + offset).toString()
+          (distortionScale + offset).toString(),
         );
         ref.current.setAttribute("xChannelSelector", xChannel);
         ref.current.setAttribute("yChannelSelector", yChannel);
@@ -404,7 +406,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
       <div
         className={cn(
           "w-full h-full flex items-center justify-center p-2 rounded-[inherit] relative z-10",
-          childClassName
+          childClassName,
         )}
       >
         {children}

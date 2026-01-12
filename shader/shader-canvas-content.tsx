@@ -2,8 +2,8 @@ import {
   BackgroundContent,
   BackgroundContentProps,
   defaultContent,
-} from "../common/background-content";
-import { SHADER_SRC, ShaderCanvas } from "../ui/radial-shader";
+} from "@/components/common/background-content";
+import { SHADER_SRC, ShaderCanvas } from "@/components/ui/radial-shader";
 
 interface ShaderCanvasContentProps {
   className?: string;

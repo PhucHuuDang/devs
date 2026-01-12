@@ -1,8 +1,10 @@
-import { GlassSurfaceProps } from "@/components/GlassSurface";
-import createSelectors from "./auto-selector";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { createWithEqualityFn } from "zustand/traditional";
+
+import { GlassSurfaceProps } from "@/components/GlassSurface";
+
+import createSelectors from "./auto-selector";
 
 export type xChannel = "R" | "G" | "B";
 
@@ -46,8 +48,10 @@ export type MixBlendMode =
   | "plus-darker"
   | "plus-lighter";
 
-export interface SettingsActions
-  extends Pick<UseNavbarDockProps, "onToggleNavbar" | "onToggleDock"> {
+export interface SettingsActions extends Pick<
+  UseNavbarDockProps,
+  "onToggleNavbar" | "onToggleDock"
+> {
   getSettings: () => SettingStates;
   setBrightness: (brightness: number) => void;
   setOpacity: (opacity: number) => void;
@@ -83,7 +87,7 @@ export interface SettingsActions
       | "color"
       | "luminosity"
       | "plus-darker"
-      | "plus-lighter"
+      | "plus-lighter",
   ) => void;
 
   onReset: () => void;
@@ -220,10 +224,10 @@ export const useSettingsGlassSurface = createWithEqualityFn<
     {
       name: "settings",
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );
 
 export const useSettingsGlassSurfaceSelectors = createSelectors(
-  useSettingsGlassSurface
+  useSettingsGlassSurface,
 );

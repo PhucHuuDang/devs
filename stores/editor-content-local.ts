@@ -1,7 +1,8 @@
 import { createJSONStorage, persist } from "zustand/middleware";
-import { createWithEqualityFn } from "zustand/traditional";
-import createSelectors from "./auto-selector";
 import { immer } from "zustand/middleware/immer";
+import { createWithEqualityFn } from "zustand/traditional";
+
+import createSelectors from "./auto-selector";
 
 interface EditorContentLocalProps {
   content: string;
@@ -18,10 +19,10 @@ export const useEditorContentLocal =
       {
         name: "editor-content-local",
         storage: createJSONStorage(() => localStorage),
-      }
-    )
+      },
+    ),
   );
 
 export const useEditorContentLocalSelectors = createSelectors(
-  useEditorContentLocal
+  useEditorContentLocal,
 );

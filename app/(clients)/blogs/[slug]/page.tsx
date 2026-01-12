@@ -1,3 +1,11 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
+
+import { isEmpty } from "lodash";
+
+import { fetchGraphql } from "@/lib/graph-fetch";
+import { baseUrl } from "@/lib/utils";
+
 import { GetPostsQuery, Query } from "@/app/graphql/__generated__/graphql";
 import {
   GET_POST_BY_SLUG,
@@ -10,11 +18,7 @@ import {
   AnimatedItemsProps,
   AnimatedTooltip,
 } from "@/components/ui/animated-tooltip";
-import { fetchGraphql } from "@/lib/graph-fetch";
-import Image from "next/image";
-import { isEmpty } from "lodash";
-import { baseUrl } from "@/lib/utils";
-import { notFound } from "next/navigation";
+
 interface SlugBlogPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -26,9 +30,8 @@ export const dynamic = "force-static";
 export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
   try {
     const { slug } = await params;
-    const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(
-      GET_POSTS_STRING
-    );
+    const { allPosts = [] } =
+      await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
 
     const post = allPosts.find((post) => post.slug === slug);
     // console.log({ post });
@@ -95,7 +98,7 @@ export async function generateSitemaps() {
     {},
     {
       cache: "force-cache",
-    }
+    },
   );
 
   if (allPosts.length === 0) {

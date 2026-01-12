@@ -1,12 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { GripHorizontal, RefreshCcw } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { GripHorizontal, RefreshCcw } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Skeleton } from "../ui/skeleton";
+
+import { cn } from "@/lib/utils";
+
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Skiper4 = () => {
   const [scale, setScale] = useState(0);
@@ -165,7 +167,7 @@ export const ThemeToggleButton1 = ({
       type="button"
       className={cn(
         "rounded-full bg-black text-white transition-all duration-300 active:scale-95",
-        className
+        className,
       )}
       onClick={() => setIsDark(!isDark)}
     >
@@ -207,7 +209,7 @@ export const ThemeToggleButton2 = ({
       className={cn(
         "rounded-full transition-all duration-300 active:scale-95",
         isDark ? "bg-black text-white" : "bg-white text-black",
-        className
+        className,
       )}
       onClick={() => setIsDark(!isDark)}
     >
@@ -273,7 +275,7 @@ export const ThemeToggleButton3 = ({
       className={cn(
         "rounded-full transition-all duration-300 active:scale-95",
         isDark ? "bg-black text-white" : "bg-white text-black",
-        className
+        className,
       )}
       onClick={() => setIsDark(!isDark)}
     >
@@ -354,7 +356,7 @@ export const ThemeToggleButton4 = ({
       className={cn(
         "rounded-full transition-all duration-300 active:scale-95",
         isDark ? "bg-black text-white" : "bg-white text-black",
-        className
+        className,
       )}
       onClick={handleToggle}
     >
@@ -440,7 +442,7 @@ export const ThemeToggleButton5 = ({
       className={cn(
         "rounded-full transition-all duration-300 active:scale-95",
         isDark ? "bg-black text-white" : "bg-white text-black",
-        className
+        className,
       )}
       onClick={handleToggle}
     >

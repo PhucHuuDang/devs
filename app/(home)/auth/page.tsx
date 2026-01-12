@@ -1,5 +1,6 @@
-import { getAuthCookies } from "@/app/utils/cookies";
 import { redirect } from "next/navigation";
+
+import { getAuthCookies } from "@/app/utils/cookies";
 import {
   SignInPage as SignInPageComponent,
   Testimonial,
@@ -31,7 +32,7 @@ const SignInPage = async () => {
 
   // console.log({ cookies });
 
-  if (!cookies.accessToken || !cookies.sessionToken || !cookies.refreshToken) {
+  if (cookies.accessToken || cookies.sessionToken || cookies.refreshToken) {
     redirect("/blogs");
   }
 

@@ -1,7 +1,17 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { useRef, useState } from "react";
+
+import Image from "next/image";
+
 import { IconLayoutNavbarCollapse } from "@tabler/icons-react";
+import {
+  IconBrandX,
+  IconExchange,
+  IconHome,
+  IconNewSection,
+  IconTerminal2,
+} from "@tabler/icons-react";
 import {
   AnimatePresence,
   MotionValue,
@@ -11,17 +21,10 @@ import {
   useTransform,
 } from "motion/react";
 
-import {
-  IconBrandX,
-  IconExchange,
-  IconHome,
-  IconNewSection,
-  IconTerminal2,
-} from "@tabler/icons-react";
+import { cn } from "@/lib/utils";
 
-import { useRef, useState } from "react";
-import { useGetSettings } from "@/hooks/zustand/use-get-settings";
-import Image from "next/image";
+import { useGetSettings } from "@/stores/use-get-settings";
+
 import { SettingsSheet } from "../common/settings-sheet";
 
 export interface IconContainerProps {
@@ -194,7 +197,7 @@ const FloatingDockDesktop = ({
           onMouseLeave={() => mouseX.set(Infinity)}
           className={cn(
             "mx-auto hidden h-16 items-end gap-2 rounded-2xl bg-gray-50 px-4 pb-3 md:flex dark:bg-neutral-900",
-            className
+            className,
           )}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -244,23 +247,23 @@ export function IconContainer({
   const widthTransform = useTransform(
     distance,
     [-150, 0, 150],
-    [40, hoveredSize, 40]
+    [40, hoveredSize, 40],
   );
   const heightTransform = useTransform(
     distance,
     [-150, 0, 150],
-    [40, hoveredSize, 40]
+    [40, hoveredSize, 40],
   );
 
   const widthTransformIcon = useTransform(
     distance,
     [-150, 0, 150],
-    [defaultSize, 60, defaultSize]
+    [defaultSize, 60, defaultSize],
   );
   const heightTransformIcon = useTransform(
     distance,
     [-150, 0, 150],
-    [defaultSize, 60, defaultSize]
+    [defaultSize, 60, defaultSize],
   );
 
   const width = useSpring(widthTransform, {

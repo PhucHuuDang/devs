@@ -1,5 +1,6 @@
-import createSelectors from "./auto-selector";
 import { createWithEqualityFn } from "zustand/traditional";
+
+import createSelectors from "./auto-selector";
 
 interface UseOpenSheetProps {
   isOpen: boolean;
