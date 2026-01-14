@@ -1,17 +1,15 @@
 "use client";
 
-import Image from "next/image";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import getUnicodeFlagIcon from "country-flag-icons/unicode";
 import {
   CircleAlertIcon,
   DotIcon,
   FileQuestionMarkIcon,
-  LanguagesIcon,
   TimerIcon,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
@@ -95,6 +93,11 @@ export const ProfileClient = () => {
 
   const onSubmit = async (data: z.infer<typeof profileSchema>) => {
     console.log(data);
+
+    if (!Object.keys(form.formState.dirtyFields).length) return;
+
+    toast.warning("Please fill in all fields");
+    return;
   };
 
   return (

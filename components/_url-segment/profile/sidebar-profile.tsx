@@ -55,13 +55,13 @@ export const SidebarProfile = ({ children }: SidebarProfileProps) => {
             }}
           />
 
-          <SidebarGroupProjectChunk
+          {/* <SidebarGroupProjectChunk
             isMobile={isMobile}
             projects={{
               label: "Platform",
               items: SIDEBAR_ROUTES.projects?.items ?? [],
             }}
-          />
+          /> */}
         </SidebarContent>
 
         <SidebarFooterChunk user={SIDEBAR_ROUTES.user} isMobile={isMobile} />

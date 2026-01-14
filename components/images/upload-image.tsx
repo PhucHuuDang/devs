@@ -1,11 +1,13 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
+
 import { ImagesIcon, ImageUpIcon } from "lucide-react";
 import {
   CldUploadWidget,
   CloudinaryUploadWidgetInfo,
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
 import { cn } from "@/lib/utils";
 
 interface UploadImageProps {
@@ -77,14 +79,14 @@ export const UploadImage = ({
             <div
               className={cn(
                 "cursor-pointer group border-dashed border-2 w-fit p-2 rounded-md",
-                classContainer
+                classContainer,
               )}
               onClick={() => open()}
             >
               <div
                 className={cn(
                   "flex flex-col items-center gap-2 justify-center",
-                  className
+                  className,
                 )}
               >
                 {isMultiple ? (
@@ -92,7 +94,7 @@ export const UploadImage = ({
                     className={cn(
                       "size-20 cursor-pointer group-hover:scale-110 transition-all duration-300 group-hover:text-primary/80 ",
                       error && "text-rose-500",
-                      classNameIcon
+                      classNameIcon,
                     )}
                   />
                 ) : (
@@ -101,7 +103,7 @@ export const UploadImage = ({
                       className={cn(
                         "size-20 cursor-pointer group-hover:scale-110 transition-all duration-300 group-hover:text-primary/80 ",
                         error && "text-rose-500",
-                        classNameIcon
+                        classNameIcon,
                       )}
                     />
                   </>
@@ -109,7 +111,7 @@ export const UploadImage = ({
                 <span
                   className={cn(
                     "text-sm text-primary/80 font-medium group-hover:text-primary/100 transition-all duration-300",
-                    error && "text-rose-500"
+                    error && "text-rose-500",
                   )}
                 >
                   {isMultiple

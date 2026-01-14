@@ -140,7 +140,7 @@ export function SettingsSheet({
   const onToggleNavbar = useSettingsGlassSurfaceSelectors.use.onToggleNavbar();
 
   const distortionTrigger = (
-    <div className="flex items-center gap-2  w-full">
+    <div className="flex items-center gap-2 w-full">
       <div className="flex items-center gap-1">
         <ZapIcon className="size-4 text-primary" />
         <span className="text-sm font-medium">Distortion</span>
@@ -341,7 +341,7 @@ export function SettingsSheet({
               <AccordionContent className={accordionContentStyle}>
                 <DualRangeSliderSingle
                   label
-                  title="Border Radius"
+                  title="Global Border Radius"
                   min={0}
                   max={50}
                   step={1}

@@ -53,7 +53,7 @@ const Trigger = forwardRef<HTMLDivElement, TriggerProps>(
         <Avatar className="size-6">
           {/* {avatarUrl ? <AvatarImage src={avatarUrl} /> : null} */}
 
-          <AvatarImage src={avatarUrl ?? ""} />
+          <AvatarImage src={avatarUrl ?? "/image.jpg"} />
           <AvatarFallback>
             <UserIcon className="size-5 group-hover:text-primary/80 transition-colors duration-300" />
           </AvatarFallback>

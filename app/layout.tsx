@@ -7,6 +7,7 @@ import "./globals.css";
 
 // import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor"; // For development
 
+import { GlobalBorderRadiusController } from "@/components/common/global-border-radius-controller";
 import { WebVitals } from "@/components/common/web-vitals";
 import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor";
 import { META_CONFIG } from "@/config/meta-config";
@@ -97,6 +98,9 @@ export default function RootLayout({
           setCookies={setAuthCookies}
           deleteCookies={deleteCookies}
         >
+          {/* Global Border Radius Controller - Syncs settings to CSS variables */}
+          <GlobalBorderRadiusController />
+
           {/* Web Vitals tracking for all users */}
           {/* <WebVitals /> */}
 

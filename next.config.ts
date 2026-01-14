@@ -68,6 +68,7 @@ const nextConfig: NextConfig = {
       "@platejs/basic-nodes",
       "@platejs/basic-styles",
       "motion/react",
+      "zod",
     ],
 
     // viewTransition: true,
