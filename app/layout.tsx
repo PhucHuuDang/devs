@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 
@@ -7,9 +8,9 @@ import "./globals.css";
 
 // import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor"; // For development
 
-import { GlobalBorderRadiusController } from "@/components/common/global-border-radius-controller";
 import { WebVitals } from "@/components/common/web-vitals";
 import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor";
+// import { PreviewcnDevtools } from "@/components/ui/previewcn";
 import { META_CONFIG } from "@/config/meta-config";
 
 import { ApolloWrapper } from "../providers/apollo-provider";
@@ -18,6 +19,10 @@ import { AuthProvider } from "../providers/auth-provider";
 import { deleteCookies, getAuthCookies, setAuthCookies } from "./utils/cookies";
 
 import type { Metadata } from "next";
+
+const PreviewcnDevtools = dynamic(() =>
+  import("@/components/ui/previewcn").then((mod) => mod.PreviewcnDevtools),
+);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -93,14 +98,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* {process.env.NODE_ENV === "development" && <PreviewcnDevtools />} */}
+        <PreviewcnDevtools />
         <AuthProvider
           getCookies={getAuthCookies}
           setCookies={setAuthCookies}
           deleteCookies={deleteCookies}
         >
-          {/* Global Border Radius Controller - Syncs settings to CSS variables */}
-          <GlobalBorderRadiusController />
-
           {/* Web Vitals tracking for all users */}
           {/* <WebVitals /> */}
 

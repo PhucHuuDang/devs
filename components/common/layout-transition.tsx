@@ -1,7 +1,9 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
-import { usePathname } from "next/navigation";
 import { useLayoutEffect, useRef } from "react";
+
+import { usePathname } from "next/navigation";
+
+import { AnimatePresence, motion } from "framer-motion";
 
 export const LayoutTransition = ({
   children,
@@ -19,7 +21,7 @@ export const LayoutTransition = ({
       lastPageRef.current = currentPageRef.current.children;
 
     exitAnimationDivRef.current?.appendChild(
-      lastPageRef.current![0].cloneNode(true)
+      lastPageRef.current![0].cloneNode(true),
     );
     lastPageRef.current = currentPageRef.current.children;
   }, [pathname]);

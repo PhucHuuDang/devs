@@ -341,7 +341,7 @@ export function SettingsSheet({
               <AccordionContent className={accordionContentStyle}>
                 <DualRangeSliderSingle
                   label
-                  title="Global Border Radius"
+                  title="Border Radius"
                   min={0}
                   max={50}
                   step={1}

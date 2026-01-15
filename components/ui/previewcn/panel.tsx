@@ -1,0 +1,221 @@
+"use client";
+
+import { useEffect, type ReactNode } from "react";
+
+import { cn } from "@/lib/utils";
+
+import { ColorPicker } from "./color-picker";
+import { CssExportButton } from "./css-export-button";
+import { FontSelector } from "./font-selector";
+import { ModeToggle } from "./mode-toggle";
+import { PaddingsSelector } from "./paddings.selector";
+import { PresetSelector } from "./preset-selector";
+import { RadiusSelector } from "./radius-selector";
+import { applyTheme } from "./theme-applier";
+import { useThemeState } from "./use-theme-state";
+
+type PanelProps = {
+  onClose: () => void;
+};
+
+type PanelHeaderProps = PanelProps;
+
+type PanelState = ReturnType<typeof useThemeState>;
+
+type PanelSectionProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+type PanelContentProps = Omit<PanelState, "resetTheme">;
+
+type PanelFooterProps = {
+  config: PanelState["config"];
+  onReset: () => void;
+};
+
+const keyframesStyle = `
+@keyframes previewcn-slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+`;
+
+function CloseIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
+
+function RotateCcwIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+    </svg>
+  );
+}
+
+function usePanelKeyframes() {
+  useEffect(() => {
+    const styleId = "previewcn-keyframes";
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement("style");
+      style.id = styleId;
+      style.textContent = keyframesStyle;
+      document.head.appendChild(style);
+    }
+  }, []);
+}
+
+function PanelSection({ children, className }: PanelSectionProps) {
+  return <div className={cn("relative", className)}>{children}</div>;
+}
+
+function PanelHeader({ onClose }: PanelHeaderProps) {
+  return (
+    <div className="flex items-center justify-between border-b border-neutral-50/10 px-4 py-3">
+      <div className="flex items-center gap-2">
+        <span className="text-[13px] font-semibold tracking-[0.02em]">
+          previewcn
+        </span>
+      </div>
+      <button
+        onClick={onClose}
+        className="inline-flex size-7 cursor-pointer items-center justify-center rounded-[10px] border border-transparent bg-transparent text-neutral-400 transition-all hover:border-neutral-50/10 hover:bg-neutral-800/90 hover:text-neutral-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+        aria-label="Close"
+      >
+        <CloseIcon />
+      </button>
+    </div>
+  );
+}
+
+function PanelContent({
+  config,
+  setColorPreset,
+  setRadius,
+  setDarkMode,
+  setFont,
+  setPresetTheme,
+  setPadding,
+}: PanelContentProps) {
+  const sections = [
+    {
+      key: "preset",
+      content: (
+        <PresetSelector value={config.preset} onChange={setPresetTheme} />
+      ),
+    },
+    {
+      key: "color",
+      content: (
+        <ColorPicker value={config.colorPreset} onChange={setColorPreset} />
+      ),
+    },
+    {
+      key: "radius",
+      content: <RadiusSelector value={config.radius} onChange={setRadius} />,
+    },
+    {
+      key: "padding",
+      content: (
+        <PaddingsSelector value={config.padding} onChange={setPadding} />
+      ),
+    },
+    {
+      key: "font",
+      className: "z-20",
+      content: <FontSelector value={config.font} onChange={setFont} />,
+    },
+    {
+      key: "mode",
+      content: <ModeToggle value={config.darkMode} onChange={setDarkMode} />,
+    },
+  ];
+
+  return (
+    <div className="grid flex-1 gap-4 overflow-y-auto p-4 [scrollbar-color:rgb(255_255_255/0.2)_transparent] [scrollbar-width:thin]">
+      {sections.map((section) => (
+        <PanelSection key={section.key} className={section.className}>
+          {section.content}
+        </PanelSection>
+      ))}
+    </div>
+  );
+}
+
+function PanelFooter({ config, onReset }: PanelFooterProps) {
+  return (
+    <div className="flex items-center justify-end border-t border-neutral-50/10 px-4 py-3">
+      <CssExportButton config={config} />
+      <button
+        onClick={onReset}
+        className="inline-flex min-h-[30px] cursor-pointer items-center justify-center gap-1.5 rounded-[10px] border border-transparent bg-transparent px-2.5 py-1.5 text-xs font-medium tracking-[0.01em] text-neutral-400 transition-all hover:border-neutral-50/10 hover:bg-neutral-800/90 hover:text-neutral-50"
+      >
+        <RotateCcwIcon />
+        <span>Reset</span>
+      </button>
+    </div>
+  );
+}
+
+export default function Panel({ onClose }: PanelProps) {
+  const {
+    config,
+    setColorPreset,
+    setRadius,
+    setPadding,
+    setDarkMode,
+    setFont,
+    setPresetTheme,
+    resetTheme,
+  } = useThemeState();
+
+  // Apply stored theme only when the panel opens
+  useEffect(() => {
+    applyTheme(config);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  usePanelKeyframes();
+
+  return (
+    <div className="fixed top-0 right-0 z-99998 flex h-dvh w-80 animate-[previewcn-slide-in-right_0.3s_ease-out] flex-col overflow-hidden border-l border-neutral-50/10 bg-neutral-950 font-['SF_Pro_Text','Segoe_UI',system-ui,sans-serif] text-[12.5px] leading-[1.55] tracking-[0.01em] text-neutral-50 shadow-2xl">
+      <PanelHeader onClose={onClose} />
+      <PanelContent
+        config={config}
+        setColorPreset={setColorPreset}
+        setRadius={setRadius}
+        setPadding={setPadding}
+        setDarkMode={setDarkMode}
+        setFont={setFont}
+        setPresetTheme={setPresetTheme}
+      />
+      <PanelFooter config={config} onReset={resetTheme} />
+    </div>
+  );
+}

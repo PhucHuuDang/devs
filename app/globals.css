@@ -45,6 +45,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --padding-sm: calc(var(--padding, 0.5rem) * 0.75);
+  --padding-md: var(--padding, 0.5rem);
+  --padding-lg: calc(var(--padding, 0.5rem) * 1.5);
+  --padding-xl: calc(var(--padding, 0.5rem) * 2);
   --color-brand: var(--brand);
   --color-highlight: var(--highlight);
   --animate-border-beam: border-beam calc(var(--duration) * 1s) infinite linear;
@@ -347,47 +351,79 @@
   }
 }
 
-/* Global Border Radius Utilities - These classes use the dynamic --radius variable */
 @layer utilities {
-  .rounded-global {
-    border-radius: var(--radius);
+  .p-global-sm {
+    padding: var(--padding-sm);
   }
-  
-  .rounded-global-sm {
-    border-radius: var(--radius-sm);
+  .p-global {
+    padding: var(--padding-md);
   }
-  
-  .rounded-global-md {
-    border-radius: var(--radius-md);
+  .p-global-md {
+    padding: var(--padding-md);
   }
-  
-  .rounded-global-lg {
-    border-radius: var(--radius-lg);
+  .p-global-lg {
+    padding: var(--padding-lg);
   }
-  
-  .rounded-global-xl {
-    border-radius: var(--radius-xl);
+  .p-global-xl {
+    padding: var(--padding-xl);
   }
 
-  /* Individual corner utilities */
-  .rounded-t-global {
-    border-top-left-radius: var(--radius);
-    border-top-right-radius: var(--radius);
+  /* Padding X (horizontal) */
+  .px-global-sm {
+    padding-left: var(--padding-sm);
+    padding-right: var(--padding-sm);
   }
-  
-  .rounded-b-global {
-    border-bottom-left-radius: var(--radius);
-    border-bottom-right-radius: var(--radius);
+  .px-global {
+    padding-left: var(--padding-md);
+    padding-right: var(--padding-md);
   }
-  
-  .rounded-l-global {
-    border-top-left-radius: var(--radius);
-    border-bottom-left-radius: var(--radius);
+  .px-global-md {
+    padding-left: var(--padding-md);
+    padding-right: var(--padding-md);
   }
-  
-  .rounded-r-global {
-    border-top-right-radius: var(--radius);
-    border-bottom-right-radius: var(--radius);
+  .px-global-lg {
+    padding-left: var(--padding-lg);
+    padding-right: var(--padding-lg);
+  }
+  .px-global-xl {
+    padding-left: var(--padding-xl);
+    padding-right: var(--padding-xl);
+  }
+
+  /* Padding Y (vertical) */
+  .py-global-sm {
+    padding-top: var(--padding-sm);
+    padding-bottom: var(--padding-sm);
+  }
+  .py-global {
+    padding-top: var(--padding-md);
+    padding-bottom: var(--padding-md);
+  }
+  .py-global-md {
+    padding-top: var(--padding-md);
+    padding-bottom: var(--padding-md);
+  }
+  .py-global-lg {
+    padding-top: var(--padding-lg);
+    padding-bottom: var(--padding-lg);
+  }
+  .py-global-xl {
+    padding-top: var(--padding-xl);
+    padding-bottom: var(--padding-xl);
+  }
+
+  /* Individual sides */
+  .pt-global {
+    padding-top: var(--padding-md);
+  }
+  .pr-global {
+    padding-right: var(--padding-md);
+  }
+  .pb-global {
+    padding-bottom: var(--padding-md);
+  }
+  .pl-global {
+    padding-left: var(--padding-md);
   }
 }
 
@@ -463,7 +499,9 @@
   overflow: hidden;
 
   background-repeat: no-repeat;
-  background-position: -100% 0, 0 0;
+  background-position:
+    -100% 0,
+    0 0;
 
   background-image: linear-gradient(
     var(--shine-deg),
@@ -475,12 +513,16 @@
     transparent 100%
   );
 
-  background-size: 250% 250%, 100% 100%;
+  background-size:
+    250% 250%,
+    100% 100%;
   transition: background-position 0s ease;
 }
 
 .card-shine-effect:hover {
-  background-position: 200%0, 0 0;
+  background-position:
+    200%0,
+    0 0;
   transition-duration: 1s;
 }
 
