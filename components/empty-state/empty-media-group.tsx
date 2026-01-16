@@ -1,4 +1,7 @@
 import { PlusIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -9,12 +12,11 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "../ui/empty";
-import { cn } from "@/lib/utils";
 
 interface EmptyMediaGroupProps {
   title?: string;
   description?: string;
-  action: React.ReactNode;
+  action: React.ReactNode | string;
 
   className?: string;
 }
@@ -54,10 +56,14 @@ export const EmptyMediaGroup = ({
         <EmptyDescription>{description}</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button size="sm">
-          <PlusIcon />
-          {action}
-        </Button>
+        {typeof action === "string" ? (
+          <Button size="sm" className=" flex items-center justify-center gap-1">
+            <PlusIcon />
+            {action}
+          </Button>
+        ) : (
+          <div></div>
+        )}
       </EmptyContent>
     </Empty>
   );

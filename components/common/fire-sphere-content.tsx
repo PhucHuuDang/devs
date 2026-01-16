@@ -1,7 +1,9 @@
 import React from "react";
-import { FireSphere } from "../ui/fire-sphere";
-import { BackgroundContent, defaultContent } from "./background-content";
+
 import LightRays from "../LightRays";
+import { FireSphere } from "../ui/fire-sphere";
+
+import { BackgroundContent, defaultContent } from "./background-content";
 
 export const FireSphereContent = () => {
   return (

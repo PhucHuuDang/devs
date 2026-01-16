@@ -99,6 +99,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* {process.env.NODE_ENV === "development" && <PreviewcnDevtools />} */}
+        <Toaster richColors position="top-right" closeButton />
         <PreviewcnDevtools />
         <AuthProvider
           getCookies={getAuthCookies}
@@ -107,11 +108,8 @@ export default function RootLayout({
         >
           {/* Web Vitals tracking for all users */}
           {/* <WebVitals /> */}
-
           {/* Web Vitals Monitor - Only in development */}
           {/* {process.env.NODE_ENV === "development" && <WebVitalsMonitor />} */}
-
-          <Toaster richColors position="top-right" closeButton />
 
           <ApolloWrapper>{children}</ApolloWrapper>
         </AuthProvider>

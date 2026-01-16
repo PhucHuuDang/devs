@@ -1,5 +1,14 @@
-import { gql } from "@apollo/client";
+// import { gql } from "@apollo/client";
 
+// TODO: Backend hasn't implemented blog mutations yet
+// Uncomment when backend implements: createPost, updatePost, incrementViews
+
+// Placeholder exports to prevent import errors
+export const CREATE_BLOG = null as any;
+export const UPDATE_BLOG = null as any;
+export const INCREMENT_BLOG_VIEWS = null as any;
+
+/*
 export const CREATE_BLOG = gql`
   mutation CreateBlog(
     $title: String!
@@ -42,13 +51,6 @@ export const UPDATE_BLOG = gql`
   }
 `;
 
-// export const TRACK_BLOG_VIEW = gql`
-//   mutation incrementViews($id: String!, $identifier: String!) {
-//     incrementViews(id: $id, identifier: $identifier) {
-//     }
-//   }
-// `;
-
 export const INCREMENT_BLOG_VIEWS = gql`
   mutation IncrementBlogViews($id: String!, $identifier: String!) {
     incrementViews(id: $id, identifier: $identifier) {
@@ -57,3 +59,4 @@ export const INCREMENT_BLOG_VIEWS = gql`
     }
   }
 `;
+*/

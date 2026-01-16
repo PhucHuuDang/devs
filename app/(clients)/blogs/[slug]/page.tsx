@@ -4,9 +4,8 @@ import { notFound } from "next/navigation";
 import { isEmpty } from "lodash";
 
 import { fetchGraphql } from "@/lib/graph-fetch";
-import { baseUrl } from "@/lib/utils";
 
-import { GetPostsQuery, Query } from "@/app/graphql/__generated__/graphql";
+import { PostModel, Query } from "@/app/graphql/__generated__/graphql";
 import {
   GET_POST_BY_SLUG,
   GET_POSTS_STRING,
@@ -27,13 +26,14 @@ export const dynamicParams = true;
 export const revalidate = 300;
 export const dynamic = "force-static";
 
+const baseUrl = process.env.NEXT_PUBLIC_CLIENT_URL as string;
+
 export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
   try {
     const { slug } = await params;
-    const { allPosts = [] } =
-      await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
+    const data = await fetchGraphql<PostModel[]>(GET_POSTS_STRING);
 
-    const post = allPosts.find((post) => post.slug === slug);
+    const post = data.find((post) => post.slug === slug);
     // console.log({ post });
 
     if (!post) {
@@ -48,7 +48,7 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
       description: post?.description ?? "",
       keywords: post?.tags.join(", "),
 
-      author: [{ name: post?.author.name }],
+      author: [{ name: post?.user.name }],
 
       openGraph: {
         title: post?.title,
@@ -64,7 +64,7 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
         type: "article",
         publishedTime: post?.createdAt,
         modifiedTime: post?.updatedAt,
-        authors: [post?.author.name],
+        authors: [post?.user.name],
       },
       twitter: {
         card: "summary_large_image",
@@ -93,7 +93,7 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
 };
 
 export async function generateSitemaps() {
-  const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(
+  const data = await fetchGraphql<PostModel[]>(
     GET_POSTS_STRING,
     {},
     {
@@ -101,11 +101,11 @@ export async function generateSitemaps() {
     },
   );
 
-  if (allPosts.length === 0) {
+  if (data.length === 0) {
     return [];
   }
 
-  return allPosts.map((post) => ({
+  return data.map((post) => ({
     slug: post.slug,
     lastModified: post.updatedAt ?? new Date(),
     changeFrequency: "weekly" as const,
@@ -115,9 +115,9 @@ export async function generateSitemaps() {
 }
 
 export async function generateStaticParams() {
-  const { allPosts = [] } = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING);
+  const data = await fetchGraphql<PostModel[]>(GET_POSTS_STRING);
 
-  return allPosts.map((post) => ({
+  return data.map((post) => ({
     slug: post.slug,
   }));
 }
@@ -127,12 +127,15 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
   const url = new URL(process.env.NEXT_PUBLIC_CLIENT_URL as string);
 
-  const { findPostBySlug = {} as Query["findPostBySlug"] } =
-    await fetchGraphql<Query>(GET_POST_BY_SLUG, {
-      slug,
-    });
+  const postDetail = await fetchGraphql<PostModel>(GET_POST_BY_SLUG, {
+    slug,
+  });
 
-  if (isEmpty(findPostBySlug)) {
+  await fetchGraphql<PostModel>(GET_POST_BY_SLUG, {
+    slug,
+  });
+
+  if (isEmpty(postDetail)) {
     return notFound();
   }
 
@@ -141,25 +144,25 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: findPostBySlug.title,
-    datePublished: findPostBySlug.createdAt,
-    dateModified: findPostBySlug.updatedAt,
+    headline: postDetail.title,
+    datePublished: postDetail.createdAt,
+    dateModified: postDetail.updatedAt,
     author: {
       "@type": "Person",
-      name: findPostBySlug.author?.name,
-      url: `${baseUrl}/${findPostBySlug.slug}`,
+      name: postDetail.user?.name,
+      url: `${baseUrl}/${postDetail.slug}`,
     },
     publisher: {
       "@type": "Organization",
       name: "DEVS",
       url: baseUrl,
     },
-    image: findPostBySlug.mainImage ?? "",
-    description: findPostBySlug.description ?? "",
+    image: postDetail.mainImage ?? "",
+    description: postDetail.description ?? "",
 
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${baseUrl}/${findPostBySlug.slug}`,
+      "@id": `${baseUrl}/${postDetail.slug}`,
     },
   };
 
@@ -176,8 +179,8 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
       {
         "@type": "ListItem",
         position: 2,
-        name: findPostBySlug.title,
-        item: `${url.origin}/blogs/${findPostBySlug.slug}`,
+        name: postDetail.title,
+        item: `${url.origin}/blogs/${postDetail.slug}`,
       },
     ],
   };
@@ -186,10 +189,10 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
   const author: AnimatedItemsProps[] = [
     {
-      id: findPostBySlug.author.id,
-      name: findPostBySlug.author.name,
-      designation: findPostBySlug.author.designation ?? "N/A",
-      image: findPostBySlug.author.avatarUrl ?? "/image.jpg",
+      id: postDetail.user.id,
+      name: postDetail.user.name ?? "N/A",
+      designation: "N/A",
+      image: postDetail.user.avatarUrl ?? "/image.jpg",
     },
   ];
 
@@ -205,17 +208,17 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
         <div className="w-full">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-0">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl text-center font-bold mb-8 leading-tight">
-              {findPostBySlug.title}
+              {postDetail.title}
             </h1>
           </div>
 
-          <ReadTrack blogId={findPostBySlug.id} />
+          <ReadTrack blogId={postDetail.id} />
 
           {/* Hero Image - Optimized for performance and responsive design */}
           <div className="relative w-full aspect-video max-w-5xl mx-auto mt-6 overflow-hidden rounded-3xl shadow-lg">
             <Image
-              src={findPostBySlug.mainImage ?? "/image.jpg"}
-              alt={findPostBySlug.title}
+              src={postDetail.mainImage ?? "/image.jpg"}
+              alt={postDetail.title}
               fill
               priority={true}
               quality={90}
@@ -234,11 +237,11 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
               <div className="flex ml-4 flex-col items-start justify-start ">
                 <h2 className="text-base text-primary font-semibold">
-                  {findPostBySlug.author.name}
+                  {postDetail.user.name}
                 </h2>
 
                 <div className="text-sm font-medium text-sky-500">
-                  posted on {formatDate(findPostBySlug.createdAt, "long")}
+                  posted on {formatDate(postDetail.createdAt, "long")}
                 </div>
               </div>
             </div>
@@ -247,7 +250,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-0">
           <BlogDetailWithMode
-            data={findPostBySlug.content || []}
+            data={postDetail.content || []}
             forcedMode="viewClient"
           />
         </div>

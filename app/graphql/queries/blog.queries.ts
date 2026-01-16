@@ -1,36 +1,35 @@
 import { gql } from "@apollo/client";
 
 export const GET_POSTS = gql`
-  query GetPosts {
-    allPosts {
-      id
-      title
-      mainImage
-      description
-      content
-      votes
-      authorId
-      categoryId
-      createdAt
-      updatedAt
-      tags
-      slug
-      views
-      isPublished
-      isPriority
-      isPinned
-      isDeleted
+  query GetPosts($filters: PostFiltersInput) {
+    posts(filters: $filters) {
+      data {
+        id
+        title
+        slug
+        description
+        mainImage
+        tags
+        views
+        isPublished
+        createdAt
 
-      author {
-        id
-        name
-        avatarUrl
-        bio
-        designation
+        user {
+          id
+          name
+          avatarUrl
+        }
+
+        category {
+          id
+          name
+        }
       }
-      category {
-        id
-        name
+      meta {
+        total
+        page
+        limit
+        totalPages
       }
     }
   }
@@ -38,7 +37,7 @@ export const GET_POSTS = gql`
 
 export const GET_POSTS_STRING = `
 query GetPosts {
-    allPosts {
+    posts {
       id
       title
       slug

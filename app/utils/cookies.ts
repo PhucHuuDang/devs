@@ -1,13 +1,16 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 import { jwtDecode } from "jwt-decode";
-import { decodeData } from "./decode";
+
+import { fetchGraphql } from "@/lib/graph-fetch";
 
 import { GetSessionQuery } from "@/app/graphql/__generated__/graphql";
 import { GET_SESSION_STRING } from "@/app/graphql/mutaions/auth.mutations";
-import { fetchGraphql } from "@/lib/graph-fetch";
-import { redirect } from "next/navigation";
+
+import { decodeData } from "./decode";
 
 export async function getAuthCookies() {
   const store = await cookies();
@@ -43,7 +46,7 @@ export async function getSessionData() {
 // };
 export async function setAuthCookies(
   accessToken: string,
-  refreshToken: string
+  refreshToken: string,
 ) {
   const store = await cookies();
   store.set("devs:access-token", accessToken, { httpOnly: true });

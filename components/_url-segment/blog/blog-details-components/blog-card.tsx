@@ -1,4 +1,26 @@
 import React, { useState } from "react";
+
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import { truncate, TruncateOptions } from "lodash";
+import {
+  ChartNoAxesGanttIcon,
+  HeartIcon,
+  MessageCircleIcon,
+  Shield,
+} from "lucide-react";
+
+import { generateSlug } from "@/lib/generate";
+import { cn } from "@/lib/utils";
+
+import { HoverCardCustom } from "@/components/custom/hover-card-custom";
+import {
+  AnimatedTooltip,
+  AnimatedItemsProps,
+} from "@/components/ui/animated-tooltip";
+import { RichBadge } from "@/components/ui/badge-1";
+import { BorderBeam } from "@/components/ui/border-beam";
 import {
   Card,
   CardContent,
@@ -7,28 +29,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
-import { truncate, TruncateOptions } from "lodash";
-import {
-  ChartNoAxesGanttIcon,
-  HeartIcon,
-  MessageCircleIcon,
-  Shield,
-} from "lucide-react";
-import { RichBadge } from "@/components/ui/badge-1";
-import { HoverCardCustom } from "@/components/custom/hover-card-custom";
-import {
-  AnimatedTooltip,
-  AnimatedItemsProps,
-} from "@/components/ui/animated-tooltip";
-import { BorderBeam } from "@/components/ui/border-beam";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { generateSlug } from "@/lib/generate";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export interface BlogCardProps {
   title: string;
+  slug?: string;
   description: string;
   mainImage: string;
   views: number;
@@ -47,6 +52,7 @@ const cardStyle = `hover:border-primary/20 rounded-3xl group transition-all dura
 
 export const BlogCard = ({
   title,
+  slug,
   description,
   mainImage,
   views,
@@ -63,7 +69,9 @@ export const BlogCard = ({
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/blogs/${generateSlug(title)}`);
+    // Use provided slug or fallback to generated slug
+    const postSlug = slug || generateSlug(title);
+    router.push(`/blogs/${postSlug}`);
   };
 
   return (
@@ -93,7 +101,7 @@ export const BlogCard = ({
             fill
             className={cn(
               "object-cover transition-all duration-500 group-hover:scale-105",
-              classImage
+              classImage,
             )}
             priority={true} // ưu tiên tải ảnh chính
             // sizes="(max-width: 768px) 100vw, 50vw"
