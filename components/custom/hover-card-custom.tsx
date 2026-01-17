@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
+
+import { cn } from "@/lib/utils";
 
 import {
   HoverCard,
@@ -15,6 +16,8 @@ interface HoverCardCustomProps {
 
   openDelay?: number;
   classNameTrigger?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const HoverCardCustom = ({
@@ -24,11 +27,13 @@ export const HoverCardCustom = ({
   asChild = true,
   openDelay = 300,
   classNameTrigger = "cursor-pointer p-0",
+  open,
+  onOpenChange,
   ...props
 }: HoverCardCustomProps &
   React.ComponentProps<typeof HoverCardPrimitive.Content>) => {
   return (
-    <HoverCard openDelay={openDelay}>
+    <HoverCard openDelay={openDelay} open={open} onOpenChange={onOpenChange}>
       <HoverCardTrigger asChild={asChild} className={classNameTrigger}>
         {trigger}
       </HoverCardTrigger>

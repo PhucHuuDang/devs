@@ -113,7 +113,7 @@
     "lodash.debounce": "^4.0.8",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.556.0",
-    "motion": "^12.23.25",
+    "motion": "^12.26.2",
     "next": "16.0.10",
     "next-cloudinary": "^6.17.1",
     "next-devtools-mcp": "^0.3.3",

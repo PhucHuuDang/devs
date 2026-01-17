@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -197,7 +199,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
   ];
 
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <article className="slate-editor py-10">
         <script
           type="application/ld+json"
@@ -255,7 +257,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
           />
         </div>
       </article>
-    </>
+    </Suspense>
   );
 };
 

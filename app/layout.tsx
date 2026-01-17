@@ -8,6 +8,7 @@ import "./globals.css";
 
 // import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor"; // For development
 
+import { SettingsSheet } from "@/components/common/settings-sheet";
 import { WebVitals } from "@/components/common/web-vitals";
 import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor";
 // import { PreviewcnDevtools } from "@/components/ui/previewcn";
@@ -101,6 +102,7 @@ export default function RootLayout({
         {/* {process.env.NODE_ENV === "development" && <PreviewcnDevtools />} */}
         <Toaster richColors position="top-right" closeButton />
         <PreviewcnDevtools />
+        <SettingsSheet />
         <AuthProvider
           getCookies={getAuthCookies}
           setCookies={setAuthCookies}

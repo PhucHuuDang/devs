@@ -1,3 +1,5 @@
+import React from "react";
+
 import { PlusIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -56,13 +58,13 @@ export const EmptyMediaGroup = ({
         <EmptyDescription>{description}</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        {typeof action === "string" ? (
+        {typeof action === "string" && typeof action !== "function" ? (
           <Button size="sm" className=" flex items-center justify-center gap-1">
             <PlusIcon />
             {action}
           </Button>
         ) : (
-          <div></div>
+          <>{action}</>
         )}
       </EmptyContent>
     </Empty>

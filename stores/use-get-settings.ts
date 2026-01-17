@@ -24,6 +24,7 @@ export const useGetSettings = () => {
 
     isDockOpen: useSettingsGlassSurfaceSelectors.use.isDockOpen?.(),
     isNavbarOpen: useSettingsGlassSurfaceSelectors.use.isNavbarOpen?.(),
+    isOpen: useSettingsGlassSurfaceSelectors.use.isOpen?.(),
   };
 
   return settings;

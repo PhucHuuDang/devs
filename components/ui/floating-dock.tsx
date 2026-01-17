@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 
 import { IconLayoutNavbarCollapse } from "@tabler/icons-react";
@@ -23,9 +24,17 @@ import {
 
 import { cn } from "@/lib/utils";
 
+import { SheetTriggerButton } from "@/components/common/settings-sheet";
 import { useGetSettings } from "@/stores/use-get-settings";
 
-import { SettingsSheet } from "../common/settings-sheet";
+// import { SettingsSheet } from "../common/settings-sheet";
+
+const SettingsSheet = dynamic(
+  () => import("../common/settings-sheet").then((mod) => mod.SettingsSheet),
+  {
+    ssr: false,
+  },
+);
 
 export interface IconContainerProps {
   mouseX: MotionValue;
@@ -98,7 +107,12 @@ const links: Omit<IconContainerProps, "mouseX">[] = [
 
   {
     title: "Settings",
-    icon: <SettingsSheet inDock={true} />,
+    icon: (
+      <SheetTriggerButton
+        isHover={true}
+        classNameTrigger="h-full w-full text-neutral-500 dark:text-neutral-300"
+      />
+    ),
     href: "#",
   },
 ];

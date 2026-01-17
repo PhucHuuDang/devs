@@ -2,8 +2,8 @@ import { MetadataRoute } from "next";
 
 import { fetchGraphql } from "@/lib/graph-fetch";
 
-import { PostModel } from "./graphql/__generated__/graphql";
-import { GET_POSTS_STRING } from "./graphql/queries/blog.queries";
+import { GetPostsQuery, PostModel } from "./graphql/__generated__/graphql";
+import { GET_POSTS, GET_POSTS_STRING } from "./graphql/queries/blog.queries";
 
 export const dynamic = "force-dynamic";
 type Route = {
@@ -29,17 +29,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "daily" as const,
   }));
 
-  const fetchRoutes: Route[] = [];
+  let fetchRoutes: Route[] = [];
 
   try {
-    const data = await fetchGraphql<PostModel>(GET_POSTS_STRING);
+    const response = await fetchGraphql<GetPostsQuery>(GET_POSTS_STRING, {
+      variables: {
+        filters: {
+          isPublished: true,
+        },
+      },
+    });
 
-    console.log({ data });
-    // fetchRoutes = allPosts.map((post) => ({
-    //   url: `${baseUrl}/${post.slug}`,
-    //   lastModified: post.updatedAt ?? new Date(),
-    //   changeFrequency: "weekly" as const,
-    // }));
+    console.log({ response });
+    fetchRoutes = response.posts.data.map((post) => ({
+      url: `${baseUrl}/${post.slug}`,
+      lastModified: post.createdAt ?? new Date(),
+      changeFrequency: "weekly" as const,
+    }));
   } catch (error) {
     throw JSON.stringify(error, null, 2);
   }

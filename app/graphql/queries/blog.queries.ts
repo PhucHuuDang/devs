@@ -36,15 +36,16 @@ export const GET_POSTS = gql`
 `;
 
 export const GET_POSTS_STRING = `
-query GetPosts {
-    posts {
+query GetPosts($filters: PostFiltersInput) {
+    posts(filters: $filters) {
+      data {
       id
       title
       slug
       tags
       description
       mainImage
-      author {
+      user {
         id
         name
         avatarUrl

@@ -57,6 +57,7 @@ const nextConfig: NextConfig = {
       "lucide-react",
       "@radix-ui/*",
       "@platejs/*",
+      "platejs/react",
       "@ai-sdk/react",
       "@faker-js/faker",
       "@fingerprintjs/fingerprintjs",
@@ -69,9 +70,12 @@ const nextConfig: NextConfig = {
       "@platejs/basic-styles",
       "motion/react",
       "zod",
+      "lodash",
+      "lodash.debounce",
+      "recharts",
     ],
 
-    // viewTransition: true,
+    viewTransition: true,
 
     // Better client-side caching for improved navigation
     // clientSegmentCache: true,

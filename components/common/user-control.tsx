@@ -2,6 +2,7 @@
 
 import { forwardRef, useEffect, useState } from "react";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
 import { useMutation, useQuery } from "@apollo/client/react";
@@ -31,7 +32,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { HoverCardItem } from "../ui/hover-card";
 import { Kbd, KbdGroup } from "../ui/kbd";
 
-import { SettingsSheet } from "./settings-sheet";
+import { SettingsSheet, SheetTriggerButton } from "./settings-sheet";
+
+// const SettingsSheet = dynamic(
+//   () => import("./settings-sheet").then((mod) => mod.SettingsSheet),
+//   {
+//     ssr: false,
+//   }
+// );
 
 type TriggerProps = {
   avatarUrl: string;
@@ -118,7 +126,8 @@ export const UserControl = () => {
           </Link>
         )}
 
-        <SettingsSheet classNameTrigger="size-5 p-0" isHover />
+        <SheetTriggerButton isHover={false} />
+        {/* <SettingsSheet classNameTrigger="size-5 p-0" /> */}
 
         {isAuth && (
           <>

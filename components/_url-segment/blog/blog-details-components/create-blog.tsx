@@ -15,7 +15,6 @@ import z from "zod";
 
 import { generateSlug } from "@/lib/generate";
 
-import { CreateBlogMutation } from "@/app/graphql/__generated__/graphql";
 import { CREATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
 import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
@@ -141,10 +140,10 @@ export const CreateBlog = () => {
         ...values,
         tags: tags.map((tag: TTag) => tag.key),
       },
-      onCompleted: (data: CreateBlogMutation | unknown) => {
+      onCompleted: (data: unknown) => {
         // toast.success(JSON);
         // console.log({ data });
-        toast.success(`${(data as CreateBlogMutation).createPost.title}`);
+        toast.success(`${(data as unknown as any).createPost.title}`);
         form.reset();
       },
       onError: (error: any) => {

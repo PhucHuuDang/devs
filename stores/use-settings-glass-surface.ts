@@ -10,6 +10,11 @@ export type xChannel = "R" | "G" | "B";
 
 export type yChannel = xChannel;
 
+export interface SettingToggleProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
 export interface UseDockSizeProps {
   defaultSize: number;
   hoveredSize: number;
@@ -60,6 +65,7 @@ export interface SettingsActions extends Pick<
   setBackgroundOpacity: (backgroundOpacity: number) => void;
   setSaturation: (saturation: number) => void;
   setDistortionScale: (distortionScale: number) => void;
+
   setRedOffset: (redOffset: number) => void;
   setGreenOffset: (greenOffset: number) => void;
   setBlueOffset: (blueOffset: number) => void;
@@ -97,9 +103,11 @@ export type SettingStates = Omit<
   "children" | "className" | "style" | "childClassName" | "width" | "height"
 > &
   Pick<UseDockSizeProps, "defaultSize" | "hoveredSize"> &
-  Pick<UseNavbarDockProps, "isDockOpen" | "isNavbarOpen">;
+  Pick<UseNavbarDockProps, "isDockOpen" | "isNavbarOpen"> &
+  Pick<SettingToggleProps, "isOpen">;
 
 export const defaultSettings: SettingStates = {
+  isOpen: false,
   borderRadius: 20,
   borderWidth: 0.07,
   brightness: 50,
@@ -127,7 +135,7 @@ export const defaultSettings: SettingStates = {
 };
 
 export const useSettingsGlassSurface = createWithEqualityFn<
-  SettingStates & SettingsActions & UseDockSizeProps
+  SettingStates & SettingsActions & UseDockSizeProps & SettingToggleProps
 >()(
   persist(
     immer((set, get) => {
@@ -212,12 +220,41 @@ export const useSettingsGlassSurface = createWithEqualityFn<
 
         onToggleDock: () =>
           set((state) => {
-            state.isDockOpen = !state.isDockOpen;
+            // If dock is the only one visible, don't allow toggle (handled by disabled state)
+            if (state.isDockOpen && !state.isNavbarOpen) {
+              return;
+            }
+
+            const nextDock = !state.isDockOpen;
+
+            // If turning off dock, ensure navbar is on
+            if (!nextDock && !state.isNavbarOpen) {
+              state.isNavbarOpen = true;
+            }
+
+            state.isDockOpen = nextDock;
           }),
 
         onToggleNavbar: () =>
           set((state) => {
-            state.isNavbarOpen = !state.isNavbarOpen;
+            // If navbar is the only one visible, don't allow toggle (handled by disabled state)
+            if (state.isNavbarOpen && !state.isDockOpen) {
+              return;
+            }
+
+            const nextNavbar = !state.isNavbarOpen;
+
+            // If turning off navbar, ensure dock is on
+            if (!nextNavbar && !state.isDockOpen) {
+              state.isDockOpen = true;
+            }
+
+            state.isNavbarOpen = nextNavbar;
+          }),
+
+        onOpenChange: (value) =>
+          set((state) => {
+            state.isOpen = value;
           }),
       };
     }),

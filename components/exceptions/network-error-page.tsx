@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import WifiOffIcon from "@/components/ui/wifi-off-icon";
 
 interface NetworkErrorPageProps {
   title?: string;
@@ -68,7 +69,7 @@ export function NetworkErrorPage({
         <div className="mb-8 flex justify-center">
           <div className="relative">
             <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
-              <ConnectionIcon className="w-10 h-10 text-muted-foreground" />
+              <WifiOffIcon className="w-10 h-10 text-muted-foreground" />
             </div>
             <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-background border-2 border-border flex items-center justify-center">
               <span className="text-xs text-muted-foreground">!</span>

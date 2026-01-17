@@ -29,6 +29,10 @@ const BlogsPage = () => {
       notifyOnNetworkStatusChange: true,
     });
 
+  if (networkStatus === NetworkStatus.error || error) {
+    return <NetworkErrorPage errorCode="NETWORK_CONNECTION_FAILED" />;
+  }
+
   // Handle loading state
   if (loading && !data) {
     return (
@@ -40,10 +44,6 @@ const BlogsPage = () => {
         </div>
       </div>
     );
-  }
-
-  if (networkStatus === NetworkStatus.error || error) {
-    return <NetworkErrorPage errorCode="NETWORK_CONNECTION_FAILED" />;
   }
 
   console.log({ data });
