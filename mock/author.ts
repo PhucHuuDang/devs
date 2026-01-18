@@ -2,7 +2,7 @@ export const AUTHORS_DATA = [
   {
     id: "cmhqi5ks60000gn5l82a3q268",
     bio: "Full-stack developer specializing in GraphQL and Prisma.",
-    avatarUrl:
+    image:
       "https://images.unsplash.com/photo-1761939433931-4305ebba3ec9?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2950",
     verified: false,
     email: "harry@example.com",
@@ -28,7 +28,7 @@ export const AUTHORS_DATA = [
   {
     id: "cmhslblxm0000gnnx3tn9aqcr",
     bio: "Full-stack developer specializing in GraphQL and Prisma.",
-    avatarUrl:
+    image:
       "https://images.unsplash.com/photo-1761939433931-4305ebba3ec9?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2950",
     verified: false,
     email: "harrydang@example.com",

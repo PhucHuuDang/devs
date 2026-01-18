@@ -17,7 +17,7 @@ export const GET_POSTS = gql`
         user {
           id
           name
-          avatarUrl
+          image
         }
 
         category {

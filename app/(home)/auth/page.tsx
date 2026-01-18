@@ -1,10 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { getAuthCookies } from "@/app/utils/cookies";
-import {
-  SignInPage as SignInPageComponent,
-  Testimonial,
-} from "@/components/ui/sign-in";
+import { AuthClientPage, Testimonial } from "@/components/ui/auth-client-page";
 
 const sampleTestimonials: Testimonial[] = [
   {
@@ -38,7 +35,7 @@ const SignInPage = async () => {
 
   return (
     <div className="bg-background text-foreground">
-      <SignInPageComponent
+      <AuthClientPage
         heroImageSrc="https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80"
         testimonials={sampleTestimonials}
       />

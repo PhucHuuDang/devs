@@ -1,4 +1,4 @@
-import { baseUrl } from "@/lib/utils";
+import { BASE_URL } from "@/config/url";
 
 export default function robots() {
   return {
@@ -8,7 +8,7 @@ export default function robots() {
       },
     ],
 
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
+    sitemap: `${BASE_URL}/sitemap.xml`,
+    host: BASE_URL,
   };
 }

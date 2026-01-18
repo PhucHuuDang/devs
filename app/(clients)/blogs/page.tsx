@@ -29,6 +29,8 @@ const BlogsPage = () => {
       notifyOnNetworkStatusChange: true,
     });
 
+  // console.log({ networkStatus });
+
   if (networkStatus === NetworkStatus.error || error) {
     return <NetworkErrorPage errorCode="NETWORK_CONNECTION_FAILED" />;
   }
@@ -93,7 +95,7 @@ const BlogsPage = () => {
                 {
                   id: post.user.id,
                   name: post.user.name ?? "Anonymous",
-                  image: post.user.avatarUrl ?? "/image.jpg",
+                  image: post.user.image ?? "/image.jpg",
                   designation: "Author",
                 },
               ]}

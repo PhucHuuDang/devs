@@ -85,13 +85,6 @@ export type CreatePostInput = {
   title: Scalars["String"]["input"];
 };
 
-export type CreateUser = {
-  avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  name: Scalars["String"]["input"];
-  password?: InputMaybe<Scalars["String"]["input"]>;
-};
-
 export type DeletePostResponse = {
   __typename?: "DeletePostResponse";
   code?: Maybe<Scalars["String"]["output"]>;
@@ -140,7 +133,6 @@ export type Mutation = {
   __typename?: "Mutation";
   /** Create a new post (requires authentication) */
   createPost: PostResponse;
-  createUser: UserModel;
   /** Delete a post (requires ownership) */
   deletePost: DeletePostResponse;
   gitHub: GitHubUserResponse;
@@ -148,6 +140,7 @@ export type Mutation = {
   incrementViews: PostResponse;
   signInEmail: SignInEmailUser;
   signOut: SignOutResponse;
+  /** Sign up email user */
   signUpEmail: SignUpEmailUser;
   /** Update a post (requires ownership) */
   updatePost: PostResponse;
@@ -156,10 +149,6 @@ export type Mutation = {
 
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
-};
-
-export type MutationCreateUserArgs = {
-  createUserInput: CreateUser;
 };
 
 export type MutationDeletePostArgs = {
@@ -185,8 +174,8 @@ export type MutationUpdatePostArgs = {
 };
 
 export type MutationUpdateProfileArgs = {
-  avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
+  image?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   password?: InputMaybe<Scalars["String"]["input"]>;
   rememberMe?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -198,7 +187,7 @@ export type OAuth2UserInfoModel = {
   emailVerified?: Maybe<Scalars["Boolean"]["output"]>;
   id: Scalars["String"]["output"];
   image?: Maybe<Scalars["String"]["output"]>;
-  name?: Maybe<Scalars["String"]["output"]>;
+  name: Scalars["String"]["output"];
 };
 
 export type PaginatedPostsResponse = {
@@ -364,10 +353,9 @@ export type SessionModel = {
 
 export type SignInEmailUser = {
   __typename?: "SignInEmailUser";
-  redirect: Scalars["String"]["output"];
-  token: Scalars["String"]["output"];
-  url: Scalars["String"]["output"];
-  user: SignInEmailUserResponse;
+  /** Token */
+  token?: Maybe<Scalars["String"]["output"]>;
+  user?: Maybe<SignInEmailUserResponse>;
 };
 
 export type SignInEmailUserResponse = {
@@ -381,9 +369,11 @@ export type SignInEmailUserResponse = {
 };
 
 export type SignInInput = {
-  callbackURL?: InputMaybe<Scalars["String"]["input"]>;
+  /** Email */
   email: Scalars["String"]["input"];
+  /** Password */
   password: Scalars["String"]["input"];
+  /** Remember me */
   rememberMe?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
@@ -392,25 +382,21 @@ export type SignOutResponse = {
   success: Scalars["Boolean"]["output"];
 };
 
-export type SignUpEmailResponse = {
-  __typename?: "SignUpEmailResponse";
-  email?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["String"]["output"];
-  image?: Maybe<Scalars["String"]["output"]>;
-  name?: Maybe<Scalars["String"]["output"]>;
-};
-
 export type SignUpEmailUser = {
   __typename?: "SignUpEmailUser";
+  /** Token */
   token?: Maybe<Scalars["String"]["output"]>;
-  user: SignUpEmailResponse;
+  user?: Maybe<UserModel>;
 };
 
 export type SignUpInput = {
-  avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
+  /** Email */
   email: Scalars["String"]["input"];
+  /** Name */
   name: Scalars["String"]["input"];
+  /** Password */
   password: Scalars["String"]["input"];
+  /** Remember me */
   rememberMe?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
@@ -430,9 +416,9 @@ export type UpdatePostInput = {
 export type UserModel = {
   __typename?: "UserModel";
   accounts: Array<AccountModel>;
-  avatarUrl?: Maybe<Scalars["String"]["output"]>;
   comments: Array<Comment>;
   createdAt: Scalars["DateTime"]["output"];
+  designation?: Maybe<Scalars["String"]["output"]>;
   email?: Maybe<Scalars["String"]["output"]>;
   emailVerified: Scalars["Boolean"]["output"];
   id: Scalars["String"]["output"];
@@ -452,12 +438,12 @@ export type SignUpEmailMutation = {
   signUpEmail: {
     __typename?: "SignUpEmailUser";
     token?: string | null;
-    user: {
-      __typename?: "SignUpEmailResponse";
+    user?: {
+      __typename?: "UserModel";
       id: string;
       email?: string | null;
       name?: string | null;
-    };
+    } | null;
   };
 };
 
@@ -469,13 +455,16 @@ export type SignInEmailMutation = {
   __typename?: "Mutation";
   signInEmail: {
     __typename?: "SignInEmailUser";
-    token: string;
-    user: {
+    token?: string | null;
+    user?: {
       __typename?: "SignInEmailUserResponse";
       id: string;
       email?: string | null;
       name?: string | null;
-    };
+      image?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    } | null;
   };
 };
 
@@ -514,10 +503,9 @@ export type GetSessionQuery = {
       id: string;
       email?: string | null;
       name?: string | null;
-      avatarUrl?: string | null;
+      image?: string | null;
       createdAt: any;
       updatedAt?: any | null;
-      image?: string | null;
     };
   };
 };
@@ -545,7 +533,7 @@ export type GetPostsQuery = {
         __typename?: "UserModel";
         id: string;
         name?: string | null;
-        avatarUrl?: string | null;
+        image?: string | null;
       };
       category?: {
         __typename?: "CategoryModel";
@@ -607,6 +595,9 @@ export const SignInEmailDocument = new TypedDocumentString(`
       id
       email
       name
+      image
+      createdAt
+      updatedAt
     }
   }
 }
@@ -651,7 +642,7 @@ export const GetSessionDocument = new TypedDocumentString(`
       id
       email
       name
-      avatarUrl
+      image
       createdAt
       updatedAt
       image
@@ -678,7 +669,7 @@ export const GetPostsDocument = new TypedDocumentString(`
       user {
         id
         name
-        avatarUrl
+        image
       }
       category {
         id

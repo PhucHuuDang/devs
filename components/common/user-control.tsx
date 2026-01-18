@@ -42,11 +42,11 @@ import { SettingsSheet, SheetTriggerButton } from "./settings-sheet";
 // );
 
 type TriggerProps = {
-  avatarUrl: string;
+  image: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const Trigger = forwardRef<HTMLDivElement, TriggerProps>(
-  ({ avatarUrl = "", className, ...props }, ref) => {
+  ({ image = "", className, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -61,7 +61,7 @@ const Trigger = forwardRef<HTMLDivElement, TriggerProps>(
         <Avatar className="size-6">
           {/* {avatarUrl ? <AvatarImage src={avatarUrl} /> : null} */}
 
-          <AvatarImage src={avatarUrl ?? "/image.jpg"} />
+          <AvatarImage src={image ?? "/image.jpg"} />
           <AvatarFallback>
             <UserIcon className="size-5 group-hover:text-primary/80 transition-colors duration-300" />
           </AvatarFallback>
@@ -103,9 +103,7 @@ export const UserControl = () => {
   return (
     <HoverCardCustom
       classNameTrigger="p-1"
-      trigger={
-        <Trigger avatarUrl={sessionData?.getSession?.user?.image ?? ""} />
-      }
+      trigger={<Trigger image={sessionData?.getSession?.user?.image ?? ""} />}
       asChild={true}
       openDelay={200}
       sideOffset={10}

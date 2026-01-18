@@ -1,25 +1,27 @@
 "use client";
 
-import {
-  PasswordControlled,
-  passwordSchema,
-} from "@/components/custom/form/fields/password-controlled";
-import FormWrapper from "@/components/custom/form/form-wrapper";
-import z from "zod";
-import { useForm } from "react-hook-form";
+import { memo } from "react";
+
+import { useMutation } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputControlled } from "@/components/custom/form/fields/input-controlled";
-import { toast } from "sonner";
 import { isEmpty } from "lodash";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+
+import { SignUpEmailMutation } from "@/app/graphql/__generated__/graphql";
 import {
   GITHUB,
   SIGN_IN,
   SIGN_UP,
 } from "@/app/graphql/mutaions/auth.mutations";
-import { useMutation } from "@apollo/client/react";
+import { InputControlled } from "@/components/custom/form/fields/input-controlled";
+import {
+  PasswordControlled,
+  passwordSchema,
+} from "@/components/custom/form/fields/password-controlled";
+import FormWrapper from "@/components/custom/form/form-wrapper";
 import { Spinner } from "@/components/ui/spinner";
-import { SignUpEmailMutation } from "@/app/graphql/__generated__/graphql";
-import { memo } from "react";
 
 interface SignUpFormProps {
   toggleSignUp: () => void;
@@ -34,6 +36,8 @@ const signUpSchema = z
       message: "Name is too short (min 1 character)",
     }),
     password: passwordSchema,
+
+    rememberMe: z.boolean().default(false).optional(),
   })
   .refine((data) => data.password.length >= 8, {
     message: "Password must be at least 8 characters",
@@ -46,18 +50,18 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
       email: "",
       name: "",
       password: "",
+      rememberMe: false,
     },
   });
   const [
     signUpMutation,
-    {
-      loading: signUpLoading,
-      client: signUpClient,
-      error: signUpError,
-      called: signUpCalled,
-      data: signUpData,
-    },
+    { loading, client, error, called, data: signUpData, reset },
   ] = useMutation<SignUpEmailMutation>(SIGN_UP);
+
+  // console.log({signUpData});
+  // console.log({error});
+  // console.log({called});
+  // console.log({loading});
 
   const onSignUp = async (data: z.infer<typeof signUpSchema>) => {
     if (isEmpty(data)) {
@@ -66,12 +70,13 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
     }
 
     try {
-      const res: unknown = await signUpMutation({
+      const res = await signUpMutation({
         variables: {
           input: {
             name: data.name,
             email: data.email,
             password: data.password,
+            rememberMe: data.rememberMe,
           },
         },
 
@@ -82,23 +87,27 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
         },
       });
 
-      // console.log({ res });
+      console.log("Sign up response:", res);
 
-      const signUpResponse = (res as any).data.signUpEmail as any;
+      // Type assertion needed until backend schema is updated and types are regenerated
+      const signUpResponse = (res.data as any)?.signUpEmail;
 
-      // console.log({ signUpResponse });
-
-      if (signUpResponse?.error) {
-        // console.log({ signUpResponse });
-        toast.error(`Failed to sign in: ${signUpResponse.error}`);
-      } else if (signUpResponse?.token) {
-        // await setCookies(signInResponse.token, "test-refresh-token");
-        toast.success("Signed in successfully");
+      if (
+        signUpResponse?.token != null &&
+        signUpResponse?.user != null &&
+        !error
+      ) {
+        toast.success(
+          `Thanks for your registration, ${signUpResponse.user.name?.toUpperCase()}!`,
+        );
         toggleSignUp();
-      } else {
-        toast.error("Failed to sign in");
+        signUpForm.reset();
+      } else if (error) {
+        console.warn("sign up error: ", error.message);
+        toast.error(error.message);
       }
     } catch (err: any) {
+      console.error("Sign up error:", err);
       toast.error(`Error: ${err.message}`);
     }
   };
@@ -136,6 +145,10 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
             type="checkbox"
             name="rememberMe"
             className="custom-checkbox"
+            checked={signUpForm.watch("rememberMe")}
+            onChange={(e) => {
+              signUpForm.setValue("rememberMe", e.target.checked);
+            }}
           />
           <span className="text-foreground/90">Keep me signed in</span>
         </label>
@@ -153,9 +166,9 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
       <button
         type="submit"
         className="animate-element animate-delay-600 w-full rounded-2xl bg-primary py-4 font-medium text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer flex items-center justify-center gap-2"
-        disabled={signUpLoading}
+        disabled={loading}
       >
-        {signUpLoading ? <Spinner /> : "Sign Up"}
+        {loading ? <Spinner /> : "Sign Up"}
       </button>
     </FormWrapper>
   );

@@ -21,6 +21,9 @@ export const SIGN_IN = gql`
         id
         email
         name
+        image
+        createdAt
+        updatedAt
       }
     }
   }
@@ -59,7 +62,7 @@ export const GET_SESSION = gql`
         id
         email
         name
-        avatarUrl
+        image
         createdAt
         updatedAt
         image

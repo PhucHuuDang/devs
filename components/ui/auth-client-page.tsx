@@ -23,7 +23,7 @@ export interface Testimonial {
   text: string;
 }
 
-interface SignInPageProps {
+interface AuthClientPageProps {
   title?: React.ReactNode;
   description?: React.ReactNode;
   heroImageSrc?: string;
@@ -62,7 +62,7 @@ const formMotion = {
   exit: { opacity: 0, x: -20 },
 };
 
-export const SignInPage: React.FC<SignInPageProps> = ({
+export const AuthClientPage: React.FC<AuthClientPageProps> = ({
   title = (
     <span className="font-light text-foreground tracking-tighter">Welcome</span>
   ),
@@ -163,7 +163,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               {SOCIAL_CONSTANTS.SIGN_IN_WITH_GITHUB}
             </button>
 
-            <p className="animate-element animate-delay-900 text-center text-sm text-muted-foreground">
+            <div className="animate-element animate-delay-900 text-center text-sm text-muted-foreground">
               New to our platform?{" "}
               <Link
                 href="#"
@@ -172,9 +172,11 @@ export const SignInPage: React.FC<SignInPageProps> = ({
                 }}
                 className="text-violet-400 hover:underline transition-colors"
               >
-                {SOCIAL_CONSTANTS.CREATE_ACCOUNT}
+                {isSignUp
+                  ? SOCIAL_CONSTANTS.CREATE_ACCOUNT
+                  : SOCIAL_CONSTANTS.CONTINUE_WITH}
               </Link>
-            </p>
+            </div>
           </div>
         </div>
       </section>

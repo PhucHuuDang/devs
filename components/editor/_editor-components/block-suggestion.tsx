@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import type { TResolvedSuggestion } from "@platejs/suggestion";
-
 import {
   acceptSuggestion,
   getSuggestionKey,
@@ -24,13 +22,13 @@ import {
 } from "platejs";
 import { useEditorPlugin, usePluginOption } from "platejs/react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   type TDiscussion,
   discussionPlugin,
 } from "@/components/editor/plugins/discussion-kit";
 import { suggestionPlugin } from "@/components/editor/plugins/suggestion-kit";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 import {
   type TComment,
@@ -38,6 +36,8 @@ import {
   CommentCreateForm,
   formatCommentDate,
 } from "./comment";
+
+import type { TResolvedSuggestion } from "@platejs/suggestion";
 
 export interface ResolvedSuggestion extends TResolvedSuggestion {
   comments: TComment[];
@@ -165,7 +165,7 @@ export function BlockSuggestionCard({
                         {text || "line breaks"}
                       </span>
                     </div>
-                  )
+                  ),
                 )}
               </React.Fragment>
             )}
@@ -183,7 +183,7 @@ export function BlockSuggestionCard({
                         <span className="text-sm">{text || "line breaks"}</span>
                       </div>
                     </React.Fragment>
-                  )
+                  ),
                 )}
 
                 {suggestionText2Array(suggestion.text!).map((text, index) => (
@@ -260,7 +260,7 @@ export function BlockSuggestionCard({
 
 export const useResolveSuggestion = (
   suggestionNodes: NodeEntry<TElement | TSuggestionText>[],
-  blockPath: Path
+  blockPath: Path,
 ) => {
   const discussions = usePluginOption(discussionPlugin, "discussions");
 
@@ -305,7 +305,7 @@ export const useResolveSuggestion = (
           if (TextApi.isText(node)) {
             const dataList = api.suggestion.dataList(node);
             const includeUpdate = dataList.some(
-              (data) => data.type === "update"
+              (data) => data.type === "update",
             );
 
             if (!includeUpdate) return api.suggestion.nodeId(node);
@@ -318,7 +318,7 @@ export const useResolveSuggestion = (
             return api.suggestion.nodeId(node);
           }
         })
-        .filter(Boolean)
+        .filter(Boolean),
     );
 
     const res: ResolvedSuggestion[] = [];
@@ -482,7 +482,7 @@ export const useResolveSuggestion = (
 };
 
 export const isResolvedSuggestion = (
-  suggestion: ResolvedSuggestion | TDiscussion
+  suggestion: ResolvedSuggestion | TDiscussion,
 ): suggestion is ResolvedSuggestion => {
   return "suggestionId" in suggestion;
 };

@@ -1,25 +1,28 @@
 "use client";
 
-import {
-  PasswordControlled,
-  passwordSchema,
-} from "@/components/custom/form/fields/password-controlled";
-import FormWrapper from "@/components/custom/form/form-wrapper";
-import z from "zod";
-import { useForm } from "react-hook-form";
+import { memo } from "react";
+
+import { useRouter } from "next/navigation";
+
+import { useMutation } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputControlled } from "@/components/custom/form/fields/input-controlled";
-import { toast } from "sonner";
 import { isEmpty } from "lodash";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+
 import {
   GITHUB,
   SIGN_IN,
   SIGN_UP,
 } from "@/app/graphql/mutaions/auth.mutations";
-import { useMutation } from "@apollo/client/react";
+import { InputControlled } from "@/components/custom/form/fields/input-controlled";
+import {
+  PasswordControlled,
+  passwordSchema,
+} from "@/components/custom/form/fields/password-controlled";
+import FormWrapper from "@/components/custom/form/form-wrapper";
 import { Spinner } from "@/components/ui/spinner";
-import { memo } from "react";
-import { useRouter } from "next/navigation";
 
 interface SignInFormProps {
   toggleSignIn: () => void;
@@ -38,112 +41,116 @@ const sigInSchema = z
     path: ["password"],
   });
 
-export const SignInForm = memo<SignInFormProps>(({ toggleSignIn }) => {
-  const signInForm = useForm<z.infer<typeof sigInSchema>>({
-    resolver: zodResolver(sigInSchema),
-    defaultValues: {
-      email: "danghuuphuc002@gmail.com",
-      password: "12312344aA@",
-      rememberMe: false,
-    },
-  });
-  const [signInMutation, { loading, client, error, called, data: signInData }] =
-    useMutation(SIGN_IN);
+export const SignInForm = memo<SignInFormProps>(
+  ({ toggleSignIn }: SignInFormProps) => {
+    const signInForm = useForm<z.infer<typeof sigInSchema>>({
+      resolver: zodResolver(sigInSchema),
+      defaultValues: {
+        email: "danghuuphuc003@gmail.com",
+        password: "12312344aA@",
+        rememberMe: false,
+      },
+    });
+    const [
+      signInMutation,
+      { loading, client, error, called, data: signInData, reset },
+    ] = useMutation(SIGN_IN);
 
-  const router = useRouter();
+    const router = useRouter();
 
-  const onSignIn = async (data: z.infer<typeof sigInSchema>) => {
-    if (isEmpty(data)) {
-      toast.warning("Please fill in all fields");
-      return;
-    }
-
-    try {
-      const res: unknown = await signInMutation({
-        variables: {
-          input: {
-            email: data.email,
-            password: data.password,
-            rememberMe: data.rememberMe,
-          },
-        },
-
-        context: {
-          fetchOptions: {
-            credentials: "include",
-          },
-        },
-      });
-
-      const signInResponse = (res as any).data.signInEmail as any;
-
-      if (signInResponse?.error) {
-        // console.log({ signInResponse });
-        toast.error(`Failed to sign in: ${signInResponse.error}`);
-      } else if (signInResponse?.token) {
-        toast.success("Signed in successfully");
-
-        router.push("/blogs");
-      } else {
-        toast.error("Failed to sign in");
+    const onSignIn = async (data: z.infer<typeof sigInSchema>) => {
+      if (isEmpty(data)) {
+        toast.warning("Please fill in all fields");
+        return;
       }
-    } catch (err: any) {
-      toast.error(`Error: ${err.message}`);
-    }
-  };
 
-  return (
-    <FormWrapper form={signInForm} className="space-y-5" onSubmit={onSignIn}>
-      <InputControlled
-        label="Email"
-        placeholder="@example.com"
-        name="email"
-        type="email"
-        classNameInput="h-12"
-      />
+      try {
+        const res: unknown = await signInMutation({
+          variables: {
+            input: {
+              email: data.email,
+              password: data.password,
+              rememberMe: data.rememberMe,
+            },
+          },
 
-      <div className="animate-element animate-delay-400">
-        <PasswordControlled
-          name="password"
-          label="Password"
-          placeholder="Enter your password"
+          context: {
+            fetchOptions: {
+              credentials: "include",
+            },
+          },
+        });
+
+        const signInResponse = (res as any).data.signInEmail as any;
+
+        if (signInResponse?.error) {
+          // console.log({ signInResponse });
+          toast.error(`Failed to sign in: ${signInResponse.error}`);
+        } else if (signInResponse?.token) {
+          toast.success("Signed in successfully");
+
+          router.push("/blogs");
+        } else {
+          toast.error("Failed to sign in");
+        }
+      } catch (err: any) {
+        toast.error(`Error: ${err.message}`);
+      }
+    };
+
+    return (
+      <FormWrapper form={signInForm} className="space-y-5" onSubmit={onSignIn}>
+        <InputControlled
+          label="Email"
+          placeholder="@example.com"
+          name="email"
+          type="email"
           classNameInput="h-12"
         />
-      </div>
 
-      <div className="animate-element animate-delay-500 flex items-center justify-between text-sm">
-        <label className="flex items-center gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            name="rememberMe"
-            className="custom-checkbox"
-            checked={signInForm.watch("rememberMe")}
-            onChange={(e) => {
-              signInForm.setValue("rememberMe", e.target.checked);
-            }}
+        <div className="animate-element animate-delay-400">
+          <PasswordControlled
+            name="password"
+            label="Password"
+            placeholder="Enter your password"
+            classNameInput="h-12"
           />
-          <span className="text-foreground/90">Keep me signed in</span>
-        </label>
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-          className="hover:underline text-violet-400 transition-colors"
-        >
-          Reset password
-        </a>
-      </div>
+        </div>
 
-      <button
-        type="submit"
-        className="animate-element animate-delay-600 w-full rounded-2xl bg-primary py-4 font-medium text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer flex items-center justify-center gap-2"
-        disabled={loading}
-      >
-        {loading ? <Spinner /> : "Sign In"}
-      </button>
-    </FormWrapper>
-  );
-});
+        <div className="animate-element animate-delay-500 flex items-center justify-between text-sm">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              name="rememberMe"
+              className="custom-checkbox"
+              checked={signInForm.watch("rememberMe")}
+              onChange={(e) => {
+                signInForm.setValue("rememberMe", e.target.checked);
+              }}
+            />
+            <span className="text-foreground/90">Keep me signed in</span>
+          </label>
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            className="hover:underline text-violet-400 transition-colors"
+          >
+            Reset password
+          </a>
+        </div>
+
+        <button
+          type="submit"
+          className="animate-element animate-delay-600 w-full rounded-2xl bg-primary py-4 font-medium text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer flex items-center justify-center gap-2"
+          disabled={loading}
+        >
+          {loading ? <Spinner /> : "Sign In"}
+        </button>
+      </FormWrapper>
+    );
+  },
+);
 
 SignInForm.displayName = "SignInForm";
