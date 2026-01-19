@@ -1,15 +1,28 @@
-import { GetSessionQuery } from "@/app/graphql/__generated__/graphql";
-import { GET_SESSION } from "@/app/graphql/mutaions/auth.mutations";
-import { useQuery } from "@apollo/client/react";
 import { useEffect, useState } from "react";
 
+import { useQuery } from "@apollo/client/react";
+
+import {
+  GetSessionQuery,
+  GetSessionResponse,
+} from "@/app/graphql/__generated__/graphql";
+import { GET_SESSION } from "@/app/graphql/mutaions/auth.mutations";
+
 export const useAuthClient = () => {
-  const { data: sessionData } = useQuery<GetSessionQuery>(GET_SESSION);
+  const {
+    data: sessionData,
+    error,
+    dataState,
+  } = useQuery<GetSessionQuery>(GET_SESSION);
+
+  // console.log({sessionData, error, dataState});
+
+  // sessionData.
 
   const [isAuth, setIsAuth] = useState<boolean>(false);
 
   useEffect(() => {
-    if (sessionData?.getSession?.user) {
+    if (sessionData?.getSession?.success === true) {
       setTimeout(() => {
         setIsAuth(true);
       }, 100);
@@ -18,7 +31,7 @@ export const useAuthClient = () => {
         setIsAuth(false);
       }, 100);
     }
-  }, [sessionData?.getSession?.user]);
+  }, [sessionData?.getSession?.success]);
 
   return { isAuth };
 };

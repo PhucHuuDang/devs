@@ -13,6 +13,8 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import z from "zod";
 
+import { generateSlug } from "@/lib/generate";
+
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Card, CardHeader } from "@/components/ui/card";
@@ -109,7 +111,7 @@ export const PreviewControl = ({
         </CardHeader>
         <div className="my-2 p-1 pl-4 bg-slate-100 rounded-xl mb-5">
           <span className="text-sm text-slate-800 font-medium">
-            https://devs.com/blogs/{form.watch("slug")}
+            https://devs.com/blogs/{generateSlug(title)}
           </span>
         </div>
 

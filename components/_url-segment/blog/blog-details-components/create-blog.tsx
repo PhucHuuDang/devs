@@ -15,6 +15,7 @@ import z from "zod";
 
 import { generateSlug } from "@/lib/generate";
 
+import { GET_SESSION } from "@/app/graphql/mutaions/auth.mutations";
 import { CREATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
 import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
@@ -57,9 +58,6 @@ export const formSchema = z.object({
     message: "Title must be at least 10 characters.",
   }),
 
-  slug: z.string().min(2, {
-    message: "Slug must be at least 2 characters.",
-  }),
   description: z.string().min(20, {
     message: "Description must be at least 20 characters.",
   }),
@@ -83,16 +81,17 @@ export const formSchema = z.object({
 
   content: z.array(z.any()),
 
-  authorId: z.string({
-    error: "Author ID is required.",
-  }),
+  // authorId: z.string({
+  //   error: "Author ID is required.",
+  // }),
 
   isPublished: z.boolean().default(false).optional(),
   isFeatured: z.boolean().default(false).optional(),
 });
 
 export const CreateBlog = () => {
-  const { data, loading, error } = useQuery(GET_POSTS);
+  // const { data, loading, error } = useQuery(GET_POSTS);
+
   const [
     createBlog,
     {
@@ -104,24 +103,24 @@ export const CreateBlog = () => {
     },
   ] = useMutation(CREATE_BLOG);
 
+  console.log({ createBlogError });
+
   const [content, setContent] = useState<Value>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      slug: "",
+      // slug: "",
       description: "",
       mainImage: "",
       tags: [TAGS[0]! as TTag],
       categoryId: categoryOptions[0]!.value,
-      authorId: "cmi5g7m410000gp9lnw00zmbb",
+      content: [],
+      // authorId: "", // Will be set from session data
       isPublished: false,
-      // isFeatured: false,
     },
   });
-
-  // console.log(form.formState.errors);
 
   const handleMainImageUploadSuccess = (url: string | string[]) => {
     // console.log({ url });
@@ -129,26 +128,48 @@ export const CreateBlog = () => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { tags, slug } = values;
+    const { tags } = values;
 
-    if (!slug) {
-      values.slug = generateSlug(values.title);
-    }
+    console.log("Form values:", values);
+
+    // Prepare the input according to the GraphQL mutation structure
+    const input = {
+      title: values.title,
+      // slug: values.slug,
+      description: values.description,
+      mainImage: values.mainImage,
+      tags: tags.map((tag: TTag) => tag.key),
+      categoryId: values.categoryId,
+      content: values.content,
+      isPublished: values.isPublished ?? false,
+    };
+
+    console.log("Mutation input:", input);
 
     createBlog({
       variables: {
-        ...values,
-        tags: tags.map((tag: TTag) => tag.key),
+        input,
       },
-      onCompleted: (data: unknown) => {
-        // toast.success(JSON);
-        // console.log({ data });
-        toast.success(`${(data as unknown as any).createPost.title}`);
-        form.reset();
+      context: {
+        fetchOptions: {
+          credentials: "include",
+        },
+      },
+      onCompleted: (data: any) => {
+        console.log("Blog created:", data);
+        if (data?.createPost?.success) {
+          toast.success(
+            `Blog "${data.createPost.data?.title}" created successfully!`,
+          );
+          form.reset();
+          setContent([]);
+        } else {
+          toast.error(data?.createPost?.message || "Failed to create blog");
+        }
       },
       onError: (error: any) => {
-        console.error({ error });
-        toast.error("Failed to create blog");
+        console.error("Create blog error:", error);
+        toast.error(`Failed to create blog: ${error.message}`);
       },
       notifyOnNetworkStatusChange: true,
     });
@@ -170,11 +191,14 @@ export const CreateBlog = () => {
   const titleDebounced = useDebounce(watchTitle, 300);
   const descriptionDebounced = useDebounce(watchDescription, 300);
 
-  useEffect(() => {
-    if (typeof titleDebounced === "string") {
-      form.setValue("slug", generateSlug(titleDebounced));
-    }
-  }, [titleDebounced]);
+  // useEffect(() => {
+  //   if (typeof titleDebounced === "string") {
+  //     form.setValue("slug", generateSlug(titleDebounced));
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [titleDebounced]);
+
+  console.log({ titleDebounced });
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 container mx-auto py-6 min-h-screen ">
@@ -212,12 +236,21 @@ export const CreateBlog = () => {
             </CardHeader>
 
             <CardContent>
-              <InputControlled
+              {/* <InputControlled
                 name="slug"
+                
                 label=""
                 placeholder="slug-of-the-blog"
                 disabled
-              />
+              /> */}
+
+              <div className="w-full h-10 bg-gray-100 rounded-md cursor-not-allowed flex items-center">
+                <p className="text-sm text-gray-500 pl-2 hover:text-primary transition-colors duration-200">
+                  {generateSlug(
+                    watchTitle !== "" ? watchTitle : "Slug is empty!",
+                  )}
+                </p>
+              </div>
             </CardContent>
           </Card>
 

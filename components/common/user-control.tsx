@@ -100,10 +100,16 @@ export const UserControl = () => {
 
   const { isAuth } = useAuthClient();
 
+  // sessionData?.getSession.data?.session.
+
   return (
     <HoverCardCustom
       classNameTrigger="p-1"
-      trigger={<Trigger image={sessionData?.getSession?.user?.image ?? ""} />}
+      trigger={
+        <Trigger
+          image={sessionData?.getSession?.data?.user.image ?? "/image.jpg"}
+        />
+      }
       asChild={true}
       openDelay={200}
       sideOffset={10}

@@ -87,7 +87,7 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
         },
       });
 
-      console.log("Sign up response:", res);
+      // console.log("Sign up response:", res);
 
       // Type assertion needed until backend schema is updated and types are regenerated
       const signUpResponse = (res.data as any)?.signUpEmail;

@@ -32,6 +32,22 @@ export const UploadImage = ({
   const [imageUrl, setImageUrl] = useState<string[]>([]);
   const [progress, setProgress] = useState<number>(0);
 
+  // Fix body scroll after widget closes
+  useEffect(() => {
+    // Ensure body can scroll
+    const restoreScroll = () => {
+      document.body.style.overflow = "unset";
+      document.body.style.position = "unset";
+    };
+
+    // Restore scroll on mount and cleanup
+    restoreScroll();
+
+    return () => {
+      restoreScroll();
+    };
+  }, []);
+
   const handleUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
     const uploadUrl = (result?.info as CloudinaryUploadWidgetInfo)?.secure_url;
     if (!uploadUrl) return;
@@ -43,6 +59,12 @@ export const UploadImage = ({
       onUploadSuccess?.(uploadUrl);
     }
     toast.success("Upload successful!");
+
+    // Restore scroll after upload
+    setTimeout(() => {
+      document.body.style.overflow = "unset";
+      document.body.style.position = "unset";
+    }, 100);
   };
 
   const handleUploadError = (error: unknown) => {
@@ -60,6 +82,11 @@ export const UploadImage = ({
         }}
         onClose={() => {
           setProgress(0);
+          // Restore body scroll when widget closes
+          setTimeout(() => {
+            document.body.style.overflow = "unset";
+            document.body.style.position = "unset";
+          }, 100);
         }}
         onError={handleUploadError}
         options={{

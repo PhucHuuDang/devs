@@ -5,7 +5,7 @@ import { SelectOption } from "@/components/custom/form/fields/select-controlled"
 export const categoryOptions: SelectOption[] = [
   {
     label: "Technology",
-    value: "cmhqj0jfs0000gnvlfw6uknbc",
+    value: "cmkkoiguw0000gnblawu2o5sz",
     icon: <GlobeIcon />,
   },
   { label: "Web Development", value: "web-development", icon: <GlobeIcon /> },

@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
+import { SignInEmailMutation } from "@/app/graphql/__generated__/graphql";
 import {
   GITHUB,
   SIGN_IN,
@@ -54,7 +55,7 @@ export const SignInForm = memo<SignInFormProps>(
     const [
       signInMutation,
       { loading, client, error, called, data: signInData, reset },
-    ] = useMutation(SIGN_IN);
+    ] = useMutation<SignInEmailMutation>(SIGN_IN);
 
     const router = useRouter();
 
@@ -79,20 +80,34 @@ export const SignInForm = memo<SignInFormProps>(
               credentials: "include",
             },
           },
+
+          onCompleted: (data: SignInEmailMutation) => {
+            const signInResponse = data.signInEmail;
+            toast.success(
+              `Welcome , ${signInResponse.user?.name?.toUpperCase()}!`,
+            );
+            router.push("/blogs");
+
+            // console.log("Sign in response:", signInResponse.);
+          },
+          onError: (error: any) => {
+            console.error("Sign in error:", error);
+            toast.error(error.message);
+          },
         });
 
-        const signInResponse = (res as any).data.signInEmail as any;
+        // const signInResponse = (res as any).data.signInEmail as any;
 
-        if (signInResponse?.error) {
-          // console.log({ signInResponse });
-          toast.error(`Failed to sign in: ${signInResponse.error}`);
-        } else if (signInResponse?.token) {
-          toast.success("Signed in successfully");
+        // if (signInResponse?.error) {
+        //   // console.log({ signInResponse });
+        //   toast.error(`Failed to sign in: ${signInResponse.error}`);
+        // } else if (signInResponse?.token) {
+        //   toast.success("Signed in successfully");
 
-          router.push("/blogs");
-        } else {
-          toast.error("Failed to sign in");
-        }
+        //   router.push("/blogs");
+        // } else {
+        //   toast.error("Failed to sign in");
+        // }
       } catch (err: any) {
         toast.error(`Error: ${err.message}`);
       }

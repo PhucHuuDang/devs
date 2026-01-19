@@ -49,23 +49,22 @@ export const GITHUB = gql`
 export const GET_SESSION = gql`
   query getSession {
     getSession {
-      session {
-        token
-        expiresAt
-        userId
-        ipAddress
-        userAgent
-        createdAt
-        updatedAt
-      }
-      user {
-        id
-        email
-        name
-        image
-        createdAt
-        updatedAt
-        image
+      success
+      message
+      data {
+        session {
+          token
+          expiresAt
+          userId
+          ipAddress
+          userAgent
+        }
+        user {
+          id
+          email
+          name
+          image
+        }
       }
     }
   }

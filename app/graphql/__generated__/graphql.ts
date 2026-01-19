@@ -50,13 +50,37 @@ export type AccountModel = {
   userId: Scalars["String"]["output"];
 };
 
+export type CategoriesResponse = {
+  __typename?: "CategoriesResponse";
+  /** Total count */
+  count: Scalars["Int"]["output"];
+  /** Array of items */
+  data: Array<CategoryModel>;
+  message?: Maybe<Scalars["String"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type CategoryModel = {
   __typename?: "CategoryModel";
   createdAt: Scalars["DateTime"]["output"];
+  /** Description of the category */
+  description: Scalars["String"]["output"];
   id: Scalars["String"]["output"];
+  /** Name of the category */
   name: Scalars["String"]["output"];
-  posts?: Maybe<Array<PostModel>>;
+  /** Posts in this category */
+  posts: Array<PostModel>;
+  /** Slug of the category */
+  slug: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type CategoryResponse = {
+  __typename?: "CategoryResponse";
+  /** Response data */
+  data?: Maybe<CategoryModel>;
+  message?: Maybe<Scalars["String"]["output"]>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type Comment = {
@@ -68,19 +92,26 @@ export type Comment = {
   user: UserModel;
 };
 
+export type CreateCategoryDto = {
+  /** Description of the category */
+  description: Scalars["String"]["input"];
+  /** Name of the category */
+  name: Scalars["String"]["input"];
+};
+
 export type CreatePostInput = {
   /** Category ID */
-  categoryId?: InputMaybe<Scalars["String"]["input"]>;
+  categoryId: Scalars["String"]["input"];
   /** Post content in JSON format */
   content: Scalars["JSON"]["input"];
   /** Post description/excerpt */
   description?: InputMaybe<Scalars["String"]["input"]>;
   /** Whether to publish immediately or save as draft */
-  isPublished?: Scalars["Boolean"]["input"];
+  isPublished?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** Main image URL */
   mainImage?: InputMaybe<Scalars["String"]["input"]>;
   /** Post tags */
-  tags?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  tags?: Array<Scalars["String"]["input"]>;
   /** Post title */
   title: Scalars["String"]["input"];
 };
@@ -114,7 +145,7 @@ export type GitHubUserResponse = {
   name?: Maybe<Scalars["String"]["output"]>;
   redirect: Scalars["String"]["output"];
   token: Scalars["String"]["output"];
-  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  updatedAt: Scalars["DateTime"]["output"];
   url: Scalars["String"]["output"];
   user?: Maybe<UserModel>;
 };
@@ -131,8 +162,12 @@ export type LikeModel = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  /** Create a new category */
+  createCategory: CategoryResponse;
   /** Create a new post (requires authentication) */
   createPost: PostResponse;
+  /** Delete a category */
+  deleteCategory: CategoryResponse;
   /** Delete a post (requires ownership) */
   deletePost: DeletePostResponse;
   gitHub: GitHubUserResponse;
@@ -142,13 +177,23 @@ export type Mutation = {
   signOut: SignOutResponse;
   /** Sign up email user */
   signUpEmail: SignUpEmailUser;
+  /** Update a category */
+  updateCategory: CategoryResponse;
   /** Update a post (requires ownership) */
   updatePost: PostResponse;
   updateProfile: UserModel;
 };
 
+export type MutationCreateCategoryArgs = {
+  input: CreateCategoryDto;
+};
+
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
+};
+
+export type MutationDeleteCategoryArgs = {
+  id: Scalars["String"]["input"];
 };
 
 export type MutationDeletePostArgs = {
@@ -166,6 +211,11 @@ export type MutationSignInEmailArgs = {
 
 export type MutationSignUpEmailArgs = {
   signUpInput: SignUpInput;
+};
+
+export type MutationUpdateCategoryArgs = {
+  id: Scalars["String"]["input"];
+  input: UpdateCategoryDto;
 };
 
 export type MutationUpdatePostArgs = {
@@ -298,9 +348,10 @@ export type PostsArrayResponse = {
 
 export type Query = {
   __typename?: "Query";
+  categories: CategoriesResponse;
   getAccounts: Array<AccountModel>;
   getProfile: GetProfileResponse;
-  getSession: GetSessionResponse;
+  getSession: SessionSingleResponse;
   /** Get current user's posts */
   myPosts: PaginatedPostsResponse;
   /** Get a single post by ID */
@@ -351,10 +402,19 @@ export type SessionModel = {
   userId: Scalars["String"]["output"];
 };
 
+export type SessionSingleResponse = {
+  __typename?: "SessionSingleResponse";
+  /** Response data */
+  data?: Maybe<GetSessionResponse>;
+  message?: Maybe<Scalars["String"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type SignInEmailUser = {
   __typename?: "SignInEmailUser";
   /** Token */
   token?: Maybe<Scalars["String"]["output"]>;
+  /** Return sign in user response */
   user?: Maybe<SignInEmailUserResponse>;
 };
 
@@ -365,7 +425,7 @@ export type SignInEmailUserResponse = {
   id: Scalars["String"]["output"];
   image?: Maybe<Scalars["String"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
-  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  updatedAt: Scalars["DateTime"]["output"];
 };
 
 export type SignInInput = {
@@ -386,6 +446,7 @@ export type SignUpEmailUser = {
   __typename?: "SignUpEmailUser";
   /** Token */
   token?: Maybe<Scalars["String"]["output"]>;
+  /** Return user model */
   user?: Maybe<UserModel>;
 };
 
@@ -398,6 +459,13 @@ export type SignUpInput = {
   password: Scalars["String"]["input"];
   /** Remember me */
   rememberMe?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type UpdateCategoryDto = {
+  /** Description of the category */
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  /** Name of the category */
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type UpdatePostInput = {
@@ -426,7 +494,7 @@ export type UserModel = {
   likes: Array<LikeModel>;
   name?: Maybe<Scalars["String"]["output"]>;
   sessions: Array<SessionModel>;
-  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  updatedAt: Scalars["DateTime"]["output"];
 };
 
 export type SignUpEmailMutationVariables = Exact<{
@@ -463,7 +531,7 @@ export type SignInEmailMutation = {
       name?: string | null;
       image?: string | null;
       createdAt: any;
-      updatedAt?: any | null;
+      updatedAt: any;
     } | null;
   };
 };
@@ -487,26 +555,47 @@ export type GetSessionQueryVariables = Exact<{ [key: string]: never }>;
 export type GetSessionQuery = {
   __typename?: "Query";
   getSession: {
-    __typename?: "GetSessionResponse";
-    session: {
-      __typename?: "SessionModel";
-      token: string;
-      expiresAt: any;
-      userId: string;
-      ipAddress: string;
-      userAgent: string;
-      createdAt: any;
-      updatedAt: any;
-    };
-    user: {
-      __typename?: "UserModel";
+    __typename?: "SessionSingleResponse";
+    success: boolean;
+    message?: string | null;
+    data?: {
+      __typename?: "GetSessionResponse";
+      session: {
+        __typename?: "SessionModel";
+        token: string;
+        expiresAt: any;
+        userId: string;
+        ipAddress: string;
+        userAgent: string;
+      };
+      user: {
+        __typename?: "UserModel";
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+      };
+    } | null;
+  };
+};
+
+export type CreateCategoryMutationVariables = Exact<{
+  input: CreateCategoryDto;
+}>;
+
+export type CreateCategoryMutation = {
+  __typename?: "Mutation";
+  createCategory: {
+    __typename?: "CategoryResponse";
+    success: boolean;
+    message?: string | null;
+    data?: {
+      __typename?: "CategoryModel";
       id: string;
-      email?: string | null;
-      name?: string | null;
-      image?: string | null;
+      name: string;
+      slug: string;
       createdAt: any;
-      updatedAt?: any | null;
-    };
+    } | null;
   };
 };
 
@@ -629,29 +718,45 @@ export const GitHubDocument = new TypedDocumentString(`
 export const GetSessionDocument = new TypedDocumentString(`
     query getSession {
   getSession {
-    session {
-      token
-      expiresAt
-      userId
-      ipAddress
-      userAgent
-      createdAt
-      updatedAt
-    }
-    user {
-      id
-      email
-      name
-      image
-      createdAt
-      updatedAt
-      image
+    success
+    message
+    data {
+      session {
+        token
+        expiresAt
+        userId
+        ipAddress
+        userAgent
+      }
+      user {
+        id
+        email
+        name
+        image
+      }
     }
   }
 }
     `) as unknown as TypedDocumentString<
   GetSessionQuery,
   GetSessionQueryVariables
+>;
+export const CreateCategoryDocument = new TypedDocumentString(`
+    mutation createCategory($input: CreateCategoryDto!) {
+  createCategory(input: $input) {
+    success
+    message
+    data {
+      id
+      name
+      slug
+      createdAt
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<
+  CreateCategoryMutation,
+  CreateCategoryMutationVariables
 >;
 export const GetPostsDocument = new TypedDocumentString(`
     query GetPosts($filters: PostFiltersInput) {

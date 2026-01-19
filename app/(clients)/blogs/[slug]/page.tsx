@@ -194,7 +194,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
       id: postDetail.user.id,
       name: postDetail.user.name ?? "N/A",
       designation: "N/A",
-      image: postDetail.user.avatarUrl ?? "/image.jpg",
+      image: postDetail.user.image ?? "/image.jpg",
     },
   ];
 
