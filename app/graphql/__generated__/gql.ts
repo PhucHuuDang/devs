@@ -16,9 +16,9 @@ type Documents = {
   "\n  mutation signInEmail($input: SignInInput!) {\n    signInEmail(signInInput: $input) {\n      token\n      user {\n        id\n        email\n        name\n        image\n        createdAt\n        updatedAt\n      }\n    }\n  }\n": typeof types.SignInEmailDocument;
   "\n  mutation signOut {\n    signOut {\n      success\n    }\n  }\n": typeof types.SignOutDocument;
   "\n  mutation gitHub {\n    gitHub {\n      redirect\n      url\n    }\n  }\n": typeof types.GitHubDocument;
-  "\n  query getSession {\n    getSession {\n      success\n      message\n      data {\n        session {\n          token\n          expiresAt\n          userId\n          ipAddress\n          userAgent\n\n        }\n        user {\n          id\n          email\n          name\n          image\n        }\n      }\n    }\n  }\n": typeof types.GetSessionDocument;
-  "\n  mutation createCategory($input: CreateCategoryDto!) {\n    createCategory(input: $input) {\n     success\n     message\n     data {\n      id\n      name\n      slug\n      createdAt\n     } \n    }\n  }\n": typeof types.CreateCategoryDocument;
-  "\n  query GetPosts($filters: PostFiltersInput) {\n    posts(filters: $filters) {\n      data {\n        id\n        title\n        slug\n        description\n        mainImage\n        tags\n        views\n        isPublished\n        createdAt\n\n        user {\n          id\n          name\n          image\n        }\n\n        category {\n          id\n          name\n        }\n      }\n      meta {\n        total\n        page\n        limit\n        totalPages\n      }\n    }\n  }\n": typeof types.GetPostsDocument;
+  "\n  query getSession {\n    getSession {\n      success\n      message\n      data {\n        session {\n          token\n          expiresAt\n          userId\n          ipAddress\n          userAgent\n        }\n        user {\n          id\n          email\n          name\n          image\n        }\n      }\n    }\n  }\n": typeof types.GetSessionDocument;
+  "\n  mutation createCategory($input: CreateCategoryDto!) {\n    createCategory(input: $input) {\n      success\n      message\n      data {\n        id\n        name\n        slug\n        createdAt\n      }\n    }\n  }\n": typeof types.CreateCategoryDocument;
+  "\nquery GetPublishedPosts($filters: PostFiltersInput!) {\n  publishedPosts(filters: $filters) {\n    success\n    message\n    data {\n      id\n      title\n      slug\n      isPublished\n      isPriority\n      createdAt\n      content\n      description\n      mainImage\n      views\n      tags\n      author {\n        id\n        name\n        image\n        \n      }\n      category {\n        id\n        name\n      }\n    }\n    meta {\n      total\n      page\n      limit\n      totalPages\n      hasNext\n      hasPrev\n    }\n  }\n}\n\n\n\n": typeof types.GetPublishedPostsDocument;
 };
 const documents: Documents = {
   "\n  mutation signUpEmail($input: SignUpInput!) {\n    signUpEmail(signUpInput: $input) {\n      token\n      user {\n        id\n        email\n        name\n      }\n    }\n  }\n":
@@ -29,12 +29,12 @@ const documents: Documents = {
     types.SignOutDocument,
   "\n  mutation gitHub {\n    gitHub {\n      redirect\n      url\n    }\n  }\n":
     types.GitHubDocument,
-  "\n  query getSession {\n    getSession {\n      success\n      message\n      data {\n        session {\n          token\n          expiresAt\n          userId\n          ipAddress\n          userAgent\n\n        }\n        user {\n          id\n          email\n          name\n          image\n        }\n      }\n    }\n  }\n":
+  "\n  query getSession {\n    getSession {\n      success\n      message\n      data {\n        session {\n          token\n          expiresAt\n          userId\n          ipAddress\n          userAgent\n        }\n        user {\n          id\n          email\n          name\n          image\n        }\n      }\n    }\n  }\n":
     types.GetSessionDocument,
-  "\n  mutation createCategory($input: CreateCategoryDto!) {\n    createCategory(input: $input) {\n     success\n     message\n     data {\n      id\n      name\n      slug\n      createdAt\n     } \n    }\n  }\n":
+  "\n  mutation createCategory($input: CreateCategoryDto!) {\n    createCategory(input: $input) {\n      success\n      message\n      data {\n        id\n        name\n        slug\n        createdAt\n      }\n    }\n  }\n":
     types.CreateCategoryDocument,
-  "\n  query GetPosts($filters: PostFiltersInput) {\n    posts(filters: $filters) {\n      data {\n        id\n        title\n        slug\n        description\n        mainImage\n        tags\n        views\n        isPublished\n        createdAt\n\n        user {\n          id\n          name\n          image\n        }\n\n        category {\n          id\n          name\n        }\n      }\n      meta {\n        total\n        page\n        limit\n        totalPages\n      }\n    }\n  }\n":
-    types.GetPostsDocument,
+  "\nquery GetPublishedPosts($filters: PostFiltersInput!) {\n  publishedPosts(filters: $filters) {\n    success\n    message\n    data {\n      id\n      title\n      slug\n      isPublished\n      isPriority\n      createdAt\n      content\n      description\n      mainImage\n      views\n      tags\n      author {\n        id\n        name\n        image\n        \n      }\n      category {\n        id\n        name\n      }\n    }\n    meta {\n      total\n      page\n      limit\n      totalPages\n      hasNext\n      hasPrev\n    }\n  }\n}\n\n\n\n":
+    types.GetPublishedPostsDocument,
 };
 
 /**
@@ -65,20 +65,20 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n  query getSession {\n    getSession {\n      success\n      message\n      data {\n        session {\n          token\n          expiresAt\n          userId\n          ipAddress\n          userAgent\n\n        }\n        user {\n          id\n          email\n          name\n          image\n        }\n      }\n    }\n  }\n",
+  source: "\n  query getSession {\n    getSession {\n      success\n      message\n      data {\n        session {\n          token\n          expiresAt\n          userId\n          ipAddress\n          userAgent\n        }\n        user {\n          id\n          email\n          name\n          image\n        }\n      }\n    }\n  }\n",
 ): typeof import("./graphql").GetSessionDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n  mutation createCategory($input: CreateCategoryDto!) {\n    createCategory(input: $input) {\n     success\n     message\n     data {\n      id\n      name\n      slug\n      createdAt\n     } \n    }\n  }\n",
+  source: "\n  mutation createCategory($input: CreateCategoryDto!) {\n    createCategory(input: $input) {\n      success\n      message\n      data {\n        id\n        name\n        slug\n        createdAt\n      }\n    }\n  }\n",
 ): typeof import("./graphql").CreateCategoryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n  query GetPosts($filters: PostFiltersInput) {\n    posts(filters: $filters) {\n      data {\n        id\n        title\n        slug\n        description\n        mainImage\n        tags\n        views\n        isPublished\n        createdAt\n\n        user {\n          id\n          name\n          image\n        }\n\n        category {\n          id\n          name\n        }\n      }\n      meta {\n        total\n        page\n        limit\n        totalPages\n      }\n    }\n  }\n",
-): typeof import("./graphql").GetPostsDocument;
+  source: "\nquery GetPublishedPosts($filters: PostFiltersInput!) {\n  publishedPosts(filters: $filters) {\n    success\n    message\n    data {\n      id\n      title\n      slug\n      isPublished\n      isPriority\n      createdAt\n      content\n      description\n      mainImage\n      views\n      tags\n      author {\n        id\n        name\n        image\n        \n      }\n      category {\n        id\n        name\n      }\n    }\n    meta {\n      total\n      page\n      limit\n      totalPages\n      hasNext\n      hasPrev\n    }\n  }\n}\n\n\n\n",
+): typeof import("./graphql").GetPublishedPostsDocument;
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { NetworkStatus } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
 
-import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
+import { GET_PUBLISHED_POSTS } from "@/app/graphql/queries/blog.queries";
 import {
   BlogCard,
   BlogCardSkeleton,
@@ -14,20 +14,29 @@ import { ListCategory } from "@/components/common/list-category.";
 import { EmptyMediaGroup } from "@/components/empty-state/empty-media-group";
 import { NetworkErrorPage } from "@/components/exceptions/network-error-page";
 
-import type { GetPostsQuery } from "@/app/graphql/__generated__/graphql";
+import type { GetPublishedPostsQuery } from "@/app/graphql/__generated__/graphql";
 
 const BlogsPage = () => {
-  const { data, loading, error, networkStatus, variables, fetchMore } =
-    useQuery<GetPostsQuery>(GET_POSTS, {
-      variables: {
-        filters: {
-          isPublished: true,
-          page: 1,
-          limit: 12,
-        },
+  const {
+    data,
+    dataState,
+    loading,
+    error,
+    networkStatus,
+    variables,
+    fetchMore,
+  } = useQuery<GetPublishedPostsQuery>(GET_PUBLISHED_POSTS, {
+    variables: {
+      filters: {
+        // isPublished: true,
+        page: 1,
+        limit: 12,
+        sortBy: "createdAt",
+        sortOrder: "desc",
       },
-      notifyOnNetworkStatusChange: true,
-    });
+    },
+    notifyOnNetworkStatusChange: true,
+  });
 
   // console.log({ networkStatus });
 
@@ -48,10 +57,20 @@ const BlogsPage = () => {
     );
   }
 
-  console.log({ data });
+  // console.log(data );
+  // console.log({ dataState });
 
-  const posts = data?.posts?.data ?? [];
-  const meta = data?.posts?.meta;
+  const publishedPosts = data?.publishedPosts;
+
+  const posts = publishedPosts?.data ?? [];
+  const meta = publishedPosts?.meta ?? {
+    total: 0,
+    page: 0,
+    limit: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false,
+  };
 
   if (posts.length === 0) {
     return (
@@ -93,9 +112,9 @@ const BlogsPage = () => {
               tags={post.tags ?? []}
               author={[
                 {
-                  id: post.user.id,
-                  name: post.user.name ?? "Anonymous",
-                  image: post.user.image ?? "/image.jpg",
+                  id: post.author.id,
+                  name: post.author.name ?? "Anonymous",
+                  image: post.author.image ?? "/image.jpg",
                   designation: "Author",
                 },
               ]}

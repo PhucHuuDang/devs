@@ -17,7 +17,6 @@ import { generateSlug } from "@/lib/generate";
 
 import { GET_SESSION } from "@/app/graphql/mutaions/auth.mutations";
 import { CREATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
-import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
 import { MultiSelectControlled } from "@/components/custom/form/fields/multi-select-controlled";
 import { SelectControlled } from "@/components/custom/form/fields/select-controlled";
@@ -81,13 +80,11 @@ export const formSchema = z.object({
 
   content: z.array(z.any()),
 
-  // authorId: z.string({
-  //   error: "Author ID is required.",
-  // }),
-
   isPublished: z.boolean().default(false).optional(),
-  isFeatured: z.boolean().default(false).optional(),
 });
+
+export const createBlogSchema = formSchema;
+export type CreateBlogFormValues = z.infer<typeof createBlogSchema>;
 
 export const CreateBlog = () => {
   // const { data, loading, error } = useQuery(GET_POSTS);
@@ -107,8 +104,8 @@ export const CreateBlog = () => {
 
   const [content, setContent] = useState<Value>([]);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateBlogFormValues>({
+    resolver: zodResolver(createBlogSchema),
     defaultValues: {
       title: "",
       // slug: "",

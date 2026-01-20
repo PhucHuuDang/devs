@@ -1,25 +1,62 @@
 import { gql } from "@apollo/client";
 
-export const GET_POSTS = gql`
-  query GetPosts($filters: PostFiltersInput) {
-    posts(filters: $filters) {
+// export const GET_POSTS = gql`
+//   query GetPosts($filters: PostFiltersInput) {
+//     posts(filters: $filters) {
+//       data {
+//         id
+//         title
+//         slug
+//         description
+//         mainImage
+//         tags
+//         views
+//         isPublished
+//         createdAt
+
+//         author {
+//           id
+//           name
+//           image
+//         }
+
+//         category {
+//           id
+//           name
+//         }
+//       }
+//       meta {
+//         total
+//         page
+//         limit
+//         totalPages
+//       }
+//     }
+//   }
+// `;
+
+export const GET_PUBLISHED_POSTS = gql`
+  query GetPublishedPosts($filters: PostFiltersInput!) {
+    publishedPosts(filters: $filters) {
+      success
+      message
       data {
         id
         title
         slug
+        isPublished
+        isPriority
+        createdAt
+        content
         description
         mainImage
-        tags
         views
-        isPublished
-        createdAt
-
-        user {
+        tags
+        author {
           id
           name
           image
         }
-
         category {
           id
           name
@@ -30,34 +67,51 @@ export const GET_POSTS = gql`
         page
         limit
         totalPages
+        hasNext
+        hasPrev
       }
     }
   }
 `;
 
 export const GET_POSTS_STRING = `
-query GetPosts($filters: PostFiltersInput) {
-    posts(filters: $filters) {
-      data {
+query GetPublishedPosts($filters: PostFiltersInput!) {
+  publishedPosts(filters: $filters) {
+    success
+    message
+    data {
       id
       title
       slug
-      tags
+      isPublished
+      isPriority
+      createdAt
+      content
       description
       mainImage
-      user {
+      views
+      tags
+      author {
         id
         name
-        avatarUrl
-        bio
-        designation
+        image
+        
       }
       category {
         id
         name
       }
     }
-  }`;
+    meta {
+      total
+      page
+      limit
+      totalPages
+      hasNext
+      hasPrev
+    }
+  }
+}`;
 
 export const GET_POST_BY_SLUG = `
   query GetPostBySlug($slug: String!) {

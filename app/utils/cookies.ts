@@ -68,7 +68,7 @@ export async function getSession() {
 export async function requireAuth() {
   const data = await getSession();
 
-  if (!data?.user) {
+  if (!data?.data?.user) {
     redirect("/auth");
   }
 

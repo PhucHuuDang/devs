@@ -291,9 +291,13 @@ export type PostFiltersInput = {
 
 export type PostModel = {
   __typename?: "PostModel";
+  /** Author of the post */
+  author: UserModel;
+  /** Category ID of the post */
   authorId: Scalars["String"]["output"];
   category?: Maybe<CategoryModel>;
-  categoryId?: Maybe<Scalars["String"]["output"]>;
+  /** Category ID of the post */
+  categoryId: Scalars["String"]["output"];
   content: Scalars["JSON"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   description?: Maybe<Scalars["String"]["output"]>;
@@ -307,7 +311,6 @@ export type PostModel = {
   tags: Array<Scalars["String"]["output"]>;
   title: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
-  user: UserModel;
   views: Scalars["Int"]["output"];
   votes: Scalars["Int"]["output"];
 };
@@ -599,26 +602,30 @@ export type CreateCategoryMutation = {
   };
 };
 
-export type GetPostsQueryVariables = Exact<{
-  filters?: InputMaybe<PostFiltersInput>;
+export type GetPublishedPostsQueryVariables = Exact<{
+  filters: PostFiltersInput;
 }>;
 
-export type GetPostsQuery = {
+export type GetPublishedPostsQuery = {
   __typename?: "Query";
-  posts: {
+  publishedPosts: {
     __typename?: "PaginatedPostsResponse";
+    success: boolean;
+    message?: string | null;
     data: Array<{
       __typename?: "PostModel";
       id: string;
       title: string;
       slug: string;
+      isPublished: boolean;
+      isPriority: boolean;
+      createdAt: any;
+      content: any;
       description?: string | null;
       mainImage?: string | null;
-      tags: Array<string>;
       views: number;
-      isPublished: boolean;
-      createdAt: any;
-      user: {
+      tags: Array<string>;
+      author: {
         __typename?: "UserModel";
         id: string;
         name?: string | null;
@@ -636,6 +643,8 @@ export type GetPostsQuery = {
       page: number;
       limit: number;
       totalPages: number;
+      hasNext: boolean;
+      hasPrev: boolean;
     };
   };
 };
@@ -758,20 +767,24 @@ export const CreateCategoryDocument = new TypedDocumentString(`
   CreateCategoryMutation,
   CreateCategoryMutationVariables
 >;
-export const GetPostsDocument = new TypedDocumentString(`
-    query GetPosts($filters: PostFiltersInput) {
-  posts(filters: $filters) {
+export const GetPublishedPostsDocument = new TypedDocumentString(`
+    query GetPublishedPosts($filters: PostFiltersInput!) {
+  publishedPosts(filters: $filters) {
+    success
+    message
     data {
       id
       title
       slug
+      isPublished
+      isPriority
+      createdAt
+      content
       description
       mainImage
-      tags
       views
-      isPublished
-      createdAt
-      user {
+      tags
+      author {
         id
         name
         image
@@ -786,7 +799,12 @@ export const GetPostsDocument = new TypedDocumentString(`
       page
       limit
       totalPages
+      hasNext
+      hasPrev
     }
   }
 }
-    `) as unknown as TypedDocumentString<GetPostsQuery, GetPostsQueryVariables>;
+    `) as unknown as TypedDocumentString<
+  GetPublishedPostsQuery,
+  GetPublishedPostsQueryVariables
+>;

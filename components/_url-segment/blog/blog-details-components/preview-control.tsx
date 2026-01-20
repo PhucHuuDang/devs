@@ -30,10 +30,10 @@ import { TTag } from "@/components/ui/multiple-select";
 import { cardStyle } from "@/styles/common-style";
 
 import { BlogCard } from "./blog-card";
-import { formSchema } from "./create-blog";
+import { CreateBlogFormValues, formSchema } from "./create-blog";
 
 interface PreviewControlProps {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<CreateBlogFormValues>;
   onSubmit: () => void;
   title: string;
   description: string;

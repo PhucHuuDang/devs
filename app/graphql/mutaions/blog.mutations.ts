@@ -14,42 +14,37 @@ export const CREATE_BLOG = gql`
         id
         title
         slug
-        description
-        mainImage
-        tags
-        views
-        isPublished
         createdAt
-        author {
-          id
-          name
-          image
-        }
-        category {
-          id
-          name
-        }
       }
     }
   }
 `;
 
 export const UPDATE_BLOG = gql`
-  mutation UpdateBlog($id: String!, $data: UpdatePostInput!) {
-    updatePost(id: $id, data: $data) {
-      id
-      title
-      slug
-      createdAt
+  mutation UpdateBlog($id: String!, $input: UpdatePostInput!) {
+    updatePost(id: $id, input: $input) {
+      success
+      message
+      data {
+        id
+        title
+        slug
+        createdAt
+      }
     }
   }
 `;
 
 export const INCREMENT_BLOG_VIEWS = gql`
-  mutation IncrementBlogViews($id: String!, $identifier: String!) {
+  mutation incrementViews($id: String!, $identifier: String!) {
     incrementViews(id: $id, identifier: $identifier) {
-      id
-      views
+      
+      success
+      message
+
+      data: {
+        id
+      }
     }
   }
 `;
