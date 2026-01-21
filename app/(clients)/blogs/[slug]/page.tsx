@@ -94,7 +94,7 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
         ],
         type: "article",
         publishedTime: post?.createdAt,
-        modifiedTime: post?.updatedAt,
+        modifiedTime: post?.createdAt,
         authors: [post?.author.name],
       },
       twitter: {
