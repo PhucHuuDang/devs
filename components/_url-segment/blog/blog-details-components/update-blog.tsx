@@ -17,7 +17,7 @@
 
 // import { PostResponse } from "@/app/graphql/__generated__/graphql";
 // import { CREATE_BLOG, UPDATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
-// import { GET_POSTS } from "@/app/graphql/queries/blog.queries";
+// import { GET_PUBLISHED_POSTS } from "@/app/graphql/queries/blog.queries";
 // import { CreateBlogFormValues, formSchema } from "@/components/_url-segment/blog/blog-details-components/create-blog";
 // import { InputControlled } from "@/components/custom/form/fields/input-controlled";
 // import { MultiSelectControlled } from "@/components/custom/form/fields/multi-select-controlled";
@@ -59,7 +59,7 @@
 // export type UpdateBlogFormValues = z.infer<typeof updateBlogSchema>;
 
 // export const UpdateBlog = () => {
-//   const { data, loading, error } = useQuery(GET_POSTS);
+//   const { data, loading, error } = useQuery(GET_PUBLISHED_POSTS);
 //   const [
 //     updateBlog,
 //     {

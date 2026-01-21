@@ -86,6 +86,7 @@ query GetPublishedPosts($filters: PostFiltersInput!) {
       isPublished
       isPriority
       createdAt
+      updatedAt
       content
       description
       mainImage
@@ -95,7 +96,6 @@ query GetPublishedPosts($filters: PostFiltersInput!) {
         id
         name
         image
-        
       }
       category {
         id
@@ -114,36 +114,94 @@ query GetPublishedPosts($filters: PostFiltersInput!) {
 }`;
 
 export const GET_POST_BY_SLUG = `
-  query GetPostBySlug($slug: String!) {
-    findPostBySlug(slug: $slug) {
+ query GetPostBySlug($slug: String!) {
+  postBySlug(slug: $slug) {
+    success
+    message
+    data {
       id
       title
+      slug
       content
-      updatedAt
-      createdAt
       description
       mainImage
+      createdAt
+      updatedAt
       author {
         id
         name
-        avatarUrl
-        bio
-        designation
+        image
+        createdAt
       }
       category {
         id
         name
       }
-      tags
-      views
-      votes
-      isPublished
-      isPriority
-      isPinned
-      isDeleted
     }
   }
+}
 `;
+
+// query GetPostBySlug($slug: String!) {
+//   postBySlug(slug: $slug) {
+//     success
+//     message
+//     data {
+//       id
+//       title
+//       slug
+//     }
+// }
+
+// query GetPostBySlug($slug: String!) {
+//   postBySlug(slug: $slug) {
+//     success
+//     message
+//     data {
+//       id
+//       title
+//       slug
+//       content
+//       description
+//       mainImage
+//       createdAt
+//       updatedAt
+//       author {
+//         id
+//         name
+//         image
+//       }
+//       category {
+//         id
+//         name
+//       }
+//     }
+//   }
+// }
+
+// id
+//         title
+//         content
+//         updatedAt
+//         createdAt
+//         description
+//         mainImage
+//         author {
+//           id
+//           name
+//           image
+//         }
+//         category {
+//           id
+//           name
+//         }
+//         tags
+//         views
+//         votes
+//         isPublished
+//         isPriority
+//         isPinned
+//         isDeleted
 
 // export const GET_POST_BY_SLUG_QUERY = gql`
 //   query GetPostBySlug($slug: String!) {

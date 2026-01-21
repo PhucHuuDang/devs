@@ -7,7 +7,12 @@ import { isEmpty } from "lodash";
 
 import { fetchGraphql } from "@/lib/graph-fetch";
 
-import { PostModel, Query } from "@/app/graphql/__generated__/graphql";
+import {
+  GetPublishedPostsQuery,
+  PostModel,
+  PostResponse,
+  Query,
+} from "@/app/graphql/__generated__/graphql";
 import {
   GET_POST_BY_SLUG,
   GET_POSTS_STRING,
@@ -24,6 +29,10 @@ interface SlugBlogPageProps {
   params: Promise<{ slug: string }>;
 }
 
+type GetPostBySlugResult = {
+  postBySlug: PostResponse;
+};
+
 export const dynamicParams = true;
 export const revalidate = 300;
 export const dynamic = "force-static";
@@ -33,10 +42,30 @@ const baseUrl = process.env.NEXT_PUBLIC_CLIENT_URL as string;
 export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
   try {
     const { slug } = await params;
-    const data = await fetchGraphql<PostModel[]>(GET_POSTS_STRING);
 
-    const post = data.find((post) => post.slug === slug);
-    // console.log({ post });
+    const response = await fetchGraphql<GetPublishedPostsQuery>(
+      GET_POSTS_STRING,
+      {
+        filters: {
+          page: 1,
+          limit: 12,
+          sortBy: "createdAt",
+          sortOrder: "desc",
+        },
+      },
+    );
+
+    if (response.publishedPosts.success === false) {
+      return {
+        title: "Bài viết không tồn tại",
+        description: "Bài viết bạn đang tìm kiếm không tồn tại.",
+      };
+    }
+
+    const blogs = response.publishedPosts.data;
+
+    const post = blogs.find((post) => post.slug === slug);
+    console.log({ post });
 
     if (!post) {
       return {
@@ -50,7 +79,7 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
       description: post?.description ?? "",
       keywords: post?.tags.join(", "),
 
-      author: [{ name: post?.user.name }],
+      author: [{ name: post?.author.name }],
 
       openGraph: {
         title: post?.title,
@@ -66,7 +95,7 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
         type: "article",
         publishedTime: post?.createdAt,
         modifiedTime: post?.updatedAt,
-        authors: [post?.user.name],
+        authors: [post?.author.name],
       },
       twitter: {
         card: "summary_large_image",
@@ -95,21 +124,27 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
 };
 
 export async function generateSitemaps() {
-  const data = await fetchGraphql<PostModel[]>(
+  const response = await fetchGraphql<GetPublishedPostsQuery>(
     GET_POSTS_STRING,
-    {},
     {
-      cache: "force-cache",
+      filters: {
+        page: 1,
+        limit: 12,
+        sortBy: "createdAt",
+        sortOrder: "desc",
+      },
     },
   );
 
-  if (data.length === 0) {
+  if (response.publishedPosts.success === false) {
     return [];
   }
 
-  return data.map((post) => ({
+  const blogs = response.publishedPosts.data;
+
+  return blogs.map((post) => ({
     slug: post.slug,
-    lastModified: post.updatedAt ?? new Date(),
+    lastModified: post.createdAt ?? new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
     images: post.mainImage ? [{ url: post.mainImage }] : undefined,
@@ -117,9 +152,27 @@ export async function generateSitemaps() {
 }
 
 export async function generateStaticParams() {
-  const data = await fetchGraphql<PostModel[]>(GET_POSTS_STRING);
+  const response = await fetchGraphql<GetPublishedPostsQuery>(
+    GET_POSTS_STRING,
+    {
+      filters: {
+        page: 1,
+        limit: 12,
+        sortBy: "createdAt",
+        sortOrder: "desc",
+      },
+    },
+  );
 
-  return data.map((post) => ({
+  let blogs: GetPublishedPostsQuery["publishedPosts"]["data"] = [];
+
+  if (response.publishedPosts.success === true) {
+    blogs = response.publishedPosts.data;
+  }
+
+  // console.log({ blogs });
+
+  return blogs.map((post) => ({
     slug: post.slug,
   }));
 }
@@ -129,13 +182,38 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
   const url = new URL(process.env.NEXT_PUBLIC_CLIENT_URL as string);
 
-  const postDetail = await fetchGraphql<PostModel>(GET_POST_BY_SLUG, {
+  const response = await fetchGraphql<GetPostBySlugResult>(GET_POST_BY_SLUG, {
     slug,
   });
 
-  await fetchGraphql<PostModel>(GET_POST_BY_SLUG, {
-    slug,
-  });
+  // const data = await fetchGraphql<GetPublishedPostsQuery>(
+  //   GET_POSTS_STRING,
+  //   {
+  //     filters: {
+  //       page: 1,
+  //       limit: 100,
+  //       sortOrder: "desc",
+  //       sortBy: "createdAt",
+
+  //     },
+  //   }
+  // );
+
+  // console.log({ response });
+
+  // console.log({data});
+
+  let postDetail: PostModel | undefined;
+
+  if (response?.postBySlug?.success) {
+    postDetail = response.postBySlug.data ?? undefined;
+  }
+
+  // let postDetail
+
+  // await fetchGraphql<PostModel>(GET_POST_BY_SLUG, {
+  //   slug,
+  // });
 
   if (isEmpty(postDetail)) {
     return notFound();
@@ -151,7 +229,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
     dateModified: postDetail.updatedAt,
     author: {
       "@type": "Person",
-      name: postDetail.user?.name,
+      name: postDetail.author?.name,
       url: `${baseUrl}/${postDetail.slug}`,
     },
     publisher: {
@@ -191,10 +269,10 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
   const author: AnimatedItemsProps[] = [
     {
-      id: postDetail.user.id,
-      name: postDetail.user.name ?? "N/A",
+      id: postDetail.author.id,
+      name: postDetail.author.name ?? "N/A",
       designation: "N/A",
-      image: postDetail.user.image ?? "/image.jpg",
+      image: postDetail.author.image ?? "/image.jpg",
     },
   ];
 
@@ -239,7 +317,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
               <div className="flex ml-4 flex-col items-start justify-start ">
                 <h2 className="text-base text-primary font-semibold">
-                  {postDetail.user.name}
+                  {postDetail.author.name}
                 </h2>
 
                 <div className="text-sm font-medium text-sky-500">

@@ -22,7 +22,7 @@ export const fetchGraphql = async <T>(
   // const cookieHeader = cookieStore.toString(); // ✅ QUAN TRỌNG
 
   if (init?.withCookies) {
-    const cookieStore = cookies(); // ✅ CHỈ gọi khi có request
+    const cookieStore = cookies();
     headers["Cookie"] = cookieStore.toString();
   }
 
@@ -57,3 +57,46 @@ export const fetchGraphql = async <T>(
     return {} as T; // fallback object rỗng khi network error
   }
 };
+
+// export const fetchGraphql = async <T>(
+//   query: string,
+//   variables: Record<string, any> = {},
+//   init: RequestInit & { withCookies?: boolean } = {},
+// ): Promise<T> => {
+//   const endpoint =
+//     process.env.NODE_ENV === "production"
+//       ? process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT_PRODUCTION
+//       : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
+
+//   if (!endpoint) {
+//     throw new Error("GraphQL endpoint is not defined");
+//   }
+
+//   const headers: HeadersInit = {
+//     "Content-Type": "application/json",
+//   };
+
+//   if (init.withCookies) {
+//     headers["Cookie"] = cookies().toString();
+//   }
+
+//   const res = await fetch(endpoint, {
+//     method: "POST",
+//     headers,
+//     body: JSON.stringify({ query, variables }),
+//     credentials: "include",
+//     ...init,
+//   });
+
+//   if (!res.ok) {
+//     throw new Error(`GraphQL HTTP error: ${res.status}`);
+//   }
+
+//   const json = await res.json();
+
+//   if (json.errors) {
+//     throw new Error(json.errors.map((e: any) => e.message).join(", "));
+//   }
+
+//   return json.data as T;
+// };

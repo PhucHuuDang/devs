@@ -36,14 +36,13 @@ export const UPDATE_BLOG = gql`
 `;
 
 export const INCREMENT_BLOG_VIEWS = gql`
-  mutation incrementViews($id: String!, $identifier: String!) {
+  mutation IncrementViews($id: String!, $identifier: String!) {
     incrementViews(id: $id, identifier: $identifier) {
-      
       success
       message
-
-      data: {
+      data {
         id
+        views
       }
     }
   }

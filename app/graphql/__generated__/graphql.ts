@@ -582,6 +582,62 @@ export type GetSessionQuery = {
   };
 };
 
+export type CreateBlogMutationVariables = Exact<{
+  input: CreatePostInput;
+}>;
+
+export type CreateBlogMutation = {
+  __typename?: "Mutation";
+  createPost: {
+    __typename?: "PostResponse";
+    success: boolean;
+    message?: string | null;
+    data?: {
+      __typename?: "PostModel";
+      id: string;
+      title: string;
+      slug: string;
+      createdAt: any;
+    } | null;
+  };
+};
+
+export type UpdateBlogMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+  input: UpdatePostInput;
+}>;
+
+export type UpdateBlogMutation = {
+  __typename?: "Mutation";
+  updatePost: {
+    __typename?: "PostResponse";
+    success: boolean;
+    message?: string | null;
+    data?: {
+      __typename?: "PostModel";
+      id: string;
+      title: string;
+      slug: string;
+      createdAt: any;
+    } | null;
+  };
+};
+
+export type IncrementViewsMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+  identifier: Scalars["String"]["input"];
+}>;
+
+export type IncrementViewsMutation = {
+  __typename?: "Mutation";
+  incrementViews: {
+    __typename?: "PostResponse";
+    success: boolean;
+    message?: string | null;
+    data?: { __typename?: "PostModel"; id: string; views: number } | null;
+  };
+};
+
 export type CreateCategoryMutationVariables = Exact<{
   input: CreateCategoryDto;
 }>;
@@ -749,6 +805,55 @@ export const GetSessionDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<
   GetSessionQuery,
   GetSessionQueryVariables
+>;
+export const CreateBlogDocument = new TypedDocumentString(`
+    mutation CreateBlog($input: CreatePostInput!) {
+  createPost(input: $input) {
+    success
+    message
+    data {
+      id
+      title
+      slug
+      createdAt
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<
+  CreateBlogMutation,
+  CreateBlogMutationVariables
+>;
+export const UpdateBlogDocument = new TypedDocumentString(`
+    mutation UpdateBlog($id: String!, $input: UpdatePostInput!) {
+  updatePost(id: $id, input: $input) {
+    success
+    message
+    data {
+      id
+      title
+      slug
+      createdAt
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<
+  UpdateBlogMutation,
+  UpdateBlogMutationVariables
+>;
+export const IncrementViewsDocument = new TypedDocumentString(`
+    mutation IncrementViews($id: String!, $identifier: String!) {
+  incrementViews(id: $id, identifier: $identifier) {
+    success
+    message
+    data {
+      id
+      views
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<
+  IncrementViewsMutation,
+  IncrementViewsMutationVariables
 >;
 export const CreateCategoryDocument = new TypedDocumentString(`
     mutation createCategory($input: CreateCategoryDto!) {

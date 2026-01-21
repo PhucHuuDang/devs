@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 import { useMutation } from "@apollo/client/react";
 
-import { PostModel } from "@/app/graphql/__generated__/graphql";
+import { PostModel, PostResponse } from "@/app/graphql/__generated__/graphql";
 import { INCREMENT_BLOG_VIEWS } from "@/app/graphql/mutaions/blog.mutations";
 import { getGuestIdentifier } from "@/app/utils/fingerprint";
 
@@ -15,7 +15,7 @@ export const ReadTrack = ({ blogId }: ReadTrackProps) => {
   const hasTracked = useRef(false);
 
   const [incrementViews, { loading, data, reset, error }] =
-    useMutation<PostModel>(INCREMENT_BLOG_VIEWS);
+    useMutation<PostResponse>(INCREMENT_BLOG_VIEWS);
 
   useEffect(() => {
     if (!hasTracked.current) {
