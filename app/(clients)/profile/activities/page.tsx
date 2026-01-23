@@ -1,5 +1,6 @@
-import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
 import React, { Suspense } from "react";
+
+import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
 
 const ActivitiesPage = () => {
   return (

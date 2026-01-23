@@ -1,5 +1,8 @@
-import * as React from 'react';
-import * as motion from 'motion/react-client';
+import * as React from "react";
+
+import * as motion from "motion/react-client";
+
+import { cn } from "@/lib/utils";
 
 import {
   TooltipProvider as TooltipProviderPrimitive,
@@ -11,8 +14,7 @@ import {
   type TooltipProps as TooltipPrimitiveProps,
   type TooltipTriggerProps as TooltipTriggerPrimitiveProps,
   type TooltipContentProps as TooltipContentPrimitiveProps,
-} from '@/components/animate-ui/primitives/animate/tooltip';
-import { cn } from '@/lib/utils';
+} from "@/components/animate-ui/primitives/animate/tooltip";
 
 type TooltipProviderProps = TooltipProviderPrimitiveProps;
 
@@ -32,21 +34,21 @@ function TooltipTrigger({ ...props }: TooltipTriggerProps) {
   return <TooltipTriggerPrimitive {...props} />;
 }
 
-type TooltipContentProps = Omit<TooltipContentPrimitiveProps, 'asChild'> & {
+type TooltipContentProps = Omit<TooltipContentPrimitiveProps, "asChild"> & {
   children: React.ReactNode;
-  layout?: boolean | 'position' | 'size' | 'preserve-aspect';
+  layout?: boolean | "position" | "size" | "preserve-aspect";
 };
 
 function TooltipContent({
   className,
   children,
-  layout = 'preserve-aspect',
+  layout = "preserve-aspect",
   ...props
 }: TooltipContentProps) {
   return (
     <TooltipContentPrimitive
       className={cn(
-        'z-50 w-fit bg-primary text-primary-foreground rounded-md',
+        "z-50 w-fit bg-primary text-primary-foreground rounded-md",
         className,
       )}
       {...props}
