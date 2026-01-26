@@ -22,7 +22,7 @@ import {
   GetSessionQuery,
   GetSessionResponse,
   SignOutMutation,
-} from "@/app/graphql/__generated__/graphql";
+} from "@/app/graphql/__generated__/generated";
 import { GET_SESSION, SIGN_OUT } from "@/app/graphql/mutaions/auth.mutations";
 import { getSessionData } from "@/app/utils/cookies";
 import { useAuthClient } from "@/hooks/use-auth-client";

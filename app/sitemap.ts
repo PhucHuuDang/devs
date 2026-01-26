@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 import { fetchGraphql } from "@/lib/graph-fetch";
 
-import { GetPublishedPostsQuery } from "./graphql/__generated__/graphql";
+import { GetPublishedPostsQuery } from "./graphql/__generated__/generated";
 import { GET_POSTS_STRING } from "./graphql/queries/blog.queries";
 
 export const dynamic = "force-dynamic";

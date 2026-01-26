@@ -14,7 +14,7 @@ import { ListCategory } from "@/components/common/list-category.";
 import { EmptyMediaGroup } from "@/components/empty-state/empty-media-group";
 import { NetworkErrorPage } from "@/components/exceptions/network-error-page";
 
-import type { GetPublishedPostsQuery } from "@/app/graphql/__generated__/graphql";
+import type { GetPublishedPostsQuery } from "@/app/graphql/__generated__/generated";
 
 const BlogsPage = () => {
   const {

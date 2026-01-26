@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 import dynamic from "next/dynamic";
 
-import { PostModel } from "@/app/graphql/__generated__/graphql";
+import { PostModel } from "@/app/graphql/__generated__/generated";
 import { SimpleLoading } from "@/components/loading-components/simple-loading";
 import { useEditorMode } from "@/stores/use-editor-mode";
 

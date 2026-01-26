@@ -1,0 +1,67 @@
+# =========================
+# AUTH MUTATIONS
+# =========================
+
+mutation SignUpEmail($input: SignUpInput!) {
+  signUpEmail(signUpInput: $input) {
+    token
+    user {
+      id
+      email
+      name
+    }
+  }
+}
+
+mutation SignInEmail($input: SignInInput!) {
+  signInEmail(signInInput: $input) {
+    token
+    user {
+      id
+      email
+      name
+      image
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+mutation SignOut {
+  signOut {
+    success
+  }
+}
+
+mutation GitHubAuth {
+  gitHub {
+    redirect
+    url
+  }
+}
+
+# =========================
+# AUTH QUERIES
+# =========================
+
+query GetSession {
+  getSession {
+    success
+    message
+    data {
+      session {
+        token
+        expiresAt
+        userId
+        ipAddress
+        userAgent
+      }
+      user {
+        id
+        email
+        name
+        image
+      }
+    }
+  }
+}

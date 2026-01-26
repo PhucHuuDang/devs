@@ -1,45 +1,48 @@
-import { gql } from "@apollo/client";
+# =========================
+# MUTATIONS
+# =========================
 
-export const GET_PUBLISHED_POSTS = gql`
-  query GetPublishedPosts($filters: PostFiltersInput!) {
-    publishedPosts(filters: $filters) {
-      success
-      message
-      data {
-        id
-        title
-        slug
-        isPublished
-        isPriority
-        createdAt
-        content
-        description
-        mainImage
-        views
-        tags
-        author {
-          id
-          name
-          image
-        }
-        category {
-          id
-          name
-        }
-      }
-      meta {
-        total
-        page
-        limit
-        totalPages
-        hasNext
-        hasPrev
-      }
+mutation CreatePost($input: CreatePostInput!) {
+  createPost(input: $input) {
+    success
+    message
+    data {
+      id
+      title
+      slug
+      createdAt
     }
   }
-`;
+}
 
-export const GET_POSTS_STRING = `
+mutation UpdatePost($id: String!, $input: UpdatePostInput!) {
+  updatePost(id: $id, input: $input) {
+    success
+    message
+    data {
+      id
+      title
+      slug
+      createdAt
+    }
+  }
+}
+
+mutation IncrementPostViews($id: String!, $identifier: String!) {
+  incrementViews(id: $id, identifier: $identifier) {
+    success
+    message
+    data {
+      id
+      views
+    }
+  }
+}
+
+# =========================
+# QUERIES
+# =========================
+
 query GetPublishedPosts($filters: PostFiltersInput!) {
   publishedPosts(filters: $filters) {
     success
@@ -51,7 +54,6 @@ query GetPublishedPosts($filters: PostFiltersInput!) {
       isPublished
       isPriority
       createdAt
-      updatedAt
       content
       description
       mainImage
@@ -76,10 +78,9 @@ query GetPublishedPosts($filters: PostFiltersInput!) {
       hasPrev
     }
   }
-}`;
+}
 
-export const GET_POST_BY_SLUG = `
- query GetPostBySlug($slug: String!) {
+query GetPostBySlug($slug: String!) {
   postBySlug(slug: $slug) {
     success
     message
@@ -105,4 +106,3 @@ export const GET_POST_BY_SLUG = `
     }
   }
 }
-`;

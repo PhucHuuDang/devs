@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 import { useMutation } from "@apollo/client/react";
 
-import { PostModel, PostResponse } from "@/app/graphql/__generated__/graphql";
+import { PostModel, PostResponse } from "@/app/graphql/__generated__/generated";
 import { INCREMENT_BLOG_VIEWS } from "@/app/graphql/mutaions/blog.mutations";
 import { getGuestIdentifier } from "@/app/utils/fingerprint";
 

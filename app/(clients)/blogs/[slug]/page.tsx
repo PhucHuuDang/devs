@@ -12,7 +12,7 @@ import {
   PostModel,
   PostResponse,
   Query,
-} from "@/app/graphql/__generated__/graphql";
+} from "@/app/graphql/__generated__/generated";
 import {
   GET_POST_BY_SLUG,
   GET_POSTS_STRING,

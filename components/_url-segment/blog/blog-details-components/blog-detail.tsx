@@ -2,7 +2,7 @@
 
 // // import { useQuery } from "@apollo/client/react";
 
-// import { Post } from "@/app/graphql/__generated__/graphql";
+// import { Post } from "@/app/graphql/__generated__/generated";
 // import { SimpleLoading } from "@/components/_loading/simple-loading";
 // import dynamic from "next/dynamic";
 // import { BlogDetailWithMode } from "./blog-detail-with-mode.example";

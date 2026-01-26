@@ -1,10 +1,10 @@
-import type { ChatMessage } from '@/components/editor/use-chat';
-import type { UIMessage } from 'ai';
+import { getMarkdown } from "@platejs/ai";
+import { serializeMd } from "@platejs/markdown";
+import dedent from "dedent";
+import { type SlateEditor, RangeApi } from "platejs";
 
-import { getMarkdown } from '@platejs/ai';
-import { serializeMd } from '@platejs/markdown';
-import dedent from 'dedent';
-import { type SlateEditor, RangeApi } from 'platejs';
+import type { ChatMessage } from "@/components/editor/use-chat";
+import type { UIMessage } from "ai";
 
 /**
  * Tag content split by newlines
@@ -15,9 +15,9 @@ import { type SlateEditor, RangeApi } from 'platejs';
  *   </tools>
  */
 export const tag = (tag: string, content?: string | null) => {
-  if (!content) return '';
+  if (!content) return "";
 
-  return [`<${tag}>`, content, `</${tag}>`].join('\n');
+  return [`<${tag}>`, content, `</${tag}>`].join("\n");
 };
 
 /**
@@ -27,14 +27,14 @@ export const tag = (tag: string, content?: string | null) => {
  *   <tools>{content}</tools>
  */
 export const inlineTag = (tag: string, content?: string | null) => {
-  if (!content) return '';
+  if (!content) return "";
 
-  return [`<${tag}>`, content, `</${tag}>`].join('');
+  return [`<${tag}>`, content, `</${tag}>`].join("");
 };
 
 // Sections split by double newlines
 export const sections = (sections: (boolean | string | null | undefined)[]) => {
-  return sections.filter(Boolean).join('\n\n');
+  return sections.filter(Boolean).join("\n\n");
 };
 
 // List items split by newlines
@@ -43,8 +43,8 @@ export const list = (items: string[] | undefined) => {
     ? items
         .filter(Boolean)
         .map((item) => `- ${item}`)
-        .join('\n')
-    : '';
+        .join("\n")
+    : "";
 };
 
 export type StructuredPromptSections = {
@@ -103,7 +103,7 @@ export const buildStructuredPrompt = ({
   tone,
 }: StructuredPromptSections) => {
   const formattedExamples = Array.isArray(examples)
-    ? examples.map((example) => tag('example', example)).join('\n')
+    ? examples.map((example) => tag("example", example)).join("\n")
     : examples;
 
   const context = sections([
@@ -126,40 +126,40 @@ export const buildStructuredPrompt = ({
     formattedExamples &&
       dedent`
         Here are some examples of how to respond in a standard interaction:
-              ${tag('examples', formattedExamples)}
+              ${tag("examples", formattedExamples)}
       `,
 
     history &&
       dedent`
         Here is the conversation history (between the user and you) prior to the question:
-              ${tag('history', history)}
+              ${tag("history", history)}
       `,
 
     question &&
       dedent`
         Here is the user's question:
-              ${tag('question', question)}
+              ${tag("question", question)}
       `,
   ]);
 
   return sections([
-    tag('context', context),
+    tag("context", context),
     task,
     // or <reasoningSteps>
-    thinking && tag('thinking', thinking),
+    thinking && tag("thinking", thinking),
     // Not needed with structured output
-    outputFormatting && tag('outputFormatting', outputFormatting),
+    outputFormatting && tag("outputFormatting", outputFormatting),
     // Not needed with structured output
     (prefilledResponse ?? null) !== null &&
-      tag('prefilledResponse', prefilledResponse ?? ''),
+      tag("prefilledResponse", prefilledResponse ?? ""),
   ]);
 };
 
 export function getTextFromMessage(message: UIMessage): string {
   return message.parts
-    .filter((part) => part.type === 'text')
+    .filter((part) => part.type === "text")
     .map((part) => part.text)
-    .join('');
+    .join("");
 }
 
 /**
@@ -168,7 +168,7 @@ export function getTextFromMessage(message: UIMessage): string {
  */
 export function formatTextFromMessages(
   messages: ChatMessage[],
-  options?: { limit?: number }
+  options?: { limit?: number },
 ): string {
   const historyMessages = options?.limit
     ? messages.slice(-options.limit)
@@ -182,11 +182,11 @@ export function formatTextFromMessages(
       return `${role}: ${text}`;
     })
     .filter(Boolean)
-    .join('\n');
+    .join("\n");
 }
 
-const SELECTION_START = '<Selection>';
-const SELECTION_END = '</Selection>';
+const SELECTION_START = "<Selection>";
+const SELECTION_END = "</Selection>";
 
 export const addSelection = (editor: SlateEditor) => {
   if (!editor.selection) return;
@@ -237,12 +237,12 @@ const removeEscapeSelection = (editor: SlateEditor, text: string) => {
 
 /** Check if the current selection fully covers all top-level blocks. */
 export const isMultiBlocks = (editor: SlateEditor) => {
-  const blocks = editor.api.blocks({ mode: 'highest' });
+  const blocks = editor.api.blocks({ mode: "highest" });
 
   return blocks.length > 1;
 };
 
 /** Get markdown with selection markers */
 export const getMarkdownWithSelection = (editor: SlateEditor) => {
-  return removeEscapeSelection(editor, getMarkdown(editor, { type: 'block' }));
+  return removeEscapeSelection(editor, getMarkdown(editor, { type: "block" }));
 };

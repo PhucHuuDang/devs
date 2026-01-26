@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-import { SignUpEmailMutation } from "@/app/graphql/__generated__/graphql";
+import { SignUpEmailMutation } from "@/app/graphql/__generated__/generated";
 import {
   GITHUB,
   SIGN_IN,

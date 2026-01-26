@@ -27,7 +27,8 @@ function createHttpLink() {
     uri: GRAPHQL_ENDPOINT,
     credentials: "include", // Include cookies for authentication
     fetchOptions: {
-      cache: "no-store", // Disable fetch cache for real-time data
+      // cache: "no-store", // Disable fetch cache for real-time data
+      cache: "force-cache", // Enable fetch cache for real-time data
     },
   });
 }

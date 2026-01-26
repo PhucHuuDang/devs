@@ -1,0 +1,16 @@
+# =========================
+# CATEGORY MUTATIONS
+# =========================
+
+mutation CreateCategory($input: CreateCategoryDto!) {
+  createCategory(input: $input) {
+    success
+    message
+    data {
+      id
+      name
+      slug
+      createdAt
+    }
+  }
+}

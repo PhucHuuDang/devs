@@ -10,7 +10,7 @@ import { useMutation, useQuery } from "@apollo/client/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { GithubIcon } from "lucide-react";
 
-import { GitHubMutation } from "@/app/graphql/__generated__/graphql";
+import { GitHubAuthMutation } from "@/app/graphql/__generated__/generated";
 import { GET_SESSION, GITHUB } from "@/app/graphql/mutaions/auth.mutations";
 import { SignInForm } from "@/components/_url-segment/auth/sign-in-form";
 import { SignUpForm } from "@/components/_url-segment/auth/sign-up-form";
@@ -91,7 +91,7 @@ export const AuthClientPage: React.FC<AuthClientPageProps> = ({
       called: githubCalled,
       data: githubData,
     },
-  ] = useMutation<GitHubMutation>(GITHUB);
+  ] = useMutation<GitHubAuthMutation>(GITHUB);
 
   const handleToggleSignUp = useCallback(() => {
     setIsSignUp((prev) => !prev);

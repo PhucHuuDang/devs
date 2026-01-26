@@ -18,7 +18,7 @@ import {
   GetSessionQuery,
   SessionModel,
   UserModel,
-} from "@/app/graphql/__generated__/graphql";
+} from "@/app/graphql/__generated__/generated";
 import {
   GET_SESSION,
   GET_SESSION_STRING,

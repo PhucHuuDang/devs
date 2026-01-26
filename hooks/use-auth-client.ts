@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client/react";
 import {
   GetSessionQuery,
   GetSessionResponse,
-} from "@/app/graphql/__generated__/graphql";
+} from "@/app/graphql/__generated__/generated";
 import { GET_SESSION } from "@/app/graphql/mutaions/auth.mutations";
 
 export const useAuthClient = () => {

@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-import { SignInEmailMutation } from "@/app/graphql/__generated__/graphql";
+import { SignInEmailMutation } from "@/app/graphql/__generated__/generated";
 import {
   GITHUB,
   SIGN_IN,

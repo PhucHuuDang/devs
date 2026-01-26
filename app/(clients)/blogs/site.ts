@@ -1,6 +1,6 @@
 import { fetchGraphql } from "@/lib/graph-fetch";
 
-import { PostModel } from "@/app/graphql/__generated__/graphql";
+import { PostModel } from "@/app/graphql/__generated__/generated";
 import { GET_POSTS_STRING } from "@/app/graphql/queries/blog.queries";
 
 import type { MetadataRoute } from "next";

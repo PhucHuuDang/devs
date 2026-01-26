@@ -15,7 +15,7 @@
 
 // import { generateSlug } from "@/lib/generate";
 
-// import { PostResponse } from "@/app/graphql/__generated__/graphql";
+// import { PostResponse } from "@/app/graphql/__generated__/generated";
 // import { CREATE_BLOG, UPDATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
 // import { GET_PUBLISHED_POSTS } from "@/app/graphql/queries/blog.queries";
 // import { CreateBlogFormValues, formSchema } from "@/components/_url-segment/blog/blog-details-components/create-blog";

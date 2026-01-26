@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 
 import { fetchGraphql } from "@/lib/graph-fetch";
 
-import { GetSessionQuery } from "@/app/graphql/__generated__/graphql";
+import { GetSessionQuery } from "@/app/graphql/__generated__/generated";
 import { GET_SESSION_STRING } from "@/app/graphql/mutaions/auth.mutations";
 
 import { decodeData } from "./decode";
