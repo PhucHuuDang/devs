@@ -11,7 +11,6 @@ import {
   GetPublishedPostsQuery,
   PostModel,
   PostResponse,
-  Query,
 } from "@/app/graphql/__generated__/generated";
 import {
   GET_POST_BY_SLUG,
@@ -29,93 +28,80 @@ interface SlugBlogPageProps {
   params: Promise<{ slug: string }>;
 }
 
-type GetPostBySlugResult = {
-  postBySlug: PostResponse;
-};
+// ISR config
 
-export const dynamicParams = true;
-export const revalidate = 300;
+export const revalidate = 300; // seconds (5 minutes)
 export const dynamic = "force-static";
+export const dynamicParams = true;
 
 const baseUrl = process.env.NEXT_PUBLIC_CLIENT_URL as string;
 
+/**
+ * Generate metadata for SEO using the most precise GraphQL query available.
+ * Prefer single-post query for better freshness and SEO accuracy.
+ */
 export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
-  try {
-    const { slug } = await params;
+  // NOTE: ISR: This runs at build and then every revalidation
+  const { slug } = await params;
 
-    const response = await fetchGraphql<GetPublishedPostsQuery>(
-      GET_POSTS_STRING,
-      {
-        filters: {
-          page: 1,
-          limit: 12,
-          sortBy: "createdAt",
-          sortOrder: "desc",
-        },
-      },
+  try {
+    // Use the most specific and up-to-date query (by slug)
+    const postResult = await fetchGraphql<{ postBySlug: PostResponse }>(
+      GET_POST_BY_SLUG,
+      { slug },
     );
 
-    if (response.publishedPosts.success === false) {
+    // console.log({ postResult });
+
+    if (!postResult?.postBySlug?.success || !postResult.postBySlug.data) {
       return {
         title: "Bài viết không tồn tại",
         description: "Bài viết bạn đang tìm kiếm không tồn tại.",
       };
     }
 
-    const blogs = response.publishedPosts.data;
-
-    const post = blogs.find((post) => post.slug === slug);
-    console.log({ post });
-
-    if (!post) {
-      return {
-        title: "Bài viết không tồn tại",
-        description: "Bài viết bạn đang tìm kiếm không tồn tại.",
-      };
-    }
+    const post = postResult.postBySlug.data;
 
     return {
-      title: post?.title,
-      description: post?.description ?? "",
-      keywords: post?.tags.join(", "),
-
-      author: [{ name: post?.author.name }],
-
+      title: post.title,
+      description: post.description ?? "",
+      keywords: post.tags?.join(", "),
+      authors: [{ name: post.author?.name }],
       openGraph: {
-        title: post?.title,
-        description: post?.description ?? "",
+        title: post.title,
+        description: post.description ?? "",
         images: [
           {
-            url: post?.mainImage ?? "",
+            url: post.mainImage ?? "",
             width: 1200,
             height: 630,
-            alt: post?.title,
+            alt: post.title,
           },
         ],
         type: "article",
-        publishedTime: post?.createdAt,
-        modifiedTime: post?.createdAt,
-        authors: [post?.author.name],
+        publishedTime: post.createdAt,
+        modifiedTime: post.updatedAt,
+        authors: [post.author?.name],
       },
       twitter: {
         card: "summary_large_image",
-        title: post?.title,
-        description: post?.description ?? "",
+        title: post.title,
+        description: post.description ?? "",
         images: [
           {
-            url: post?.mainImage ?? "",
+            url: post.mainImage ?? "",
             width: 1200,
             height: 630,
-            alt: post?.title,
+            alt: post.title,
           },
         ],
       },
-
       alternates: {
         canonical: `https://www.devs.com/blogs/${slug}`,
       },
     };
-  } catch (error) {
+  } catch {
+    // On error fallback
     return {
       title: "Loading error...",
       description: "Failed to load the blog post.",
@@ -123,41 +109,45 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
   }
 };
 
+/**
+ * Used for generating sitemap entry for all posts.
+ */
 export async function generateSitemaps() {
   const response = await fetchGraphql<GetPublishedPostsQuery>(
     GET_POSTS_STRING,
     {
       filters: {
         page: 1,
-        limit: 12,
+        limit: 1000, // fetch more for sitemaps
         sortBy: "createdAt",
         sortOrder: "desc",
       },
     },
   );
-
-  if (response.publishedPosts.success === false) {
-    return [];
-  }
+  if (!response?.publishedPosts?.success) return [];
 
   const blogs = response.publishedPosts.data;
 
   return blogs.map((post) => ({
     slug: post.slug,
-    lastModified: post.createdAt ?? new Date(),
+    lastModified: post.createdAt ? new Date(post.createdAt) : new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
     images: post.mainImage ? [{ url: post.mainImage }] : undefined,
   }));
 }
 
+/**
+ * Used for pre-rendering all blog slugs for static site generation.
+ * Enables ISR for each slug.
+ */
 export async function generateStaticParams() {
   const response = await fetchGraphql<GetPublishedPostsQuery>(
     GET_POSTS_STRING,
     {
       filters: {
         page: 1,
-        limit: 12,
+        limit: 1000, // fetch all for pre-generation
         sortBy: "createdAt",
         sortOrder: "desc",
       },
@@ -165,62 +155,38 @@ export async function generateStaticParams() {
   );
 
   let blogs: GetPublishedPostsQuery["publishedPosts"]["data"] = [];
-
-  if (response.publishedPosts.success === true) {
+  if (response?.publishedPosts?.success) {
     blogs = response.publishedPosts.data;
   }
-
-  // console.log({ blogs });
-
   return blogs.map((post) => ({
     slug: post.slug,
   }));
 }
 
+/**
+ * Blog Post Page with ISR, fresh GraphQL fetch, and enhanced SEO structure.
+ */
 const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
   const { slug } = await params;
+  // Use slug from params directly
+  const url = new URL(baseUrl);
 
-  const url = new URL(process.env.NEXT_PUBLIC_CLIENT_URL as string);
+  // Always fetch latest from the backend for each ISR revalidation.
+  const response = await fetchGraphql<{ postBySlug: PostResponse }>(
+    GET_POST_BY_SLUG,
+    { slug },
+  );
 
-  const response = await fetchGraphql<GetPostBySlugResult>(GET_POST_BY_SLUG, {
-    slug,
-  });
-
-  // const data = await fetchGraphql<GetPublishedPostsQuery>(
-  //   GET_POSTS_STRING,
-  //   {
-  //     filters: {
-  //       page: 1,
-  //       limit: 100,
-  //       sortOrder: "desc",
-  //       sortBy: "createdAt",
-
-  //     },
-  //   }
-  // );
-
-  // console.log({ response });
-
-  // console.log({data});
-
-  let postDetail: PostModel | undefined;
-
-  if (response?.postBySlug?.success) {
-    postDetail = response.postBySlug.data ?? undefined;
-  }
-
-  // let postDetail
-
-  // await fetchGraphql<PostModel>(GET_POST_BY_SLUG, {
-  //   slug,
-  // });
+  const postDetail = response?.postBySlug?.success
+    ? response.postBySlug.data
+    : undefined;
 
   if (isEmpty(postDetail)) {
+    // This triggers a 404 page in Next.js
     return notFound();
   }
 
-  // console.log({ baseUrl });
-
+  // SEO Structured Data
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -230,7 +196,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
     author: {
       "@type": "Person",
       name: postDetail.author?.name,
-      url: `${baseUrl}/${postDetail.slug}`,
+      url: `${baseUrl}/blogs/${postDetail.slug}`,
     },
     publisher: {
       "@type": "Organization",
@@ -239,10 +205,9 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
     },
     image: postDetail.mainImage ?? "",
     description: postDetail.description ?? "",
-
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${baseUrl}/${postDetail.slug}`,
+      "@id": `${baseUrl}/blogs/${postDetail.slug}`,
     },
   };
 
@@ -269,10 +234,10 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
 
   const author: AnimatedItemsProps[] = [
     {
-      id: postDetail.author.id,
-      name: postDetail.author.name ?? "N/A",
+      id: postDetail.author?.id ?? "",
+      name: postDetail.author?.name ?? "N/A",
       designation: "N/A",
-      image: postDetail.author.image ?? "/image.jpg",
+      image: postDetail.author?.image ?? "/image.jpg",
     },
   ];
 
@@ -291,10 +256,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
               {postDetail.title}
             </h1>
           </div>
-
           <ReadTrack blogId={postDetail.id} />
-
-          {/* Hero Image - Optimized for performance and responsive design */}
           <div className="relative w-full aspect-video max-w-5xl mx-auto mt-6 overflow-hidden rounded-3xl shadow-lg">
             <Image
               src={postDetail.mainImage ?? "/image.jpg"}
@@ -308,18 +270,15 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
               blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
             />
           </div>
-
           <div className="max-w-5xl mx-auto mt-6 px-4 sm:px-6 lg:px-0">
             <div className="flex flex-row items-center justify-start gap-2">
               <div className="flex flex-row items-center justify-start gap-2">
                 <AnimatedTooltip items={author} />
               </div>
-
               <div className="flex ml-4 flex-col items-start justify-start ">
                 <h2 className="text-base text-primary font-semibold">
-                  {postDetail.author.name}
+                  {postDetail.author?.name}
                 </h2>
-
                 <div className="text-sm font-medium text-sky-500">
                   posted on {formatDate(postDetail.createdAt, "long")}
                 </div>
@@ -327,7 +286,6 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
             </div>
           </div>
         </div>
-
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-0">
           <BlogDetailWithMode
             data={postDetail.content || []}

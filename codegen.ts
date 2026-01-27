@@ -45,10 +45,17 @@ const config: CodegenConfig = {
         withHOC: false,
         withComponent: false,
         reactApolloVersion: 3,
+
+        apolloReactCommonImportFrom: "@apollo/client",
+        apolloReactHooksImportFrom: "@apollo/client/react",
+
+        skipTypename: true,
+        useTypeImports: true,
       },
     },
   },
 
+  // verbose: true,
   watch: true,
 };
 

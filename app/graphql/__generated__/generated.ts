@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
-import * as Apollo from "@apollo/client";
+import * as ApolloReactHooks from "@apollo/client/react";
+
+import type * as ApolloReactCommon from "@apollo/client";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -33,7 +35,6 @@ export type Scalars = {
 };
 
 export type AccountModel = {
-  __typename?: "AccountModel";
   accessToken?: Maybe<Scalars["String"]["output"]>;
   accessTokenExpiresAt?: Maybe<Scalars["DateTime"]["output"]>;
   accountId: Scalars["String"]["output"];
@@ -51,7 +52,6 @@ export type AccountModel = {
 };
 
 export type CategoriesResponse = {
-  __typename?: "CategoriesResponse";
   /** Total count */
   count: Scalars["Int"]["output"];
   /** Array of items */
@@ -61,7 +61,6 @@ export type CategoriesResponse = {
 };
 
 export type CategoryModel = {
-  __typename?: "CategoryModel";
   createdAt: Scalars["DateTime"]["output"];
   /** Description of the category */
   description: Scalars["String"]["output"];
@@ -76,7 +75,6 @@ export type CategoryModel = {
 };
 
 export type CategoryResponse = {
-  __typename?: "CategoryResponse";
   /** Response data */
   data?: Maybe<CategoryModel>;
   message?: Maybe<Scalars["String"]["output"]>;
@@ -84,7 +82,6 @@ export type CategoryResponse = {
 };
 
 export type Comment = {
-  __typename?: "Comment";
   content: Scalars["String"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
@@ -117,7 +114,6 @@ export type CreatePostInput = {
 };
 
 export type DeletePostResponse = {
-  __typename?: "DeletePostResponse";
   code?: Maybe<Scalars["String"]["output"]>;
   deletedId?: Maybe<Scalars["String"]["output"]>;
   message: Scalars["String"]["output"];
@@ -125,13 +121,11 @@ export type DeletePostResponse = {
 };
 
 export type GetSessionResponse = {
-  __typename?: "GetSessionResponse";
   session: SessionModel;
   user: UserModel;
 };
 
 export type GitHubUserResponse = {
-  __typename?: "GitHubUserResponse";
   createdAt: Scalars["DateTime"]["output"];
   email?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["String"]["output"];
@@ -145,7 +139,6 @@ export type GitHubUserResponse = {
 };
 
 export type LikeModel = {
-  __typename?: "LikeModel";
   createdAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
   post: PostModel;
@@ -155,7 +148,6 @@ export type LikeModel = {
 };
 
 export type Mutation = {
-  __typename?: "Mutation";
   /** Create a new category */
   createCategory: CategoryResponse;
   /** Create a new post (requires authentication) */
@@ -226,7 +218,6 @@ export type MutationUpdateProfileArgs = {
 };
 
 export type OAuth2UserInfoModel = {
-  __typename?: "OAuth2UserInfoModel";
   createdAt: Scalars["DateTime"]["output"];
   email?: Maybe<Scalars["String"]["output"]>;
   emailVerified?: Maybe<Scalars["Boolean"]["output"]>;
@@ -237,7 +228,6 @@ export type OAuth2UserInfoModel = {
 };
 
 export type PaginatedPostsResponse = {
-  __typename?: "PaginatedPostsResponse";
   /** Array of items */
   data: Array<PostModel>;
   message?: Maybe<Scalars["String"]["output"]>;
@@ -247,7 +237,6 @@ export type PaginatedPostsResponse = {
 };
 
 export type PaginationMeta = {
-  __typename?: "PaginationMeta";
   /** Has next page */
   hasNext: Scalars["Boolean"]["output"];
   /** Has previous page */
@@ -286,7 +275,6 @@ export type PostFiltersInput = {
 };
 
 export type PostModel = {
-  __typename?: "PostModel";
   /** Author of the post */
   author: UserModel;
   /** Category ID of the post */
@@ -312,7 +300,6 @@ export type PostModel = {
 };
 
 export type PostResponse = {
-  __typename?: "PostResponse";
   /** Response data */
   data?: Maybe<PostModel>;
   message?: Maybe<Scalars["String"]["output"]>;
@@ -336,7 +323,6 @@ export enum PostStatusFilter {
 }
 
 export type PostsArrayResponse = {
-  __typename?: "PostsArrayResponse";
   /** Total count */
   count: Scalars["Int"]["output"];
   /** Array of items */
@@ -346,7 +332,6 @@ export type PostsArrayResponse = {
 };
 
 export type Query = {
-  __typename?: "Query";
   categories: CategoriesResponse;
   getAccounts: Array<AccountModel>;
   getProfile: SingleProfileResponse;
@@ -389,7 +374,6 @@ export type QueryPublishedPostsArgs = {
 };
 
 export type SessionModel = {
-  __typename?: "SessionModel";
   createdAt: Scalars["DateTime"]["output"];
   expiresAt: Scalars["DateTime"]["output"];
   id: Scalars["String"]["output"];
@@ -402,7 +386,6 @@ export type SessionModel = {
 };
 
 export type SessionSingleResponse = {
-  __typename?: "SessionSingleResponse";
   /** Response data */
   data?: Maybe<GetSessionResponse>;
   message?: Maybe<Scalars["String"]["output"]>;
@@ -410,7 +393,6 @@ export type SessionSingleResponse = {
 };
 
 export type SignInEmailUser = {
-  __typename?: "SignInEmailUser";
   /** Token */
   token?: Maybe<Scalars["String"]["output"]>;
   /** Return sign in user response */
@@ -418,7 +400,6 @@ export type SignInEmailUser = {
 };
 
 export type SignInEmailUserResponse = {
-  __typename?: "SignInEmailUserResponse";
   createdAt: Scalars["DateTime"]["output"];
   email?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["String"]["output"];
@@ -437,12 +418,10 @@ export type SignInInput = {
 };
 
 export type SignOutResponse = {
-  __typename?: "SignOutResponse";
   success: Scalars["Boolean"]["output"];
 };
 
 export type SignUpEmailUser = {
-  __typename?: "SignUpEmailUser";
   /** Token */
   token?: Maybe<Scalars["String"]["output"]>;
   /** Return user model */
@@ -461,7 +440,6 @@ export type SignUpInput = {
 };
 
 export type SingleProfileResponse = {
-  __typename?: "SingleProfileResponse";
   /** Response data */
   data?: Maybe<OAuth2UserInfoModel>;
   message?: Maybe<Scalars["String"]["output"]>;
@@ -489,7 +467,6 @@ export type UpdatePostInput = {
 };
 
 export type UserModel = {
-  __typename?: "UserModel";
   accounts: Array<AccountModel>;
   comments: Array<Comment>;
   createdAt: Scalars["DateTime"]["output"];
@@ -509,16 +486,9 @@ export type SignUpEmailMutationVariables = Exact<{
 }>;
 
 export type SignUpEmailMutation = {
-  __typename?: "Mutation";
   signUpEmail: {
-    __typename?: "SignUpEmailUser";
     token?: string | null;
-    user?: {
-      __typename?: "UserModel";
-      id: string;
-      email?: string | null;
-      name?: string | null;
-    } | null;
+    user?: { id: string; email?: string | null; name?: string | null } | null;
   };
 };
 
@@ -527,12 +497,9 @@ export type SignInEmailMutationVariables = Exact<{
 }>;
 
 export type SignInEmailMutation = {
-  __typename?: "Mutation";
   signInEmail: {
-    __typename?: "SignInEmailUser";
     token?: string | null;
     user?: {
-      __typename?: "SignInEmailUserResponse";
       id: string;
       email?: string | null;
       name?: string | null;
@@ -545,30 +512,20 @@ export type SignInEmailMutation = {
 
 export type SignOutMutationVariables = Exact<{ [key: string]: never }>;
 
-export type SignOutMutation = {
-  __typename?: "Mutation";
-  signOut: { __typename?: "SignOutResponse"; success: boolean };
-};
+export type SignOutMutation = { signOut: { success: boolean } };
 
 export type GitHubAuthMutationVariables = Exact<{ [key: string]: never }>;
 
-export type GitHubAuthMutation = {
-  __typename?: "Mutation";
-  gitHub: { __typename?: "GitHubUserResponse"; redirect: string; url: string };
-};
+export type GitHubAuthMutation = { gitHub: { redirect: string; url: string } };
 
 export type GetSessionQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetSessionQuery = {
-  __typename?: "Query";
   getSession: {
-    __typename?: "SessionSingleResponse";
     success: boolean;
     message?: string | null;
     data?: {
-      __typename?: "GetSessionResponse";
       session: {
-        __typename?: "SessionModel";
         token: string;
         expiresAt: any;
         userId: string;
@@ -576,7 +533,6 @@ export type GetSessionQuery = {
         userAgent: string;
       };
       user: {
-        __typename?: "UserModel";
         id: string;
         email?: string | null;
         name?: string | null;
@@ -591,18 +547,10 @@ export type CreateCategoryMutationVariables = Exact<{
 }>;
 
 export type CreateCategoryMutation = {
-  __typename?: "Mutation";
   createCategory: {
-    __typename?: "CategoryResponse";
     success: boolean;
     message?: string | null;
-    data?: {
-      __typename?: "CategoryModel";
-      id: string;
-      name: string;
-      slug: string;
-      createdAt: any;
-    } | null;
+    data?: { id: string; name: string; slug: string; createdAt: any } | null;
   };
 };
 
@@ -611,18 +559,10 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 export type CreatePostMutation = {
-  __typename?: "Mutation";
   createPost: {
-    __typename?: "PostResponse";
     success: boolean;
     message?: string | null;
-    data?: {
-      __typename?: "PostModel";
-      id: string;
-      title: string;
-      slug: string;
-      createdAt: any;
-    } | null;
+    data?: { id: string; title: string; slug: string; createdAt: any } | null;
   };
 };
 
@@ -632,18 +572,10 @@ export type UpdatePostMutationVariables = Exact<{
 }>;
 
 export type UpdatePostMutation = {
-  __typename?: "Mutation";
   updatePost: {
-    __typename?: "PostResponse";
     success: boolean;
     message?: string | null;
-    data?: {
-      __typename?: "PostModel";
-      id: string;
-      title: string;
-      slug: string;
-      createdAt: any;
-    } | null;
+    data?: { id: string; title: string; slug: string; createdAt: any } | null;
   };
 };
 
@@ -653,12 +585,10 @@ export type IncrementPostViewsMutationVariables = Exact<{
 }>;
 
 export type IncrementPostViewsMutation = {
-  __typename?: "Mutation";
   incrementViews: {
-    __typename?: "PostResponse";
     success: boolean;
     message?: string | null;
-    data?: { __typename?: "PostModel"; id: string; views: number } | null;
+    data?: { id: string; views: number } | null;
   };
 };
 
@@ -667,13 +597,10 @@ export type GetPublishedPostsQueryVariables = Exact<{
 }>;
 
 export type GetPublishedPostsQuery = {
-  __typename?: "Query";
   publishedPosts: {
-    __typename?: "PaginatedPostsResponse";
     success: boolean;
     message?: string | null;
     data: Array<{
-      __typename?: "PostModel";
       id: string;
       title: string;
       slug: string;
@@ -685,20 +612,10 @@ export type GetPublishedPostsQuery = {
       mainImage?: string | null;
       views: number;
       tags: Array<string>;
-      author: {
-        __typename?: "UserModel";
-        id: string;
-        name?: string | null;
-        image?: string | null;
-      };
-      category?: {
-        __typename?: "CategoryModel";
-        id: string;
-        name: string;
-      } | null;
+      author: { id: string; name?: string | null; image?: string | null };
+      category?: { id: string; name: string } | null;
     }>;
     meta: {
-      __typename?: "PaginationMeta";
       total: number;
       page: number;
       limit: number;
@@ -714,13 +631,10 @@ export type GetPostBySlugQueryVariables = Exact<{
 }>;
 
 export type GetPostBySlugQuery = {
-  __typename?: "Query";
   postBySlug: {
-    __typename?: "PostResponse";
     success: boolean;
     message?: string | null;
     data?: {
-      __typename?: "PostModel";
       id: string;
       title: string;
       slug: string;
@@ -730,17 +644,12 @@ export type GetPostBySlugQuery = {
       createdAt: any;
       updatedAt: any;
       author: {
-        __typename?: "UserModel";
         id: string;
         name?: string | null;
         image?: string | null;
         createdAt: any;
       };
-      category?: {
-        __typename?: "CategoryModel";
-        id: string;
-        name: string;
-      } | null;
+      category?: { id: string; name: string } | null;
     } | null;
   };
 };
@@ -757,7 +666,7 @@ export const SignUpEmailDocument = gql`
     }
   }
 `;
-export type SignUpEmailMutationFn = Apollo.MutationFunction<
+export type SignUpEmailMutationFn = ApolloReactCommon.MutationFunction<
   SignUpEmailMutation,
   SignUpEmailMutationVariables
 >;
@@ -780,23 +689,23 @@ export type SignUpEmailMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useSignUpEmailMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
     SignUpEmailMutation,
     SignUpEmailMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<SignUpEmailMutation, SignUpEmailMutationVariables>(
-    SignUpEmailDocument,
-    options,
-  );
+  return ApolloReactHooks.useMutation<
+    SignUpEmailMutation,
+    SignUpEmailMutationVariables
+  >(SignUpEmailDocument, options);
 }
 export type SignUpEmailMutationHookResult = ReturnType<
   typeof useSignUpEmailMutation
 >;
 export type SignUpEmailMutationResult =
-  Apollo.MutationResult<SignUpEmailMutation>;
-export type SignUpEmailMutationOptions = Apollo.BaseMutationOptions<
+  ApolloReactCommon.MutationResult<SignUpEmailMutation>;
+export type SignUpEmailMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SignUpEmailMutation,
   SignUpEmailMutationVariables
 >;
@@ -815,7 +724,7 @@ export const SignInEmailDocument = gql`
     }
   }
 `;
-export type SignInEmailMutationFn = Apollo.MutationFunction<
+export type SignInEmailMutationFn = ApolloReactCommon.MutationFunction<
   SignInEmailMutation,
   SignInEmailMutationVariables
 >;
@@ -838,23 +747,23 @@ export type SignInEmailMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useSignInEmailMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
     SignInEmailMutation,
     SignInEmailMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<SignInEmailMutation, SignInEmailMutationVariables>(
-    SignInEmailDocument,
-    options,
-  );
+  return ApolloReactHooks.useMutation<
+    SignInEmailMutation,
+    SignInEmailMutationVariables
+  >(SignInEmailDocument, options);
 }
 export type SignInEmailMutationHookResult = ReturnType<
   typeof useSignInEmailMutation
 >;
 export type SignInEmailMutationResult =
-  Apollo.MutationResult<SignInEmailMutation>;
-export type SignInEmailMutationOptions = Apollo.BaseMutationOptions<
+  ApolloReactCommon.MutationResult<SignInEmailMutation>;
+export type SignInEmailMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SignInEmailMutation,
   SignInEmailMutationVariables
 >;
@@ -865,7 +774,7 @@ export const SignOutDocument = gql`
     }
   }
 `;
-export type SignOutMutationFn = Apollo.MutationFunction<
+export type SignOutMutationFn = ApolloReactCommon.MutationFunction<
   SignOutMutation,
   SignOutMutationVariables
 >;
@@ -887,20 +796,21 @@ export type SignOutMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useSignOutMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
     SignOutMutation,
     SignOutMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<SignOutMutation, SignOutMutationVariables>(
-    SignOutDocument,
-    options,
-  );
+  return ApolloReactHooks.useMutation<
+    SignOutMutation,
+    SignOutMutationVariables
+  >(SignOutDocument, options);
 }
 export type SignOutMutationHookResult = ReturnType<typeof useSignOutMutation>;
-export type SignOutMutationResult = Apollo.MutationResult<SignOutMutation>;
-export type SignOutMutationOptions = Apollo.BaseMutationOptions<
+export type SignOutMutationResult =
+  ApolloReactCommon.MutationResult<SignOutMutation>;
+export type SignOutMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SignOutMutation,
   SignOutMutationVariables
 >;
@@ -912,7 +822,7 @@ export const GitHubAuthDocument = gql`
     }
   }
 `;
-export type GitHubAuthMutationFn = Apollo.MutationFunction<
+export type GitHubAuthMutationFn = ApolloReactCommon.MutationFunction<
   GitHubAuthMutation,
   GitHubAuthMutationVariables
 >;
@@ -934,23 +844,23 @@ export type GitHubAuthMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useGitHubAuthMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
     GitHubAuthMutation,
     GitHubAuthMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<GitHubAuthMutation, GitHubAuthMutationVariables>(
-    GitHubAuthDocument,
-    options,
-  );
+  return ApolloReactHooks.useMutation<
+    GitHubAuthMutation,
+    GitHubAuthMutationVariables
+  >(GitHubAuthDocument, options);
 }
 export type GitHubAuthMutationHookResult = ReturnType<
   typeof useGitHubAuthMutation
 >;
 export type GitHubAuthMutationResult =
-  Apollo.MutationResult<GitHubAuthMutation>;
-export type GitHubAuthMutationOptions = Apollo.BaseMutationOptions<
+  ApolloReactCommon.MutationResult<GitHubAuthMutation>;
+export type GitHubAuthMutationOptions = ApolloReactCommon.BaseMutationOptions<
   GitHubAuthMutation,
   GitHubAuthMutationVariables
 >;
@@ -994,45 +904,45 @@ export const GetSessionDocument = gql`
  * });
  */
 export function useGetSessionQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
     GetSessionQuery,
     GetSessionQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetSessionQuery, GetSessionQueryVariables>(
+  return ApolloReactHooks.useQuery<GetSessionQuery, GetSessionQueryVariables>(
     GetSessionDocument,
     options,
   );
 }
 export function useGetSessionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
     GetSessionQuery,
     GetSessionQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetSessionQuery, GetSessionQueryVariables>(
-    GetSessionDocument,
-    options,
-  );
+  return ApolloReactHooks.useLazyQuery<
+    GetSessionQuery,
+    GetSessionQueryVariables
+  >(GetSessionDocument, options);
 }
 export function useGetSessionSuspenseQuery(
   baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
         GetSessionQuery,
         GetSessionQueryVariables
       >,
 ) {
   const options =
-    baseOptions === Apollo.skipToken
+    baseOptions === ApolloReactHooks.skipToken
       ? baseOptions
       : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<GetSessionQuery, GetSessionQueryVariables>(
-    GetSessionDocument,
-    options,
-  );
+  return ApolloReactHooks.useSuspenseQuery<
+    GetSessionQuery,
+    GetSessionQueryVariables
+  >(GetSessionDocument, options);
 }
 export type GetSessionQueryHookResult = ReturnType<typeof useGetSessionQuery>;
 export type GetSessionLazyQueryHookResult = ReturnType<
@@ -1041,7 +951,7 @@ export type GetSessionLazyQueryHookResult = ReturnType<
 export type GetSessionSuspenseQueryHookResult = ReturnType<
   typeof useGetSessionSuspenseQuery
 >;
-export type GetSessionQueryResult = Apollo.QueryResult<
+export type GetSessionQueryResult = ApolloReactCommon.QueryResult<
   GetSessionQuery,
   GetSessionQueryVariables
 >;
@@ -1059,7 +969,7 @@ export const CreateCategoryDocument = gql`
     }
   }
 `;
-export type CreateCategoryMutationFn = Apollo.MutationFunction<
+export type CreateCategoryMutationFn = ApolloReactCommon.MutationFunction<
   CreateCategoryMutation,
   CreateCategoryMutationVariables
 >;
@@ -1082,13 +992,13 @@ export type CreateCategoryMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useCreateCategoryMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
     CreateCategoryMutation,
     CreateCategoryMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
+  return ApolloReactHooks.useMutation<
     CreateCategoryMutation,
     CreateCategoryMutationVariables
   >(CreateCategoryDocument, options);
@@ -1097,11 +1007,12 @@ export type CreateCategoryMutationHookResult = ReturnType<
   typeof useCreateCategoryMutation
 >;
 export type CreateCategoryMutationResult =
-  Apollo.MutationResult<CreateCategoryMutation>;
-export type CreateCategoryMutationOptions = Apollo.BaseMutationOptions<
-  CreateCategoryMutation,
-  CreateCategoryMutationVariables
->;
+  ApolloReactCommon.MutationResult<CreateCategoryMutation>;
+export type CreateCategoryMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateCategoryMutation,
+    CreateCategoryMutationVariables
+  >;
 export const CreatePostDocument = gql`
   mutation CreatePost($input: CreatePostInput!) {
     createPost(input: $input) {
@@ -1116,7 +1027,7 @@ export const CreatePostDocument = gql`
     }
   }
 `;
-export type CreatePostMutationFn = Apollo.MutationFunction<
+export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
   CreatePostMutation,
   CreatePostMutationVariables
 >;
@@ -1139,23 +1050,23 @@ export type CreatePostMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useCreatePostMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
     CreatePostMutation,
     CreatePostMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreatePostMutation, CreatePostMutationVariables>(
-    CreatePostDocument,
-    options,
-  );
+  return ApolloReactHooks.useMutation<
+    CreatePostMutation,
+    CreatePostMutationVariables
+  >(CreatePostDocument, options);
 }
 export type CreatePostMutationHookResult = ReturnType<
   typeof useCreatePostMutation
 >;
 export type CreatePostMutationResult =
-  Apollo.MutationResult<CreatePostMutation>;
-export type CreatePostMutationOptions = Apollo.BaseMutationOptions<
+  ApolloReactCommon.MutationResult<CreatePostMutation>;
+export type CreatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreatePostMutation,
   CreatePostMutationVariables
 >;
@@ -1173,7 +1084,7 @@ export const UpdatePostDocument = gql`
     }
   }
 `;
-export type UpdatePostMutationFn = Apollo.MutationFunction<
+export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
   UpdatePostMutation,
   UpdatePostMutationVariables
 >;
@@ -1197,23 +1108,23 @@ export type UpdatePostMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useUpdatePostMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
     UpdatePostMutation,
     UpdatePostMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(
-    UpdatePostDocument,
-    options,
-  );
+  return ApolloReactHooks.useMutation<
+    UpdatePostMutation,
+    UpdatePostMutationVariables
+  >(UpdatePostDocument, options);
 }
 export type UpdatePostMutationHookResult = ReturnType<
   typeof useUpdatePostMutation
 >;
 export type UpdatePostMutationResult =
-  Apollo.MutationResult<UpdatePostMutation>;
-export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<
+  ApolloReactCommon.MutationResult<UpdatePostMutation>;
+export type UpdatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdatePostMutation,
   UpdatePostMutationVariables
 >;
@@ -1229,7 +1140,7 @@ export const IncrementPostViewsDocument = gql`
     }
   }
 `;
-export type IncrementPostViewsMutationFn = Apollo.MutationFunction<
+export type IncrementPostViewsMutationFn = ApolloReactCommon.MutationFunction<
   IncrementPostViewsMutation,
   IncrementPostViewsMutationVariables
 >;
@@ -1253,13 +1164,13 @@ export type IncrementPostViewsMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useIncrementPostViewsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
     IncrementPostViewsMutation,
     IncrementPostViewsMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
+  return ApolloReactHooks.useMutation<
     IncrementPostViewsMutation,
     IncrementPostViewsMutationVariables
   >(IncrementPostViewsDocument, options);
@@ -1268,11 +1179,12 @@ export type IncrementPostViewsMutationHookResult = ReturnType<
   typeof useIncrementPostViewsMutation
 >;
 export type IncrementPostViewsMutationResult =
-  Apollo.MutationResult<IncrementPostViewsMutation>;
-export type IncrementPostViewsMutationOptions = Apollo.BaseMutationOptions<
-  IncrementPostViewsMutation,
-  IncrementPostViewsMutationVariables
->;
+  ApolloReactCommon.MutationResult<IncrementPostViewsMutation>;
+export type IncrementPostViewsMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    IncrementPostViewsMutation,
+    IncrementPostViewsMutationVariables
+  >;
 export const GetPublishedPostsDocument = gql`
   query GetPublishedPosts($filters: PostFiltersInput!) {
     publishedPosts(filters: $filters) {
@@ -1329,7 +1241,7 @@ export const GetPublishedPostsDocument = gql`
  * });
  */
 export function useGetPublishedPostsQuery(
-  baseOptions: Apollo.QueryHookOptions<
+  baseOptions: ApolloReactHooks.QueryHookOptions<
     GetPublishedPostsQuery,
     GetPublishedPostsQueryVariables
   > &
@@ -1339,36 +1251,36 @@ export function useGetPublishedPostsQuery(
     ),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
+  return ApolloReactHooks.useQuery<
     GetPublishedPostsQuery,
     GetPublishedPostsQueryVariables
   >(GetPublishedPostsDocument, options);
 }
 export function useGetPublishedPostsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
     GetPublishedPostsQuery,
     GetPublishedPostsQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
+  return ApolloReactHooks.useLazyQuery<
     GetPublishedPostsQuery,
     GetPublishedPostsQueryVariables
   >(GetPublishedPostsDocument, options);
 }
 export function useGetPublishedPostsSuspenseQuery(
   baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
         GetPublishedPostsQuery,
         GetPublishedPostsQueryVariables
       >,
 ) {
   const options =
-    baseOptions === Apollo.skipToken
+    baseOptions === ApolloReactHooks.skipToken
       ? baseOptions
       : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
+  return ApolloReactHooks.useSuspenseQuery<
     GetPublishedPostsQuery,
     GetPublishedPostsQueryVariables
   >(GetPublishedPostsDocument, options);
@@ -1382,7 +1294,7 @@ export type GetPublishedPostsLazyQueryHookResult = ReturnType<
 export type GetPublishedPostsSuspenseQueryHookResult = ReturnType<
   typeof useGetPublishedPostsSuspenseQuery
 >;
-export type GetPublishedPostsQueryResult = Apollo.QueryResult<
+export type GetPublishedPostsQueryResult = ApolloReactCommon.QueryResult<
   GetPublishedPostsQuery,
   GetPublishedPostsQueryVariables
 >;
@@ -1432,7 +1344,7 @@ export const GetPostBySlugDocument = gql`
  * });
  */
 export function useGetPostBySlugQuery(
-  baseOptions: Apollo.QueryHookOptions<
+  baseOptions: ApolloReactHooks.QueryHookOptions<
     GetPostBySlugQuery,
     GetPostBySlugQueryVariables
   > &
@@ -1442,36 +1354,36 @@ export function useGetPostBySlugQuery(
     ),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetPostBySlugQuery, GetPostBySlugQueryVariables>(
-    GetPostBySlugDocument,
-    options,
-  );
+  return ApolloReactHooks.useQuery<
+    GetPostBySlugQuery,
+    GetPostBySlugQueryVariables
+  >(GetPostBySlugDocument, options);
 }
 export function useGetPostBySlugLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
     GetPostBySlugQuery,
     GetPostBySlugQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetPostBySlugQuery, GetPostBySlugQueryVariables>(
-    GetPostBySlugDocument,
-    options,
-  );
+  return ApolloReactHooks.useLazyQuery<
+    GetPostBySlugQuery,
+    GetPostBySlugQueryVariables
+  >(GetPostBySlugDocument, options);
 }
 export function useGetPostBySlugSuspenseQuery(
   baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
         GetPostBySlugQuery,
         GetPostBySlugQueryVariables
       >,
 ) {
   const options =
-    baseOptions === Apollo.skipToken
+    baseOptions === ApolloReactHooks.skipToken
       ? baseOptions
       : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
+  return ApolloReactHooks.useSuspenseQuery<
     GetPostBySlugQuery,
     GetPostBySlugQueryVariables
   >(GetPostBySlugDocument, options);
@@ -1485,7 +1397,7 @@ export type GetPostBySlugLazyQueryHookResult = ReturnType<
 export type GetPostBySlugSuspenseQueryHookResult = ReturnType<
   typeof useGetPostBySlugSuspenseQuery
 >;
-export type GetPostBySlugQueryResult = Apollo.QueryResult<
+export type GetPostBySlugQueryResult = ApolloReactCommon.QueryResult<
   GetPostBySlugQuery,
   GetPostBySlugQueryVariables
 >;

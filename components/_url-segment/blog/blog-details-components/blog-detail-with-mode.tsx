@@ -1,10 +1,9 @@
 "use client";
 
 /**
- * EXAMPLE: Enhanced Blog Detail Component with Editor Mode Support
+ * ENHANCED: Blog Detail Component with Editor Mode Support
  *
- * This is an example of how to use the editor mode system in your blog detail page.
- * Copy this code and adapt it to your needs, integrating with your authentication system.
+ * The loading component now visually mimics the editor's shape/skeleton.
  */
 
 import { useEffect } from "react";
@@ -12,12 +11,34 @@ import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
 import { PostModel } from "@/app/graphql/__generated__/generated";
-import { SimpleLoading } from "@/components/loading-components/simple-loading";
 import { useEditorMode } from "@/stores/use-editor-mode";
 
-// Uncomment and use your actual auth hook
-// import { useSession } from "next-auth/react";
-// import { useAuth } from "@/hooks/use-auth";
+function PlateEditorLoadingSkeleton() {
+  return (
+    <div
+      className="relative w-full min-h-[350px] max-w-5xl mx-auto my-10 bg-primary border border-gray-200 shadow rounded-2xl overflow-hidden"
+      aria-label="Editor loading"
+    >
+      <div className="px-6 pt-8">
+        <div className="h-8 w-3/4 bg-gray-200 rounded mb-6 animate-pulse" />
+      </div>
+      <div className="px-6 flex items-center gap-2 mb-4">
+        <div className="h-6 w-20 bg-gray-200 rounded animate-pulse" />
+        <div className="h-6 w-16 bg-gray-200 rounded animate-pulse" />
+        <div className="h-6 w-10 bg-gray-200 rounded animate-pulse" />
+      </div>
+      <div className="px-6 pb-8 space-y-3">
+        <div className="h-6 w-full bg-gray-200 rounded animate-pulse" />
+        <div className="h-6 w-11/12 bg-gray-200 rounded animate-pulse" />
+        <div className="h-6 w-9/12 bg-gray-200 rounded animate-pulse" />
+        <div className="h-52 w-full bg-gray-100 rounded mt-6 animate-pulse" />
+        <div className="h-6 w-8/12 bg-gray-200 rounded animate-pulse mt-6" />
+        <div className="h-6 w-10/12 bg-gray-200 rounded animate-pulse" />
+        <div className="h-6 w-6/12 bg-gray-200 rounded animate-pulse" />
+      </div>
+    </div>
+  );
+}
 
 interface BlogDetailWithModeProps {
   data: PostModel;
@@ -30,9 +51,7 @@ const PlateEditor = dynamic(
     import("@/components/editor/plate-editor").then((mod) => mod.PlateEditor),
   {
     // ssr: false,
-    loading() {
-      return <SimpleLoading />;
-    },
+    loading: () => <PlateEditorLoadingSkeleton />,
   },
 );
 
@@ -42,61 +61,17 @@ export const BlogDetailWithMode = ({
 }: BlogDetailWithModeProps) => {
   const { setMode } = useEditorMode();
 
-  // Example 1: Using next-auth (uncomment if you use next-auth)
-  // const { data: session, status } = useSession();
-
-  // Example 2: Using custom auth hook (uncomment if you use custom auth)
-  // const { user, isLoading } = useAuth();
-
   useEffect(() => {
-    // If forcedMode is provided, use it
     if (forcedMode) {
       setMode(forcedMode);
       return;
     }
 
-    // Otherwise, set mode based on user authentication/role
-
-    // Example 1: Using next-auth
-    // if (status === "loading") return;
-    //
-    // if (!session) {
-    //   // Not logged in - show client view (minimal features)
-    //   setMode("viewClient");
-    // } else if (session.user.role === "admin" || session.user.role === "editor") {
-    //   // Admin or Editor - show viewing mode with features (highlight, comment)
-    //   setMode("viewing");
-    // } else {
-    //   // Regular logged-in user - show client view
-    //   setMode("viewClient");
-    // }
-
-    // Example 2: Using custom auth
-    // if (isLoading) return;
-    //
-    // if (!user) {
-    //   setMode("viewClient");
-    // } else if (user.isAdmin || user.isEditor) {
-    //   setMode("viewing");
-    // } else {
-    //   setMode("viewClient");
-    // }
-
-    // Example 3: Simple - always show client view for public blog posts
+    // Simple: always show client view for public blog posts
     setMode("viewClient");
 
-    // Example 4: Check if current user is the author
-    // if (user && user.id === data.author?.id) {
-    //   // Author can edit their own post
-    //   setMode("editing");
-    // } else if (user?.isAdmin) {
-    //   // Admin can view with features
-    //   setMode("viewing");
-    // } else {
-    //   // Everyone else sees client view
-    //   setMode("viewClient");
-    // }
-  }, [setMode, forcedMode]); // Add your auth dependencies here
+    // Add your auth logic here if needed
+  }, [setMode, forcedMode]);
 
   return (
     <>

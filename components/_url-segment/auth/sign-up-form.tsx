@@ -9,12 +9,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-import { SignUpEmailMutation } from "@/app/graphql/__generated__/generated";
 import {
-  GITHUB,
-  SIGN_IN,
-  SIGN_UP,
-} from "@/app/graphql/mutaions/auth.mutations";
+  SignUpEmailMutation,
+  SignUpEmailMutationVariables,
+  useSignUpEmailMutation,
+} from "@/app/graphql/__generated__/generated";
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
 import {
   PasswordControlled,
@@ -27,6 +26,7 @@ interface SignUpFormProps {
   toggleSignUp: () => void;
 }
 
+// Leverage graphql-codegen generated hooks and types from .graphql
 const signUpSchema = z
   .object({
     email: z.string().email({
@@ -36,13 +36,13 @@ const signUpSchema = z
       message: "Name is too short (min 1 character)",
     }),
     password: passwordSchema,
-
     rememberMe: z.boolean().default(false).optional(),
   })
   .refine((data) => data.password.length >= 8, {
     message: "Password must be at least 8 characters",
     path: ["password"],
   });
+
 export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
   const signUpForm = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -53,33 +53,30 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
       rememberMe: false,
     },
   });
-  const [
-    signUpMutation,
-    { loading, client, error, called, data: signUpData, reset },
-  ] = useMutation<SignUpEmailMutation>(SIGN_UP);
 
-  // console.log({signUpData});
-  // console.log({error});
-  // console.log({called});
-  // console.log({loading});
+  // Use codegen-generated hook (from .graphql file)
+  const [signUpMutation, { loading, error, data: signUpData }] =
+    useSignUpEmailMutation();
 
-  const onSignUp = async (data: z.infer<typeof signUpSchema>) => {
-    if (isEmpty(data)) {
+  const onSignUp = async (formData: z.infer<typeof signUpSchema>) => {
+    if (isEmpty(formData)) {
       toast.warning("Please fill in all fields");
       return;
     }
 
     try {
-      const res = await signUpMutation({
+      // The returned object from signUpMutation does not have an 'errors' property;
+      // instead, error handling is done through the 'error' object returned by the useSignUpEmailMutation hook,
+      // or via try/catch for network/GraphQL errors.
+      const { data, error } = await signUpMutation({
         variables: {
           input: {
-            name: data.name,
-            email: data.email,
-            password: data.password,
-            rememberMe: data.rememberMe,
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            rememberMe: formData.rememberMe,
           },
         },
-
         context: {
           fetchOptions: {
             credentials: "include",
@@ -87,10 +84,7 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
         },
       });
 
-      // console.log("Sign up response:", res);
-
-      // Type assertion needed until backend schema is updated and types are regenerated
-      const signUpResponse = (res.data as any)?.signUpEmail;
+      const signUpResponse = data?.signUpEmail;
 
       if (
         signUpResponse?.token != null &&
@@ -102,7 +96,11 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
         );
         toggleSignUp();
         signUpForm.reset();
+      } else if (error && error.message) {
+        console.warn("sign up error: ", error.message);
+        toast.error(error.message);
       } else if (error) {
+        // fallback error handling
         console.warn("sign up error: ", error.message);
         toast.error(error.message);
       }

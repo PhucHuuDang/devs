@@ -13,10 +13,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "codegen": "graphql-codegen --watch --config .graphqlrc.yml --verbose",
     "generate:icons": "node scripts/generate-pwa-icons.js",
     "pwa:test": "npm run build && npm start",
-    "prepare": "husky"
+    "prepare": "husky",
+    "codegen": "graphql-codegen --watch --config codegen.ts",
+    "codegen:once": "graphql-codegen --config codegen.ts --verbose",
+    "codegen:clean": "rimraf app/graphql/__generated__"
   },
   "dependencies": {
     "@ai-sdk/react": "2.0.28",
@@ -150,15 +152,14 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@0no-co/graphqlsp": "^1.15.0",
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
+    "@0no-co/graphqlsp": "^1.15.0",
     "@graphql-codegen/cli": "^6.0.1",
     "@graphql-codegen/client-preset": "^5.1.1",
     "@graphql-codegen/typescript": "^5.0.2",
     "@graphql-codegen/typescript-operations": "^5.0.2",
     "@graphql-codegen/typescript-react-apollo": "^4.3.3",
-    "@graphql-codegen/typescript-resolvers": "^5.1.0",
     "@parcel/watcher": "^2.5.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

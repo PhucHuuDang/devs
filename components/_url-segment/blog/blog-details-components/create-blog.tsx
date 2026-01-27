@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 
-import { useMutation, useQuery } from "@apollo/client/react";
+// Import the generated GraphQL hooks/types
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TrashIcon } from "lucide-react";
 import { Value } from "platejs";
@@ -15,8 +16,10 @@ import z from "zod";
 
 import { generateSlug } from "@/lib/generate";
 
-import { GET_SESSION } from "@/app/graphql/mutaions/auth.mutations";
-import { CREATE_BLOG } from "@/app/graphql/mutaions/blog.mutations";
+import {
+  useCreatePostMutation,
+  CreatePostInput,
+} from "@/app/graphql/__generated__/generated";
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
 import { MultiSelectControlled } from "@/components/custom/form/fields/multi-select-controlled";
 import { SelectControlled } from "@/components/custom/form/fields/select-controlled";
@@ -41,6 +44,7 @@ import { cardStyle } from "@/styles/common-style";
 
 import { PreviewControl } from "./preview-control";
 
+// Dynamically import PlateEditor for SSR safety
 const PlateEditor = dynamic(
   () =>
     import("@/components/editor/plate-editor").then((mod) => mod.PlateEditor),
@@ -52,11 +56,11 @@ const PlateEditor = dynamic(
   },
 );
 
+// The form schema can remain unchanged since it helps for validation.
 export const formSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 10 characters.",
   }),
-
   description: z.string().min(20, {
     message: "Description must be at least 20 characters.",
   }),
@@ -73,13 +77,10 @@ export const formSchema = z.object({
   mainImage: z.string().url({
     message: "Main image must be a valid URL.",
   }),
-
   categoryId: z.string().min(1, {
     message: "CategoryId is required.",
   }),
-
   content: z.array(z.any()),
-
   isPublished: z.boolean().default(false).optional(),
 });
 
@@ -87,115 +88,85 @@ export const createBlogSchema = formSchema;
 export type CreateBlogFormValues = z.infer<typeof createBlogSchema>;
 
 export const CreateBlog = () => {
-  // const { data, loading, error } = useQuery(GET_POSTS);
+  const [content, setContent] = useState<Value>([]);
 
+  // Use the generated GraphQL mutation hook.
   const [
     createBlog,
     {
       loading: createBlogLoading,
       error: createBlogError,
       data: createBlogData,
-      called,
       reset,
     },
-  ] = useMutation(CREATE_BLOG);
-
-  console.log({ createBlogError });
-
-  const [content, setContent] = useState<Value>([]);
+  ] = useCreatePostMutation();
 
   const form = useForm<CreateBlogFormValues>({
     resolver: zodResolver(createBlogSchema),
     defaultValues: {
       title: "",
-      // slug: "",
       description: "",
       mainImage: "",
       tags: [TAGS[0]! as TTag],
       categoryId: categoryOptions[0]!.value,
       content: [],
-      // authorId: "", // Will be set from session data
       isPublished: false,
     },
   });
 
   const handleMainImageUploadSuccess = (url: string | string[]) => {
-    // console.log({ url });
     form.setValue("mainImage", url as string);
   };
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { tags } = values;
-
-    console.log("Form values:", values);
-
-    // Prepare the input according to the GraphQL mutation structure
-    const input = {
+  const onSubmit = async (values: CreateBlogFormValues) => {
+    // Prepare variable as typed for generated GraphQL
+    const input: CreatePostInput = {
       title: values.title,
-      // slug: values.slug,
       description: values.description,
       mainImage: values.mainImage,
-      tags: tags.map((tag: TTag) => tag.key),
+      tags: values.tags.map((tag) => tag.key),
       categoryId: values.categoryId,
       content: values.content,
       isPublished: values.isPublished ?? false,
     };
 
-    console.log("Mutation input:", input);
-
-    createBlog({
-      variables: {
-        input,
-      },
-      context: {
-        fetchOptions: {
-          credentials: "include",
+    try {
+      const { data } = await createBlog({
+        variables: { input },
+        context: {
+          fetchOptions: {
+            credentials: "include",
+          },
         },
-      },
-      onCompleted: (data: any) => {
-        console.log("Blog created:", data);
-        if (data?.createPost?.success) {
-          toast.success(
-            `Blog "${data.createPost.data?.title}" created successfully!`,
-          );
-          form.reset();
-          setContent([]);
-        } else {
-          toast.error(data?.createPost?.message || "Failed to create blog");
-        }
-      },
-      onError: (error: any) => {
-        console.error("Create blog error:", error);
-        toast.error(`Failed to create blog: ${error.message}`);
-      },
-      notifyOnNetworkStatusChange: true,
-    });
-  };
+      });
 
-  // if (loading) return <p>Đang tải...</p>;
-  // if (error) return <p>Lỗi: {error.message}</p>;
+      if (data?.createPost?.success) {
+        toast.success(
+          `Blog "${data.createPost.data?.title}" created successfully!`,
+        );
+        form.reset();
+        setContent([]);
+      } else {
+        toast.error(data?.createPost?.message || "Failed to create blog");
+      }
+    } catch (error: any) {
+      // Type should be ApolloError
+      console.error("Create blog error:", error);
+      toast.error(`Failed to create blog: ${error?.message}`);
+    }
+  };
 
   const watchTitle = form.watch("title");
   const watchDescription = form.watch("description");
   const img = form.watch("mainImage");
 
   const onChangeContent = (value: Value) => {
-    // console.log({ value });
     setContent(value);
     form.setValue("content", value);
   };
 
   const titleDebounced = useDebounce(watchTitle, 300);
   const descriptionDebounced = useDebounce(watchDescription, 300);
-
-  // useEffect(() => {
-  //   if (typeof titleDebounced === "string") {
-  //     form.setValue("slug", generateSlug(titleDebounced));
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [titleDebounced]);
-
-  console.log({ titleDebounced });
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 container mx-auto py-6 min-h-screen ">
@@ -213,7 +184,6 @@ export const CreateBlog = () => {
                 first thing people see when they land on your blog post.
               </CardDescription>
             </CardHeader>
-
             <CardContent>
               <InputControlled
                 name="title"
@@ -231,16 +201,7 @@ export const CreateBlog = () => {
                 post. It should be unique and descriptive.
               </CardDescription>
             </CardHeader>
-
             <CardContent>
-              {/* <InputControlled
-                name="slug"
-                
-                label=""
-                placeholder="slug-of-the-blog"
-                disabled
-              /> */}
-
               <div className="w-full h-10 bg-gray-100 rounded-md cursor-not-allowed flex items-center">
                 <p className="text-sm text-gray-500 pl-2 hover:text-primary transition-colors duration-200">
                   {generateSlug(
@@ -276,7 +237,6 @@ export const CreateBlog = () => {
                      60vw"
                   className="object-cover rounded-2xl w-full h-full min-h-20"
                 />
-
                 <div className="absolute cursor-pointer opacity-0 group-hover:opacity-100 group-hover:bg-black/20 group-hover:inset-0 hidden group-hover:flex justify-center items-center w-full h-full rounded-2xl transition-all duration-300 ease-in-out ">
                   <Button
                     variant="outline"
@@ -290,7 +250,6 @@ export const CreateBlog = () => {
                 </div>
               </div>
             )}
-
             {form.formState.errors["mainImage"]?.message && (
               <FormMessage className="mt-2">
                 {form.formState.errors["mainImage"]?.message}
@@ -305,12 +264,10 @@ export const CreateBlog = () => {
                 Write a detailed description of the blog post...
               </CardDescription>
             </CardHeader>
-
             <CardContent>
               <TextareaControlled
                 name="description"
                 label=""
-                // control={form.control}
                 placeholder="Write a detailed description of the blog post..."
               />
             </CardContent>
@@ -323,7 +280,6 @@ export const CreateBlog = () => {
                 Select the category of the blog post...
               </CardDescription>
             </CardHeader>
-
             <CardContent>
               <SelectControlled
                 name="categoryId"
@@ -345,7 +301,6 @@ export const CreateBlog = () => {
                 Lets cook the content with plenty of tools and features...
               </CardDescription>
             </CardHeader>
-
             <CardContent>
               <PlateEditor value={content} onChange={onChangeContent} />
             </CardContent>
