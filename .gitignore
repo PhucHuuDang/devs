@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI agents / prompts / skills
+.skills/
+**/skills/
+.agent/
+.agents/
+
+# Tool-specific state
+.cursor/
+.continue/
+.claude/
+.codegen/

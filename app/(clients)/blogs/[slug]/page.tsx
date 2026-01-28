@@ -17,12 +17,12 @@ import {
   GET_POSTS_STRING,
 } from "@/app/graphql/queries/blog.queries";
 import { formatDate } from "@/app/utils/date";
-import { BlogDetailWithMode } from "@/components/_url-segment/blog/blog-details-components/blog-detail-with-mode";
-import { ReadTrack } from "@/components/_url-segment/blog/blog-details-components/read-track";
 import {
   AnimatedItemsProps,
   AnimatedTooltip,
 } from "@/components/ui/animated-tooltip";
+import { BlogDetailWithMode } from "@/components/url-segment/blog/blog-details-components/blog-detail-with-mode";
+import { ReadTrack } from "@/components/url-segment/blog/blog-details-components/read-track";
 
 interface SlugBlogPageProps {
   params: Promise<{ slug: string }>;

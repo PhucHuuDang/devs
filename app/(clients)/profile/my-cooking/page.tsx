@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
 
 const CreateBlog = dynamic(() =>
-  import("@/components/_url-segment/blog/blog-details-components/create-blog").then(
+  import("@/components/url-segment/blog/blog-details-components/create-blog").then(
     (mod) => mod.CreateBlog,
   ),
 );

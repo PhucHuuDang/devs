@@ -6,13 +6,13 @@ import { NetworkStatus } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
 
 import { GET_PUBLISHED_POSTS } from "@/app/graphql/queries/blog.queries";
-import {
-  BlogCard,
-  BlogCardSkeleton,
-} from "@/components/_url-segment/blog/blog-details-components/blog-card";
 import { ListCategory } from "@/components/common/list-category.";
 import { EmptyMediaGroup } from "@/components/empty-state/empty-media-group";
 import { NetworkErrorPage } from "@/components/exceptions/network-error-page";
+import {
+  BlogCard,
+  BlogCardSkeleton,
+} from "@/components/url-segment/blog/blog-details-components/blog-card";
 
 import type { GetPublishedPostsQuery } from "@/app/graphql/__generated__/generated";
 

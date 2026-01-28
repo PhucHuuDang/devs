@@ -12,8 +12,8 @@ import { GithubIcon } from "lucide-react";
 
 import { GitHubAuthMutation } from "@/app/graphql/__generated__/generated";
 import { GET_SESSION, GITHUB } from "@/app/graphql/mutaions/auth.mutations";
-import { SignInForm } from "@/components/_url-segment/auth/sign-in-form";
-import { SignUpForm } from "@/components/_url-segment/auth/sign-up-form";
+import { SignInForm } from "@/components/url-segment/auth/sign-in-form";
+import { SignUpForm } from "@/components/url-segment/auth/sign-up-form";
 import { SOCIAL_CONSTANTS } from "@/constants";
 
 export interface Testimonial {

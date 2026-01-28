@@ -24,7 +24,6 @@ import {
   GET_SESSION_STRING,
 } from "@/app/graphql/mutaions/auth.mutations";
 import { getAuthCookies, getSession } from "@/app/utils/cookies";
-import { SidebarProfile } from "@/components/_url-segment/profile/sidebar-profile";
 import {
   Sidebar,
   SidebarContent,
@@ -36,6 +35,7 @@ import {
 } from "@/components/animate-ui/components/radix/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { VercelTabs } from "@/components/ui/vercel-tabs";
+import { SidebarProfile } from "@/components/url-segment/profile/sidebar-profile";
 import { ThemeProvider } from "@/providers/next-theme-provider";
 
 interface ProfileLayoutProps {

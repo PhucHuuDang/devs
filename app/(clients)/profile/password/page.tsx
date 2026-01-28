@@ -1,6 +1,7 @@
-import { PasswordContainer } from "@/components/_url-segment/password/password-container";
-import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
 import React, { Suspense } from "react";
+
+import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
+import { PasswordContainer } from "@/components/url-segment/password/password-container";
 
 const PasswordPage = () => {
   return (
