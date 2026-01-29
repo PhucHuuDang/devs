@@ -13,6 +13,8 @@ const eslintConfig = defineConfig([
       import: importPlugin,
     },
     rules: {
+      "react-hooks/incompatible-library": "off",
+
       "import/order": [
         "error",
         {

@@ -5,7 +5,9 @@ import { PasswordContainer } from "@/components/url-segment/password/password-co
 const GeneralPage = () => {
   return (
     <Suspense>
-      <PasswordContainer />
+      <div className=" w-full h-fit">
+        <PasswordContainer />
+      </div>
     </Suspense>
   );
 };

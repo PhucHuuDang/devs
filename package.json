@@ -90,6 +90,7 @@
     "@radix-ui/react-toolbar": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tabler/icons-react": "^3.35.0",
+    "@tanstack/react-table": "^8.21.3",
     "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.17.20",
     "@types/three": "^0.180.0",
@@ -152,9 +153,9 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@0no-co/graphqlsp": "^1.15.0",
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
-    "@0no-co/graphqlsp": "^1.15.0",
     "@graphql-codegen/cli": "^6.0.1",
     "@graphql-codegen/client-preset": "^5.1.1",
     "@graphql-codegen/typescript": "^5.0.2",
@@ -169,6 +170,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "3.6.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
