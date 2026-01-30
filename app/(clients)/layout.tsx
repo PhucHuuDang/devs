@@ -4,6 +4,7 @@ import { AppleFloatingDock } from "@/components/common/apple-floating-dock";
 import { LayoutTransition } from "@/components/common/layout-transition";
 import { ListCategory } from "@/components/common/list-category.";
 import { Navbar } from "@/components/common/navbar";
+import { BASE_URL } from "@/config/url";
 
 import { ThemeProvider } from "../../providers/next-theme-provider";
 
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
   ],
   creator: "Harry Dang",
 
-  metadataBase: new URL("localhost:3000/blogs"),
+  metadataBase: new URL(BASE_URL),
   generator: "Next.js",
   applicationName: "DEVS",
 

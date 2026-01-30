@@ -37,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       {
         filters: {
           page: 1,
-          limit: 12,
+          limit: 1000, // Include all published posts in sitemap
           sortBy: "createdAt",
           sortOrder: "desc",
         },
@@ -48,9 +48,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       return [];
     }
 
-    console.log({ response });
     fetchRoutes = response.publishedPosts.data.map((post) => ({
-      url: `${baseUrl}/${post.slug}`,
+      url: `${baseUrl}/blogs/${post.slug}`,
       lastModified: post.createdAt ?? new Date(),
       changeFrequency: "weekly" as const,
     }));

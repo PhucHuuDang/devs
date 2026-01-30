@@ -97,7 +97,7 @@ export const generateMetadata = async ({ params }: SlugBlogPageProps) => {
         ],
       },
       alternates: {
-        canonical: `https://www.devs.com/blogs/${slug}`,
+        canonical: `${baseUrl}/blogs/${slug}`,
       },
     };
   } catch {
