@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import * as ApolloReactHooks from "@apollo/client/react";
 
-import type * as ApolloReactCommon from "@apollo/client";
+import type * as ApolloReactCommon from "../../../lib/apollo-compat";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -1283,7 +1283,7 @@ export function useGetPublishedPostsSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetPublishedPostsQuery,
     GetPublishedPostsQueryVariables
-  >(GetPublishedPostsDocument, options);
+  >(GetPublishedPostsDocument, options as any);
 }
 export type GetPublishedPostsQueryHookResult = ReturnType<
   typeof useGetPublishedPostsQuery
@@ -1386,7 +1386,7 @@ export function useGetPostBySlugSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetPostBySlugQuery,
     GetPostBySlugQueryVariables
-  >(GetPostBySlugDocument, options);
+  >(GetPostBySlugDocument, options as any);
 }
 export type GetPostBySlugQueryHookResult = ReturnType<
   typeof useGetPostBySlugQuery

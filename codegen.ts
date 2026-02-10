@@ -46,7 +46,7 @@ const config: CodegenConfig = {
         withComponent: false,
         reactApolloVersion: 3,
 
-        apolloReactCommonImportFrom: "@apollo/client",
+        apolloReactCommonImportFrom: "../../../lib/apollo-compat",
         apolloReactHooksImportFrom: "@apollo/client/react",
 
         skipTypename: true,
