@@ -17,6 +17,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
+import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -93,159 +94,170 @@ export default function AnalyticsPage() {
   }, [analyticsData]);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-          <p className="text-muted-foreground">
-            Track your platform&apos;s performance.
-          </p>
+    <SidebarInsetContent>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+            <p className="text-muted-foreground">
+              Track your platform&apos;s performance.
+            </p>
+          </div>
+          <Select value={dateRange} onValueChange={setDateRange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select range" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7">Last 7 days</SelectItem>
+              <SelectItem value="14">Last 14 days</SelectItem>
+              <SelectItem value="30">Last 30 days</SelectItem>
+              <SelectItem value="90">Last 90 days</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <Select value={dateRange} onValueChange={setDateRange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select range" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="7">Last 7 days</SelectItem>
-            <SelectItem value="14">Last 14 days</SelectItem>
-            <SelectItem value="30">Last 30 days</SelectItem>
-            <SelectItem value="90">Last 90 days</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
 
-      {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Total Views</CardDescription>
-            <CardTitle className="text-3xl">
-              {totals.views.toLocaleString()}
-            </CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Total Visitors</CardDescription>
-            <CardTitle className="text-3xl">
-              {totals.visitors.toLocaleString()}
-            </CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>New Posts</CardDescription>
-            <CardTitle className="text-3xl">{totals.posts}</CardTitle>
-          </CardHeader>
-        </Card>
-      </div>
+        {/* Summary Cards */}
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Total Views</CardDescription>
+              <CardTitle className="text-3xl">
+                {totals.views.toLocaleString()}
+              </CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Total Visitors</CardDescription>
+              <CardTitle className="text-3xl">
+                {totals.visitors.toLocaleString()}
+              </CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>New Posts</CardDescription>
+              <CardTitle className="text-3xl">{totals.posts}</CardTitle>
+            </CardHeader>
+          </Card>
+        </div>
 
-      {/* Views Over Time Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Views Over Time</CardTitle>
-          <CardDescription>
-            Daily views and unique visitors for the selected period.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={viewsChartConfig} className="h-[350px]">
-            <AreaChart
-              data={analyticsData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        {/* Views Over Time Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Views Over Time</CardTitle>
+            <CardDescription>
+              Daily views and unique visitors for the selected period.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer
+              config={viewsChartConfig}
+              className="h-[350px] w-full"
             >
-              <defs>
-                <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-views)"
-                    stopOpacity={0.3}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-views)"
-                    stopOpacity={0}
-                  />
-                </linearGradient>
-                <linearGradient id="colorVisitors" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-visitors)"
-                    stopOpacity={0.3}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-visitors)"
-                    stopOpacity={0}
-                  />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-              <XAxis
-                dataKey="date"
-                tickFormatter={(value) => format(new Date(value), "MMM d")}
-                className="text-xs"
-              />
-              <YAxis className="text-xs" />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Area
-                type="monotone"
-                dataKey="views"
-                stroke="var(--color-views)"
-                fillOpacity={1}
-                fill="url(#colorViews)"
-              />
-              <Area
-                type="monotone"
-                dataKey="visitors"
-                stroke="var(--color-visitors)"
-                fillOpacity={1}
-                fill="url(#colorVisitors)"
-              />
-            </AreaChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+              <AreaChart
+                data={analyticsData}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-views)"
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-views)"
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                  <linearGradient
+                    id="colorVisitors"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-visitors)"
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-visitors)"
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={(value) => format(new Date(value), "MMM d")}
+                  className="text-xs"
+                />
+                <YAxis className="text-xs" />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Area
+                  type="monotone"
+                  dataKey="views"
+                  stroke="var(--color-views)"
+                  fillOpacity={1}
+                  fill="url(#colorViews)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="visitors"
+                  stroke="var(--color-visitors)"
+                  fillOpacity={1}
+                  fill="url(#colorVisitors)"
+                />
+              </AreaChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
-      {/* Category Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Posts by Category</CardTitle>
-          <CardDescription>
-            Distribution of posts and views across categories.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={categoryChartConfig} className="h-[300px]">
-            <BarChart
-              data={categoryData}
-              layout="vertical"
-              margin={{ top: 10, right: 30, left: 80, bottom: 0 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                className="stroke-muted"
-                horizontal={true}
-                vertical={false}
-              />
-              <XAxis type="number" className="text-xs" />
-              <YAxis
-                dataKey="category"
-                type="category"
-                className="text-xs"
-                width={80}
-              />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar
-                dataKey="posts"
-                fill="var(--color-posts)"
-                radius={[0, 4, 4, 0]}
-              />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
-    </div>
+        {/* Category Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Posts by Category</CardTitle>
+            <CardDescription>
+              Distribution of posts and views across categories.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={categoryChartConfig} className="h-[300px]">
+              <BarChart
+                data={categoryData}
+                layout="vertical"
+                margin={{ top: 10, right: 30, left: 80, bottom: 0 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  className="stroke-muted"
+                  horizontal={true}
+                  vertical={false}
+                />
+                <XAxis type="number" className="text-xs" />
+                <YAxis
+                  dataKey="category"
+                  type="category"
+                  className="text-xs"
+                  width={80}
+                />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar
+                  dataKey="posts"
+                  fill="var(--color-posts)"
+                  radius={[0, 4, 4, 0]}
+                />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </div>
+    </SidebarInsetContent>
   );
 }

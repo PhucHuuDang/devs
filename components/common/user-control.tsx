@@ -10,6 +10,7 @@ import {
   EllipsisVerticalIcon,
   FileUserIcon,
   FingerprintPattern,
+  LayoutDashboardIcon,
   LogOut,
   NotebookTextIcon,
   UserIcon,
@@ -152,6 +153,18 @@ export const UserControl = () => {
                 <div className="flex items-center gap-1">
                   <FileUserIcon className="size-4" />
                   Profile
+                </div>
+                <KbdGroup>
+                  <Kbd>⌘</Kbd>
+                </KbdGroup>
+              </HoverCardItem>
+            </Link>
+
+            <Link href="/dashboard" prefetch>
+              <HoverCardItem className="">
+                <div className="flex items-center gap-1">
+                  <LayoutDashboardIcon className="size-4" />
+                  Dashboard
                 </div>
                 <KbdGroup>
                   <Kbd>⌘</Kbd>

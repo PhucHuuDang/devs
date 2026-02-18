@@ -311,52 +311,52 @@ export const SidebarGroupProjectChunk = ({
                 </Link>
               </SidebarMenuButton>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuAction showOnHover>
-                    <MoreHorizontal />
-                    <span className="sr-only">More</span>
-                  </SidebarMenuAction>
-                </DropdownMenuTrigger>
+              {item.dropdownItems && item.dropdownItems.length > 0 ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuAction showOnHover>
+                      <MoreHorizontal />
+                      <span className="sr-only">More</span>
+                    </SidebarMenuAction>
+                  </DropdownMenuTrigger>
 
-                <DropdownMenuContent
-                  className="min-w-52 rounded-lg bg-sidebar-accent p-1"
-                  side={isMobile ? "bottom" : "right"}
-                  align={isMobile ? "end" : "start"}
-                  sideOffset={14}
-                >
-                  {item?.dropdownItems?.map((dropdownItem, index) => {
-                    const isActiveChild = pathName === dropdownItem.url;
-                    return (
-                      <DropdownMenuItem
-                        key={dropdownItem.title}
-                        onClick={dropdownItem?.onClick}
-                        className={cn(
-                          "flex justify-between items-center p-1 hover:bg-primary cursor-pointer",
-                          isActiveChild &&
-                            "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          {<dropdownItem.icon />}
-                          <span>{dropdownItem.title}</span>
-                        </div>
-                        <DropdownMenuShortcut>
-                          ⌘{index + 1}
-                        </DropdownMenuShortcut>
-                      </DropdownMenuItem>
-                    );
-                  })}
-                  <SidebarSeparator className="my-2" />
+                  <DropdownMenuContent
+                    className="min-w-52 rounded-lg bg-sidebar-accent p-1"
+                    side={isMobile ? "bottom" : "right"}
+                    align={isMobile ? "end" : "start"}
+                    sideOffset={14}
+                  >
+                    {item?.dropdownItems?.map((dropdownItem, index) => {
+                      const isActiveChild = pathName === dropdownItem.url;
+                      return (
+                        <DropdownMenuItem
+                          key={dropdownItem.title}
+                          onClick={dropdownItem?.onClick}
+                          className={cn(
+                            "flex justify-between items-center p-1 hover:bg-primary cursor-pointer",
+                            isActiveChild &&
+                              "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
+                          )}
+                        >
+                          <div className="flex items-center gap-2">
+                            {<dropdownItem.icon />}
+                            <span>{dropdownItem.title}</span>
+                          </div>
+                          <DropdownMenuShortcut>
+                            ⌘{index + 1}
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                    <SidebarSeparator className="my-2" />
 
-                  <SidebarMenuItem className="flex gap-2">
-                    {/* <SidebarMenuButton className=""> */}
-                    <MoreHorizontal className="ml-2" />
-                    <span>More</span>
-                    {/* </SidebarMenuButton> */}
-                  </SidebarMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <SidebarMenuItem className="flex gap-2">
+                      <MoreHorizontal className="ml-2" />
+                      <span>More</span>
+                    </SidebarMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : null}
             </SidebarMenuItem>
           );
         })}

@@ -2,7 +2,9 @@ import {
   ActivityIcon,
   AudioWaveform,
   BadgeCheck,
+  BadgePlusIcon,
   Bell,
+  BookIcon,
   BookOpen,
   Bot,
   ChefHatIcon,
@@ -13,6 +15,7 @@ import {
   Folder,
   Forward,
   GalleryVerticalEnd,
+  LayoutDashboard,
   LogOut,
   MonitorCogIcon,
   Settings2,
@@ -20,6 +23,7 @@ import {
   Sparkles,
   SquareTerminal,
   Trash2,
+  UsersIcon,
 } from "lucide-react";
 
 import { DataProps } from "@/components/animate-ui/split/sidebar-chunks";
@@ -148,6 +152,52 @@ export const SIDEBAR_ROUTES: DataProps = {
         name: "Password & Authentication",
         url: "/profile/password",
         icon: ShieldUserIcon,
+      },
+    ],
+  },
+};
+
+const DASHBOARD = "dashboard";
+
+export const DASHBOARD_SIDEBAR: DataProps = {
+  projects: {
+    label: "Dashboard",
+    items: [
+      {
+        name: "Analytics",
+        url: `/${DASHBOARD}/analytics`,
+        icon: MonitorCogIcon,
+      },
+
+      {
+        name: "Users",
+        url: `/${DASHBOARD}/users`,
+        icon: UsersIcon,
+      },
+    ],
+  },
+
+  navMain: {
+    label: "Posts",
+    items: [
+      {
+        icon: BookIcon,
+        title: "Posts",
+        url: `/${DASHBOARD}/posts`,
+
+        items: [
+          {
+            title: "All Posts",
+            url: `/${DASHBOARD}/posts`,
+            logo: BookIcon,
+          },
+
+          {
+            title: "Create Blog",
+            url: `/${DASHBOARD}/create-blog`,
+            logo: BadgePlusIcon,
+          },
+        ],
       },
     ],
   },

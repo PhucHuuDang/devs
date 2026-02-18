@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 
+import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
 import { CreateBlog } from "@/components/url-segment/blog/blog-details-components/create-blog";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -12,9 +13,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const CreateBlogPage = () => {
   return (
-    <>
+    <SidebarInsetContent>
       <CreateBlog />
-    </>
+    </SidebarInsetContent>
   );
 };
 
