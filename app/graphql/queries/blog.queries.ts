@@ -1,44 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const GET_PUBLISHED_POSTS = gql`
-  query GetPublishedPosts($filters: PostFiltersInput!) {
-    publishedPosts(filters: $filters) {
-      success
-      message
-      data {
-        id
-        title
-        slug
-        isPublished
-        isPriority
-        createdAt
-        content
-        description
-        mainImage
-        views
-        tags
-        author {
-          id
-          name
-          image
-        }
-        category {
-          id
-          name
-        }
-      }
-      meta {
-        total
-        page
-        limit
-        totalPages
-        hasNext
-        hasPrev
-      }
-    }
-  }
-`;
-
 export const GET_POSTS_STRING = `
 query GetPublishedPosts($filters: PostFiltersInput!) {
   publishedPosts(filters: $filters) {
@@ -52,7 +13,6 @@ query GetPublishedPosts($filters: PostFiltersInput!) {
       isPriority
       createdAt
       updatedAt
-      content
       description
       mainImage
       views

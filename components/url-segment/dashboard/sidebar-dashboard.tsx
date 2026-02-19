@@ -55,7 +55,7 @@ export const SidebarDashboard = ({ children }: SidebarDashboardProps) => {
           <SidebarGroupCollapseChunk navMain={DASHBOARD_SIDEBAR.navMain} />
         </SidebarContent>
 
-        <SidebarFooterChunk user={SIDEBAR_ROUTES.user} isMobile={isMobile} />
+        {/* <SidebarF`ooterChunk user={SIDEBAR_ROUTES.user} isMobile={isMobile} /> */}
         <SidebarRail />
       </Sidebar>
 

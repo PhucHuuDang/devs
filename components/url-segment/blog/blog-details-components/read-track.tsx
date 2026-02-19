@@ -2,20 +2,16 @@
 
 import { useEffect, useRef } from "react";
 
-import { useMutation } from "@apollo/client/react";
-
-import { PostModel, PostResponse } from "@/app/graphql/__generated__/generated";
-import { INCREMENT_BLOG_VIEWS } from "@/app/graphql/mutaions/blog.mutations";
+import { useIncrementPostViewsMutation } from "@/app/graphql/__generated__/generated";
 import { getGuestIdentifier } from "@/app/utils/fingerprint";
 
 interface ReadTrackProps {
   blogId: string;
 }
+
 export const ReadTrack = ({ blogId }: ReadTrackProps) => {
   const hasTracked = useRef(false);
-
-  const [incrementViews, { loading, data, reset, error }] =
-    useMutation<PostResponse>(INCREMENT_BLOG_VIEWS);
+  const [incrementViews] = useIncrementPostViewsMutation();
 
   useEffect(() => {
     if (!hasTracked.current) {
@@ -25,22 +21,16 @@ export const ReadTrack = ({ blogId }: ReadTrackProps) => {
 
           const guestId = await getGuestIdentifier();
 
-          // console.log("Tracking view with identifier:", guestId);
-
-          // mutation
-          const result = await incrementViews({
+          await incrementViews({
             variables: {
               id: blogId,
               identifier: guestId,
             },
           });
 
-          // console.log("View tracked:", result.data?.views);
-
           hasTracked.current = true;
         } catch (error) {
-          console.error({ error });
-        } finally {
+          console.error("Failed to track view:", error);
         }
       };
 

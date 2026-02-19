@@ -607,7 +607,6 @@ export type GetPublishedPostsQuery = {
       isPublished: boolean;
       isPriority: boolean;
       createdAt: any;
-      content: any;
       description?: string | null;
       mainImage?: string | null;
       views: number;
@@ -1197,7 +1196,6 @@ export const GetPublishedPostsDocument = gql`
         isPublished
         isPriority
         createdAt
-        content
         description
         mainImage
         views
@@ -1400,4 +1398,166 @@ export type GetPostBySlugSuspenseQueryHookResult = ReturnType<
 export type GetPostBySlugQueryResult = ApolloReactCommon.QueryResult<
   GetPostBySlugQuery,
   GetPostBySlugQueryVariables
+>;
+
+// ---------------------------------------------------------------------------
+// GetAllPosts — admin query returning ALL posts regardless of published state
+// ---------------------------------------------------------------------------
+
+export type GetAllPostsQueryVariables = Exact<{
+  filters: PostFiltersInput;
+}>;
+
+export type GetAllPostsQuery = {
+  posts: {
+    success: boolean;
+    message?: string | null;
+    data: Array<{
+      id: string;
+      title: string;
+      slug: string;
+      isPublished: boolean;
+      isPriority: boolean;
+      createdAt: any;
+      updatedAt: any;
+      views: number;
+      author: { id: string; name?: string | null; image?: string | null };
+      category?: { id: string; name: string } | null;
+    }>;
+    meta: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+      hasNext: boolean;
+      hasPrev: boolean;
+    };
+  };
+};
+
+export const GetAllPostsDocument = gql`
+  query GetAllPosts($filters: PostFiltersInput!) {
+    posts(filters: $filters) {
+      success
+      message
+      data {
+        id
+        title
+        slug
+        isPublished
+        isPriority
+        createdAt
+        updatedAt
+        views
+        author {
+          id
+          name
+          image
+        }
+        category {
+          id
+          name
+        }
+      }
+      meta {
+        total
+        page
+        limit
+        totalPages
+        hasNext
+        hasPrev
+      }
+    }
+  }
+`;
+
+export function useGetAllPostsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetAllPostsQuery,
+    GetAllPostsQueryVariables
+  > &
+    (
+      | { variables: GetAllPostsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useQuery<GetAllPostsQuery, GetAllPostsQueryVariables>(
+    GetAllPostsDocument,
+    options,
+  );
+}
+
+export function useGetAllPostsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetAllPostsQuery,
+    GetAllPostsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useLazyQuery<
+    GetAllPostsQuery,
+    GetAllPostsQueryVariables
+  >(GetAllPostsDocument, options);
+}
+
+export type GetAllPostsQueryHookResult = ReturnType<typeof useGetAllPostsQuery>;
+export type GetAllPostsLazyQueryHookResult = ReturnType<
+  typeof useGetAllPostsLazyQuery
+>;
+export type GetAllPostsQueryResult = ApolloReactCommon.QueryResult<
+  GetAllPostsQuery,
+  GetAllPostsQueryVariables
+>;
+
+// ---------------------------------------------------------------------------
+// DeletePost — admin mutation to hard-delete a post
+// ---------------------------------------------------------------------------
+
+export type DeletePostMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+}>;
+
+export type DeletePostMutation = {
+  deletePost: {
+    success: boolean;
+    message?: string | null;
+  };
+};
+
+export const DeletePostDocument = gql`
+  mutation DeletePost($id: String!) {
+    deletePost(id: $id) {
+      success
+      message
+    }
+  }
+`;
+
+export type DeletePostMutationFn = ApolloReactCommon.MutationFunction<
+  DeletePostMutation,
+  DeletePostMutationVariables
+>;
+
+export function useDeletePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeletePostMutation,
+    DeletePostMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useMutation<
+    DeletePostMutation,
+    DeletePostMutationVariables
+  >(DeletePostDocument, options);
+}
+
+export type DeletePostMutationHookResult = ReturnType<
+  typeof useDeletePostMutation
+>;
+export type DeletePostMutationResult =
+  ApolloReactCommon.MutationResult<DeletePostMutation>;
+export type DeletePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeletePostMutation,
+  DeletePostMutationVariables
 >;

@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // reactCompiler: true,
+  // reactCompiler: true, // Requires: npm i babel-plugin-react-compiler
 
   bundlePagesRouterDependencies: true,
 
@@ -73,6 +73,11 @@ const nextConfig: NextConfig = {
       "lodash",
       "lodash.debounce",
       "recharts",
+      "@tabler/icons-react",
+      "date-fns",
+      "sonner",
+      "framer-motion",
+      "cmdk",
     ],
 
     viewTransition: true,

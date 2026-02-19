@@ -1,13 +1,16 @@
-import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import React from "react";
+
+import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
+
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
 
-interface CollapseCustomProps
-  extends React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent> {
+interface CollapseCustomProps extends React.ComponentProps<
+  typeof CollapsiblePrimitive.CollapsibleContent
+> {
   children: React.ReactNode;
   trigger: React.ReactNode;
   classNameTrigger?: string;

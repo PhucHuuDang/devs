@@ -26,10 +26,6 @@ function createHttpLink() {
   return new HttpLink({
     uri: GRAPHQL_ENDPOINT,
     credentials: "include", // Include cookies for authentication
-    fetchOptions: {
-      // cache: "no-store", // Disable fetch cache for real-time data
-      cache: "force-cache", // Enable fetch cache for real-time data
-    },
   });
 }
 
@@ -130,7 +126,7 @@ export const client = new ApolloClient({
       errorPolicy: "all",
     },
     query: {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-first",
       errorPolicy: "all",
     },
     mutate: {

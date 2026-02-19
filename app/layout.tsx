@@ -1,17 +1,11 @@
 import dynamic from "next/dynamic";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Figtree, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
-
-import { Toaster } from "sonner";
 
 import "./globals.css";
 
-// import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor"; // For development
-
-import { SettingsSheet } from "@/components/common/settings-sheet";
 import { WebVitals } from "@/components/common/web-vitals";
 import { WebVitalsMonitor } from "@/components/common/web-vitals-monitor";
-// import { PreviewcnDevtools } from "@/components/ui/previewcn";
 import { META_CONFIG } from "@/config/meta-config";
 
 import { ApolloWrapper } from "../providers/apollo-provider";
@@ -21,17 +15,23 @@ import { deleteCookies, getAuthCookies, setAuthCookies } from "./utils/cookies";
 
 import type { Metadata } from "next";
 
+// --- Lazy-loaded non-critical UI (deferred from initial bundle) ---
+const Toaster = dynamic(() => import("sonner").then((mod) => mod.Toaster));
+const SettingsSheet = dynamic(() =>
+  import("@/components/common/settings-sheet").then((mod) => mod.SettingsSheet),
+);
 const PreviewcnDevtools = dynamic(() =>
   import("@/components/ui/previewcn").then((mod) => mod.PreviewcnDevtools),
 );
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
 
@@ -94,25 +94,30 @@ export default function RootLayout({
         {/* DNS Prefetch for faster third-party connections */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+        {/* Preconnect to GraphQL API for faster data fetching */}
+        <link
+          rel="preconnect"
+          href={
+            process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT?.replace(
+              /\/graphql$/,
+              "",
+            ) || ""
+          }
+        />
       </head>
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${figtree.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        {/* {process.env.NODE_ENV === "development" && <PreviewcnDevtools />} */}
+        {process.env.NODE_ENV === "development" && <PreviewcnDevtools />}
         <Toaster richColors position="top-right" closeButton />
-        <PreviewcnDevtools />
         <SettingsSheet />
         <AuthProvider
           getCookies={getAuthCookies}
           setCookies={setAuthCookies}
           deleteCookies={deleteCookies}
         >
-          {/* Web Vitals tracking for all users */}
-          {/* <WebVitals /> */}
-          {/* Web Vitals Monitor - Only in development */}
-          {/* {process.env.NODE_ENV === "development" && <WebVitalsMonitor />} */}
-
           <ApolloWrapper>{children}</ApolloWrapper>
         </AuthProvider>
       </body>

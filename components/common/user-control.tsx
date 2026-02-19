@@ -136,18 +136,6 @@ export const UserControl = () => {
 
         {isAuth && (
           <>
-            <Link href="/create-blog" prefetch>
-              <HoverCardItem className="">
-                <div className="flex items-center gap-1">
-                  <NotebookTextIcon className="size-4" />
-                  Cooking Story
-                </div>
-                <KbdGroup>
-                  <Kbd>⌘</Kbd>
-                </KbdGroup>
-              </HoverCardItem>
-            </Link>
-
             <Link href="/profile" prefetch>
               <HoverCardItem className="">
                 <div className="flex items-center gap-1">

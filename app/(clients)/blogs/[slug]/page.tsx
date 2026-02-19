@@ -3,8 +3,6 @@ import { Suspense } from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-import { isEmpty } from "lodash";
-
 import { fetchGraphql } from "@/lib/graph-fetch";
 
 import {
@@ -181,7 +179,7 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
     ? response.postBySlug.data
     : undefined;
 
-  if (isEmpty(postDetail)) {
+  if (!postDetail) {
     // This triggers a 404 page in Next.js
     return notFound();
   }

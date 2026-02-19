@@ -1,11 +1,8 @@
 "use client";
 
-import Link from "next/link";
-
 import { NetworkStatus } from "@apollo/client";
-import { useQuery } from "@apollo/client/react";
 
-import { GET_PUBLISHED_POSTS } from "@/app/graphql/queries/blog.queries";
+import { useGetPublishedPostsQuery } from "@/app/graphql/__generated__/generated";
 import { ListCategory } from "@/components/common/list-category.";
 import { EmptyMediaGroup } from "@/components/empty-state/empty-media-group";
 import { NetworkErrorPage } from "@/components/exceptions/network-error-page";
@@ -14,29 +11,19 @@ import {
   BlogCardSkeleton,
 } from "@/components/url-segment/blog/blog-details-components/blog-card";
 
-import type { GetPublishedPostsQuery } from "@/app/graphql/__generated__/generated";
-
 const BlogsPage = () => {
-  const {
-    data,
-    dataState,
-    loading,
-    error,
-    networkStatus,
-    variables,
-    fetchMore,
-  } = useQuery<GetPublishedPostsQuery>(GET_PUBLISHED_POSTS, {
-    variables: {
-      filters: {
-        // isPublished: true,
-        page: 1,
-        limit: 12,
-        sortBy: "createdAt",
-        sortOrder: "desc",
+  const { data, loading, error, networkStatus, variables, fetchMore } =
+    useGetPublishedPostsQuery({
+      variables: {
+        filters: {
+          page: 1,
+          limit: 12,
+          sortBy: "createdAt",
+          sortOrder: "desc",
+        },
       },
-    },
-    notifyOnNetworkStatusChange: true,
-  });
+      notifyOnNetworkStatusChange: true,
+    });
 
   // console.log({ networkStatus });
 
