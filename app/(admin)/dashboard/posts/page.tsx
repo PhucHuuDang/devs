@@ -27,13 +27,13 @@ import {
 } from "@/app/graphql/__generated__/generated";
 import { SidebarInsetContent } from "@/components/animate-ui/split/sidebar-chunks";
 import { AlertDialogCustom } from "@/components/custom/alert-dialog-custom";
+import {
+  AdvancedColumnHeader,
+  DataTableAdvance,
+  getAdvancedSelectColumn,
+} from "@/components/custom/data-table-advance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  DataTable,
-  DataTableColumnHeader,
-  getSelectColumn,
-} from "@/components/ui/data-table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -341,11 +341,11 @@ export default function PostsManagementPage() {
   // Build columns with callbacks injected into the actions cell
   const columns: ColumnDef<PostItem>[] = React.useMemo(
     () => [
-      getSelectColumn<PostItem>(),
+      getAdvancedSelectColumn<PostItem>(),
       {
         accessorKey: "title",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Title" />
+          <AdvancedColumnHeader column={column} title="Title" />
         ),
         cell: ({ row }) => (
           <div className="max-w-[300px]">
@@ -359,7 +359,7 @@ export default function PostsManagementPage() {
       {
         accessorKey: "author",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Author" />
+          <AdvancedColumnHeader column={column} title="Author" />
         ),
         cell: ({ row }) => {
           const author = row.original.author;
@@ -386,7 +386,7 @@ export default function PostsManagementPage() {
       {
         accessorKey: "category",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Category" />
+          <AdvancedColumnHeader column={column} title="Category" />
         ),
         cell: ({ row }) => {
           const cat = row.original.category;
@@ -400,7 +400,7 @@ export default function PostsManagementPage() {
       {
         accessorKey: "isPublished",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Status" />
+          <AdvancedColumnHeader column={column} title="Status" />
         ),
         cell: ({ row }) => {
           const key = row.original.isPublished ? "published" : "unpublished";
@@ -414,7 +414,7 @@ export default function PostsManagementPage() {
       {
         accessorKey: "views",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Views" />
+          <AdvancedColumnHeader column={column} title="Views" />
         ),
         cell: ({ row }) => {
           const views = row.getValue("views") as number;
@@ -429,7 +429,7 @@ export default function PostsManagementPage() {
       {
         accessorKey: "createdAt",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Created" />
+          <AdvancedColumnHeader column={column} title="Created" />
         ),
         cell: ({ row }) => (
           <span className="text-sm text-muted-foreground">
@@ -453,64 +453,64 @@ export default function PostsManagementPage() {
   );
 
   return (
-    <SidebarInsetContent>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Posts</h1>
-            <p className="text-muted-foreground">
-              Manage and moderate all blog posts.
-            </p>
-          </div>
-          <Button asChild>
-            <Link href="#">
-              Create Post
-              <ArrowUpRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+    <SidebarInsetContent className="space-y-6 overflow-x-hidden ">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Posts</h1>
+          <p className="text-muted-foreground">
+            Manage and moderate all blog posts.
+          </p>
         </div>
-
-        {/* Status filter */}
-        <div className="flex items-center gap-4">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="pending">Pending Review</SelectItem>
-              <SelectItem value="published">Published</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Feedback banners */}
-        {actionSuccess && (
-          <div className="flex items-center gap-2 rounded-md border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-400">
-            <CheckCircle className="h-4 w-4 shrink-0" />
-            {actionSuccess}
-          </div>
-        )}
-        {(error || actionError) && (
-          <div className="flex items-center gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            <XCircle className="h-4 w-4 shrink-0" />
-            {actionError ?? error?.message}
-          </div>
-        )}
-
-        {/* Table */}
-        <DataTable
-          columns={columns}
-          data={posts}
-          searchKey="title"
-          searchPlaceholder="Search posts..."
-          isLoading={loading}
-          onRowClick={(row) => router.push(`/dashboard/posts/${row.id}`)}
-        />
+        <Button asChild>
+          <Link href="#">
+            Create Post
+            <ArrowUpRight className="ml-2 h-4 w-4" />
+          </Link>
+        </Button>
       </div>
+
+      {/* Status filter */}
+      <div className="flex items-center gap-4">
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value="draft">Draft</SelectItem>
+            <SelectItem value="pending">Pending Review</SelectItem>
+            <SelectItem value="published">Published</SelectItem>
+            <SelectItem value="rejected">Rejected</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Feedback banners */}
+      {actionSuccess && (
+        <div className="flex items-center gap-2 rounded-md border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-400">
+          <CheckCircle className="h-4 w-4 shrink-0" />
+          {actionSuccess}
+        </div>
+      )}
+      {(error || actionError) && (
+        <div className="flex items-center gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <XCircle className="h-4 w-4 shrink-0" />
+          {actionError ?? error?.message}
+        </div>
+      )}
+
+      {/* Table */}
+      <DataTableAdvance
+        columns={columns}
+        data={posts}
+        searchKey="title"
+        searchPlaceholder="Search posts..."
+        isLoading={loading}
+        enableRowDrag
+        onRowClick={(row) => router.push(`/dashboard/posts/${row.id}`)}
+        showColumnToggle
+      />
     </SidebarInsetContent>
   );
 }
