@@ -1,42 +1,9 @@
 import React from "react";
 
-import { redirect } from "next/navigation";
-
-import { isEmpty } from "lodash";
-import {
-  BookIcon,
-  BookmarkIcon,
-  HeartIcon,
-  MessageSquareIcon,
-  UsersIcon,
-} from "lucide-react";
 import { Metadata } from "next";
 
-import { fetchGraphql } from "@/lib/graph-fetch";
-
-import {
-  GetSessionQuery,
-  SessionModel,
-  UserModel,
-} from "@/app/graphql/__generated__/generated";
-import {
-  GET_SESSION,
-  GET_SESSION_STRING,
-} from "@/app/graphql/mutaions/auth.mutations";
-import { getAuthCookies, getSession } from "@/app/utils/cookies";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarProvider,
-} from "@/components/animate-ui/components/radix/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { VercelTabs } from "@/components/ui/vercel-tabs";
+import { getSession } from "@/app/utils/cookies";
 import { SidebarProfile } from "@/components/url-segment/profile/sidebar-profile";
-import { ThemeProvider } from "@/providers/next-theme-provider";
 
 interface ProfileLayoutProps {
   children: React.ReactNode;

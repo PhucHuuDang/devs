@@ -1,0 +1,8 @@
+fragment UserFragment on UserModel {
+  id
+  email
+  name
+  image
+  createdAt
+  updatedAt
+}

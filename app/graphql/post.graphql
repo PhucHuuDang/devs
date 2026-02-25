@@ -7,10 +7,7 @@ mutation CreatePost($input: CreatePostInput!) {
     success
     message
     data {
-      id
-      title
-      slug
-      createdAt
+      ...PostFragment
     }
   }
 }
@@ -20,10 +17,7 @@ mutation UpdatePost($id: String!, $input: UpdatePostInput!) {
     success
     message
     data {
-      id
-      title
-      slug
-      createdAt
+      ...PostFragment
     }
   }
 }
@@ -48,26 +42,7 @@ query GetPublishedPosts($filters: PostFiltersInput!) {
     success
     message
     data {
-      id
-      title
-      slug
-      isPublished
-      isPriority
-      createdAt
-      content
-      description
-      mainImage
-      views
-      tags
-      author {
-        id
-        name
-        image
-      }
-      category {
-        id
-        name
-      }
+      ...PostFragment
     }
     meta {
       total
@@ -85,24 +60,7 @@ query GetPostBySlug($slug: String!) {
     success
     message
     data {
-      id
-      title
-      slug
-      content
-      description
-      mainImage
-      createdAt
-      updatedAt
-      author {
-        id
-        name
-        image
-        createdAt
-      }
-      category {
-        id
-        name
-      }
+      ...PostFragment
     }
   }
 }

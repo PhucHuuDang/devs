@@ -7,10 +7,7 @@ mutation CreateCategory($input: CreateCategoryDto!) {
     success
     message
     data {
-      id
-      name
-      slug
-      createdAt
+      ...CategoryFragment
     }
   }
 }

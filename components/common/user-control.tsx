@@ -5,7 +5,6 @@ import { forwardRef, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-import { useMutation, useQuery } from "@apollo/client/react";
 import {
   EllipsisVerticalIcon,
   FileUserIcon,
@@ -20,11 +19,9 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 import {
-  GetSessionQuery,
-  GetSessionResponse,
-  SignOutMutation,
+  useGetSessionQuery,
+  useSignOutMutation,
 } from "@/app/graphql/__generated__/generated";
-import { GET_SESSION, SIGN_OUT } from "@/app/graphql/mutaions/auth.mutations";
 import { getSessionData } from "@/app/utils/cookies";
 import { useAuthClient } from "@/hooks/use-auth-client";
 
@@ -75,12 +72,12 @@ const Trigger = forwardRef<HTMLDivElement, TriggerProps>(
 Trigger.displayName = "Trigger";
 
 export const UserControl = () => {
-  const { data: sessionData } = useQuery<GetSessionQuery>(GET_SESSION);
+  const { data: sessionData } = useGetSessionQuery();
 
   const [
     signOutMutation,
     { loading, client, error, called, data: signOutData },
-  ] = useMutation<SignOutMutation>(SIGN_OUT, {
+  ] = useSignOutMutation({
     context: {
       fetchOptions: {
         credentials: "include",

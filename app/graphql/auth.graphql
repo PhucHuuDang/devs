@@ -6,9 +6,7 @@ mutation SignUpEmail($input: SignUpInput!) {
   signUpEmail(signUpInput: $input) {
     token
     user {
-      id
-      email
-      name
+      ...UserFragment
     }
   }
 }
@@ -18,8 +16,8 @@ mutation SignInEmail($input: SignInInput!) {
     token
     user {
       id
-      email
       name
+      email
       image
       createdAt
       updatedAt
@@ -57,10 +55,7 @@ query GetSession {
         userAgent
       }
       user {
-        id
-        email
-        name
-        image
+        ...UserFragment
       }
     }
   }

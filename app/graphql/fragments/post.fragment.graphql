@@ -1,0 +1,20 @@
+fragment PostFragment on PostModel {
+  id
+  title
+  slug
+  content
+  description
+  mainImage
+  isPublished
+  isPriority
+  views
+  tags
+  createdAt
+  updatedAt
+  author {
+    ...UserFragment
+  }
+  category {
+    ...CategoryFragment
+  }
+}

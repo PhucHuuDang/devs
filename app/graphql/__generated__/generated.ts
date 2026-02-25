@@ -488,7 +488,14 @@ export type SignUpEmailMutationVariables = Exact<{
 export type SignUpEmailMutation = {
   signUpEmail: {
     token?: string | null;
-    user?: { id: string; email?: string | null; name?: string | null } | null;
+    user?: {
+      id: string;
+      email?: string | null;
+      name?: string | null;
+      image?: string | null;
+      createdAt: any;
+      updatedAt: any;
+    } | null;
   };
 };
 
@@ -501,8 +508,8 @@ export type SignInEmailMutation = {
     token?: string | null;
     user?: {
       id: string;
-      email?: string | null;
       name?: string | null;
+      email?: string | null;
       image?: string | null;
       createdAt: any;
       updatedAt: any;
@@ -537,6 +544,8 @@ export type GetSessionQuery = {
         email?: string | null;
         name?: string | null;
         image?: string | null;
+        createdAt: any;
+        updatedAt: any;
       };
     } | null;
   };
@@ -550,8 +559,61 @@ export type CreateCategoryMutation = {
   createCategory: {
     success: boolean;
     message?: string | null;
-    data?: { id: string; name: string; slug: string; createdAt: any } | null;
+    data?: {
+      id: string;
+      name: string;
+      slug: string;
+      createdAt: any;
+      updatedAt: any;
+    } | null;
   };
+};
+
+export type CategoryFragmentFragment = {
+  id: string;
+  name: string;
+  slug: string;
+  createdAt: any;
+  updatedAt: any;
+};
+
+export type PostFragmentFragment = {
+  id: string;
+  title: string;
+  slug: string;
+  content: any;
+  description?: string | null;
+  mainImage?: string | null;
+  isPublished: boolean;
+  isPriority: boolean;
+  views: number;
+  tags: Array<string>;
+  createdAt: any;
+  updatedAt: any;
+  author: {
+    id: string;
+    email?: string | null;
+    name?: string | null;
+    image?: string | null;
+    createdAt: any;
+    updatedAt: any;
+  };
+  category?: {
+    id: string;
+    name: string;
+    slug: string;
+    createdAt: any;
+    updatedAt: any;
+  } | null;
+};
+
+export type UserFragmentFragment = {
+  id: string;
+  email?: string | null;
+  name?: string | null;
+  image?: string | null;
+  createdAt: any;
+  updatedAt: any;
 };
 
 export type CreatePostMutationVariables = Exact<{
@@ -562,7 +624,35 @@ export type CreatePostMutation = {
   createPost: {
     success: boolean;
     message?: string | null;
-    data?: { id: string; title: string; slug: string; createdAt: any } | null;
+    data?: {
+      id: string;
+      title: string;
+      slug: string;
+      content: any;
+      description?: string | null;
+      mainImage?: string | null;
+      isPublished: boolean;
+      isPriority: boolean;
+      views: number;
+      tags: Array<string>;
+      createdAt: any;
+      updatedAt: any;
+      author: {
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+        createdAt: any;
+        updatedAt: any;
+      };
+      category?: {
+        id: string;
+        name: string;
+        slug: string;
+        createdAt: any;
+        updatedAt: any;
+      } | null;
+    } | null;
   };
 };
 
@@ -575,7 +665,35 @@ export type UpdatePostMutation = {
   updatePost: {
     success: boolean;
     message?: string | null;
-    data?: { id: string; title: string; slug: string; createdAt: any } | null;
+    data?: {
+      id: string;
+      title: string;
+      slug: string;
+      content: any;
+      description?: string | null;
+      mainImage?: string | null;
+      isPublished: boolean;
+      isPriority: boolean;
+      views: number;
+      tags: Array<string>;
+      createdAt: any;
+      updatedAt: any;
+      author: {
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+        createdAt: any;
+        updatedAt: any;
+      };
+      category?: {
+        id: string;
+        name: string;
+        slug: string;
+        createdAt: any;
+        updatedAt: any;
+      } | null;
+    } | null;
   };
 };
 
@@ -604,15 +722,30 @@ export type GetPublishedPostsQuery = {
       id: string;
       title: string;
       slug: string;
-      isPublished: boolean;
-      isPriority: boolean;
-      createdAt: any;
+      content: any;
       description?: string | null;
       mainImage?: string | null;
+      isPublished: boolean;
+      isPriority: boolean;
       views: number;
       tags: Array<string>;
-      author: { id: string; name?: string | null; image?: string | null };
-      category?: { id: string; name: string } | null;
+      createdAt: any;
+      updatedAt: any;
+      author: {
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+        createdAt: any;
+        updatedAt: any;
+      };
+      category?: {
+        id: string;
+        name: string;
+        slug: string;
+        createdAt: any;
+        updatedAt: any;
+      } | null;
     }>;
     meta: {
       total: number;
@@ -640,30 +773,84 @@ export type GetPostBySlugQuery = {
       content: any;
       description?: string | null;
       mainImage?: string | null;
+      isPublished: boolean;
+      isPriority: boolean;
+      views: number;
+      tags: Array<string>;
       createdAt: any;
       updatedAt: any;
       author: {
         id: string;
+        email?: string | null;
         name?: string | null;
         image?: string | null;
         createdAt: any;
+        updatedAt: any;
       };
-      category?: { id: string; name: string } | null;
+      category?: {
+        id: string;
+        name: string;
+        slug: string;
+        createdAt: any;
+        updatedAt: any;
+      } | null;
     } | null;
   };
 };
 
+export const UserFragmentFragmentDoc = gql`
+  fragment UserFragment on UserModel {
+    id
+    email
+    name
+    image
+    createdAt
+    updatedAt
+  }
+`;
+export const CategoryFragmentFragmentDoc = gql`
+  fragment CategoryFragment on CategoryModel {
+    id
+    name
+    slug
+    createdAt
+    updatedAt
+  }
+`;
+export const PostFragmentFragmentDoc = gql`
+  fragment PostFragment on PostModel {
+    id
+    title
+    slug
+    content
+    description
+    mainImage
+    isPublished
+    isPriority
+    views
+    tags
+    createdAt
+    updatedAt
+    author {
+      ...UserFragment
+    }
+    category {
+      ...CategoryFragment
+    }
+  }
+  ${UserFragmentFragmentDoc}
+  ${CategoryFragmentFragmentDoc}
+`;
 export const SignUpEmailDocument = gql`
   mutation SignUpEmail($input: SignUpInput!) {
     signUpEmail(signUpInput: $input) {
       token
       user {
-        id
-        email
-        name
+        ...UserFragment
       }
     }
   }
+  ${UserFragmentFragmentDoc}
 `;
 export type SignUpEmailMutationFn = ApolloReactCommon.MutationFunction<
   SignUpEmailMutation,
@@ -714,8 +901,8 @@ export const SignInEmailDocument = gql`
       token
       user {
         id
-        email
         name
+        email
         image
         createdAt
         updatedAt
@@ -877,14 +1064,12 @@ export const GetSessionDocument = gql`
           userAgent
         }
         user {
-          id
-          email
-          name
-          image
+          ...UserFragment
         }
       }
     }
   }
+  ${UserFragmentFragmentDoc}
 `;
 
 /**
@@ -960,13 +1145,11 @@ export const CreateCategoryDocument = gql`
       success
       message
       data {
-        id
-        name
-        slug
-        createdAt
+        ...CategoryFragment
       }
     }
   }
+  ${CategoryFragmentFragmentDoc}
 `;
 export type CreateCategoryMutationFn = ApolloReactCommon.MutationFunction<
   CreateCategoryMutation,
@@ -1018,13 +1201,11 @@ export const CreatePostDocument = gql`
       success
       message
       data {
-        id
-        title
-        slug
-        createdAt
+        ...PostFragment
       }
     }
   }
+  ${PostFragmentFragmentDoc}
 `;
 export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
   CreatePostMutation,
@@ -1075,13 +1256,11 @@ export const UpdatePostDocument = gql`
       success
       message
       data {
-        id
-        title
-        slug
-        createdAt
+        ...PostFragment
       }
     }
   }
+  ${PostFragmentFragmentDoc}
 `;
 export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
   UpdatePostMutation,
@@ -1190,25 +1369,7 @@ export const GetPublishedPostsDocument = gql`
       success
       message
       data {
-        id
-        title
-        slug
-        isPublished
-        isPriority
-        createdAt
-        description
-        mainImage
-        views
-        tags
-        author {
-          id
-          name
-          image
-        }
-        category {
-          id
-          name
-        }
+        ...PostFragment
       }
       meta {
         total
@@ -1220,6 +1381,7 @@ export const GetPublishedPostsDocument = gql`
       }
     }
   }
+  ${PostFragmentFragmentDoc}
 `;
 
 /**
@@ -1281,7 +1443,7 @@ export function useGetPublishedPostsSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetPublishedPostsQuery,
     GetPublishedPostsQueryVariables
-  >(GetPublishedPostsDocument, options as any);
+  >(GetPublishedPostsDocument, options);
 }
 export type GetPublishedPostsQueryHookResult = ReturnType<
   typeof useGetPublishedPostsQuery
@@ -1302,27 +1464,11 @@ export const GetPostBySlugDocument = gql`
       success
       message
       data {
-        id
-        title
-        slug
-        content
-        description
-        mainImage
-        createdAt
-        updatedAt
-        author {
-          id
-          name
-          image
-          createdAt
-        }
-        category {
-          id
-          name
-        }
+        ...PostFragment
       }
     }
   }
+  ${PostFragmentFragmentDoc}
 `;
 
 /**
@@ -1384,7 +1530,7 @@ export function useGetPostBySlugSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetPostBySlugQuery,
     GetPostBySlugQueryVariables
-  >(GetPostBySlugDocument, options as any);
+  >(GetPostBySlugDocument, options);
 }
 export type GetPostBySlugQueryHookResult = ReturnType<
   typeof useGetPostBySlugQuery
@@ -1398,166 +1544,4 @@ export type GetPostBySlugSuspenseQueryHookResult = ReturnType<
 export type GetPostBySlugQueryResult = ApolloReactCommon.QueryResult<
   GetPostBySlugQuery,
   GetPostBySlugQueryVariables
->;
-
-// ---------------------------------------------------------------------------
-// GetAllPosts — admin query returning ALL posts regardless of published state
-// ---------------------------------------------------------------------------
-
-export type GetAllPostsQueryVariables = Exact<{
-  filters: PostFiltersInput;
-}>;
-
-export type GetAllPostsQuery = {
-  posts: {
-    success: boolean;
-    message?: string | null;
-    data: Array<{
-      id: string;
-      title: string;
-      slug: string;
-      isPublished: boolean;
-      isPriority: boolean;
-      createdAt: any;
-      updatedAt: any;
-      views: number;
-      author: { id: string; name?: string | null; image?: string | null };
-      category?: { id: string; name: string } | null;
-    }>;
-    meta: {
-      total: number;
-      page: number;
-      limit: number;
-      totalPages: number;
-      hasNext: boolean;
-      hasPrev: boolean;
-    };
-  };
-};
-
-export const GetAllPostsDocument = gql`
-  query GetAllPosts($filters: PostFiltersInput!) {
-    posts(filters: $filters) {
-      success
-      message
-      data {
-        id
-        title
-        slug
-        isPublished
-        isPriority
-        createdAt
-        updatedAt
-        views
-        author {
-          id
-          name
-          image
-        }
-        category {
-          id
-          name
-        }
-      }
-      meta {
-        total
-        page
-        limit
-        totalPages
-        hasNext
-        hasPrev
-      }
-    }
-  }
-`;
-
-export function useGetAllPostsQuery(
-  baseOptions: ApolloReactHooks.QueryHookOptions<
-    GetAllPostsQuery,
-    GetAllPostsQueryVariables
-  > &
-    (
-      | { variables: GetAllPostsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return ApolloReactHooks.useQuery<GetAllPostsQuery, GetAllPostsQueryVariables>(
-    GetAllPostsDocument,
-    options,
-  );
-}
-
-export function useGetAllPostsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetAllPostsQuery,
-    GetAllPostsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return ApolloReactHooks.useLazyQuery<
-    GetAllPostsQuery,
-    GetAllPostsQueryVariables
-  >(GetAllPostsDocument, options);
-}
-
-export type GetAllPostsQueryHookResult = ReturnType<typeof useGetAllPostsQuery>;
-export type GetAllPostsLazyQueryHookResult = ReturnType<
-  typeof useGetAllPostsLazyQuery
->;
-export type GetAllPostsQueryResult = ApolloReactCommon.QueryResult<
-  GetAllPostsQuery,
-  GetAllPostsQueryVariables
->;
-
-// ---------------------------------------------------------------------------
-// DeletePost — admin mutation to hard-delete a post
-// ---------------------------------------------------------------------------
-
-export type DeletePostMutationVariables = Exact<{
-  id: Scalars["String"]["input"];
-}>;
-
-export type DeletePostMutation = {
-  deletePost: {
-    success: boolean;
-    message?: string | null;
-  };
-};
-
-export const DeletePostDocument = gql`
-  mutation DeletePost($id: String!) {
-    deletePost(id: $id) {
-      success
-      message
-    }
-  }
-`;
-
-export type DeletePostMutationFn = ApolloReactCommon.MutationFunction<
-  DeletePostMutation,
-  DeletePostMutationVariables
->;
-
-export function useDeletePostMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    DeletePostMutation,
-    DeletePostMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return ApolloReactHooks.useMutation<
-    DeletePostMutation,
-    DeletePostMutationVariables
-  >(DeletePostDocument, options);
-}
-
-export type DeletePostMutationHookResult = ReturnType<
-  typeof useDeletePostMutation
->;
-export type DeletePostMutationResult =
-  ApolloReactCommon.MutationResult<DeletePostMutation>;
-export type DeletePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  DeletePostMutation,
-  DeletePostMutationVariables
 >;
