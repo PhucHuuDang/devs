@@ -64,3 +64,28 @@ query GetPostBySlug($slug: String!) {
     }
   }
 }
+
+query GetAllPosts($filters: PostFiltersInput) {
+  posts(filters: $filters) {
+    success
+    message
+    data {
+      ...PostFragment
+    }
+    meta {
+      total
+      page
+      limit
+      totalPages
+      hasNext
+      hasPrev
+    }
+  }
+}
+
+mutation DeletePost($id: String!) {
+  deletePost(id: $id) {
+    success
+    message
+  }
+}

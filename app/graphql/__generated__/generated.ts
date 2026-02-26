@@ -798,6 +798,62 @@ export type GetPostBySlugQuery = {
   };
 };
 
+export type GetAllPostsQueryVariables = Exact<{
+  filters?: InputMaybe<PostFiltersInput>;
+}>;
+
+export type GetAllPostsQuery = {
+  posts: {
+    success: boolean;
+    message?: string | null;
+    data: Array<{
+      id: string;
+      title: string;
+      slug: string;
+      content: any;
+      description?: string | null;
+      mainImage?: string | null;
+      isPublished: boolean;
+      isPriority: boolean;
+      views: number;
+      tags: Array<string>;
+      createdAt: any;
+      updatedAt: any;
+      author: {
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+        createdAt: any;
+        updatedAt: any;
+      };
+      category?: {
+        id: string;
+        name: string;
+        slug: string;
+        createdAt: any;
+        updatedAt: any;
+      } | null;
+    }>;
+    meta: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+      hasNext: boolean;
+      hasPrev: boolean;
+    };
+  };
+};
+
+export type DeletePostMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+}>;
+
+export type DeletePostMutation = {
+  deletePost: { success: boolean; message: string };
+};
+
 export const UserFragmentFragmentDoc = gql`
   fragment UserFragment on UserModel {
     id
@@ -1126,7 +1182,7 @@ export function useGetSessionSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetSessionQuery,
     GetSessionQueryVariables
-  >(GetSessionDocument, options);
+  >(GetSessionDocument, options as any);
 }
 export type GetSessionQueryHookResult = ReturnType<typeof useGetSessionQuery>;
 export type GetSessionLazyQueryHookResult = ReturnType<
@@ -1443,7 +1499,7 @@ export function useGetPublishedPostsSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetPublishedPostsQuery,
     GetPublishedPostsQueryVariables
-  >(GetPublishedPostsDocument, options);
+  >(GetPublishedPostsDocument, options as any);
 }
 export type GetPublishedPostsQueryHookResult = ReturnType<
   typeof useGetPublishedPostsQuery
@@ -1530,7 +1586,7 @@ export function useGetPostBySlugSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetPostBySlugQuery,
     GetPostBySlugQueryVariables
-  >(GetPostBySlugDocument, options);
+  >(GetPostBySlugDocument, options as any);
 }
 export type GetPostBySlugQueryHookResult = ReturnType<
   typeof useGetPostBySlugQuery
@@ -1544,4 +1600,144 @@ export type GetPostBySlugSuspenseQueryHookResult = ReturnType<
 export type GetPostBySlugQueryResult = ApolloReactCommon.QueryResult<
   GetPostBySlugQuery,
   GetPostBySlugQueryVariables
+>;
+export const GetAllPostsDocument = gql`
+  query GetAllPosts($filters: PostFiltersInput) {
+    posts(filters: $filters) {
+      success
+      message
+      data {
+        ...PostFragment
+      }
+      meta {
+        total
+        page
+        limit
+        totalPages
+        hasNext
+        hasPrev
+      }
+    }
+  }
+  ${PostFragmentFragmentDoc}
+`;
+
+/**
+ * __useGetAllPostsQuery__
+ *
+ * To run a query within a React component, call `useGetAllPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPostsQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *   },
+ * });
+ */
+export function useGetAllPostsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetAllPostsQuery,
+    GetAllPostsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useQuery<GetAllPostsQuery, GetAllPostsQueryVariables>(
+    GetAllPostsDocument,
+    options,
+  );
+}
+export function useGetAllPostsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetAllPostsQuery,
+    GetAllPostsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useLazyQuery<
+    GetAllPostsQuery,
+    GetAllPostsQueryVariables
+  >(GetAllPostsDocument, options);
+}
+export function useGetAllPostsSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetAllPostsQuery,
+        GetAllPostsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === ApolloReactHooks.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useSuspenseQuery<
+    GetAllPostsQuery,
+    GetAllPostsQueryVariables
+  >(GetAllPostsDocument, options as any);
+}
+export type GetAllPostsQueryHookResult = ReturnType<typeof useGetAllPostsQuery>;
+export type GetAllPostsLazyQueryHookResult = ReturnType<
+  typeof useGetAllPostsLazyQuery
+>;
+export type GetAllPostsSuspenseQueryHookResult = ReturnType<
+  typeof useGetAllPostsSuspenseQuery
+>;
+export type GetAllPostsQueryResult = ApolloReactCommon.QueryResult<
+  GetAllPostsQuery,
+  GetAllPostsQueryVariables
+>;
+export const DeletePostDocument = gql`
+  mutation DeletePost($id: String!) {
+    deletePost(id: $id) {
+      success
+      message
+    }
+  }
+`;
+export type DeletePostMutationFn = ApolloReactCommon.MutationFunction<
+  DeletePostMutation,
+  DeletePostMutationVariables
+>;
+
+/**
+ * __useDeletePostMutation__
+ *
+ * To run a mutation, you first call `useDeletePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePostMutation, { data, loading, error }] = useDeletePostMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeletePostMutation,
+    DeletePostMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useMutation<
+    DeletePostMutation,
+    DeletePostMutationVariables
+  >(DeletePostDocument, options);
+}
+export type DeletePostMutationHookResult = ReturnType<
+  typeof useDeletePostMutation
+>;
+export type DeletePostMutationResult =
+  ApolloReactCommon.MutationResult<DeletePostMutation>;
+export type DeletePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeletePostMutation,
+  DeletePostMutationVariables
 >;
