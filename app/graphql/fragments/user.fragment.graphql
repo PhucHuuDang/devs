@@ -3,6 +3,4 @@ fragment UserFragment on UserModel {
   email
   name
   image
-  createdAt
-  updatedAt
 }

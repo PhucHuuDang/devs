@@ -15,11 +15,10 @@ mutation SignInEmail($input: SignInInput!) {
   signInEmail(signInInput: $input) {
     token
     user {
-      id
-      name
-      email
-      image
       createdAt
+      id
+      image
+      name
       updatedAt
     }
   }

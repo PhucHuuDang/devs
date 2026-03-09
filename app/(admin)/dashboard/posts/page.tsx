@@ -260,6 +260,8 @@ export default function PostsManagementPage() {
     return () => clearTimeout(t);
   }, [actionSuccess, actionError]);
 
+  console.log({ data });
+
   // Map GQL response → PostItem[]
   const posts: PostItem[] = React.useMemo(() => {
     const raw = data?.posts?.data ?? [];
