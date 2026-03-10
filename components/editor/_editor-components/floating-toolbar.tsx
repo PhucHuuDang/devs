@@ -64,7 +64,7 @@ export function FloatingToolbar({
     ref: floatingRef,
   } = useFloatingToolbar(floatingToolbarState);
 
-  const ref = useComposedRef<HTMLDivElement>(props.ref, floatingRef);
+  const ref = useComposedRef<HTMLDivElement>(props.ref as any, floatingRef);
 
   if (hidden) return null;
 
@@ -77,7 +77,7 @@ export function FloatingToolbar({
         className={cn(
           "absolute z-50 scrollbar-hide overflow-x-auto rounded-md border bg-popover p-1 whitespace-nowrap opacity-100 shadow-md print:hidden",
           "max-w-[80vw]",
-          className
+          className,
         )}
       >
         {children}

@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
             enum: isSelecting
               ? ["generate", "edit", "comment"]
               : ["generate", "comment"],
-            model: gatewayProvider(model || "google/gemini-2.5-flash"),
+            model: gatewayProvider(model || "google/gemini-2.5-flash") as any,
             output: "enum",
             prompt: getChooseToolPrompt(messagesRaw),
           });
@@ -79,13 +79,13 @@ export async function POST(req: NextRequest) {
 
         const stream = streamText({
           experimental_transform: markdownJoinerTransform(),
-          model: gatewayProvider(model || "openai/gpt-4o-mini"),
+          model: gatewayProvider(model || "openai/gpt-4o-mini") as any,
           // Not used
           prompt: "",
           tools: {
             comment: getCommentTool(editor, {
               messagesRaw,
-              model: gatewayProvider(model || "google/gemini-2.5-flash"),
+              model: gatewayProvider(model || "google/gemini-2.5-flash") as any,
               writer,
             }),
           },
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
                     role: "user",
                   },
                 ],
-                model: gatewayProvider(model || "openai/gpt-4o-mini"),
+                model: gatewayProvider(model || "openai/gpt-4o-mini") as any,
               };
             }
           },
