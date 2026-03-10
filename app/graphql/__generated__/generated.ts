@@ -47,7 +47,6 @@ export type AccountModel = {
   refreshTokenExpiresAt?: Maybe<Scalars["DateTime"]["output"]>;
   scope?: Maybe<Scalars["String"]["output"]>;
   updatedAt: Scalars["DateTime"]["output"];
-  user: UserModel;
   userId: Scalars["String"]["output"];
 };
 
@@ -67,8 +66,6 @@ export type CategoryModel = {
   id: Scalars["String"]["output"];
   /** Name of the category */
   name: Scalars["String"]["output"];
-  /** Posts in this category */
-  posts: Array<PostModel>;
   /** Slug of the category */
   slug: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
@@ -85,8 +82,8 @@ export type Comment = {
   content: Scalars["String"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
-  post?: Maybe<PostModel>;
-  user: UserModel;
+  postId?: Maybe<Scalars["String"]["output"]>;
+  userId: Scalars["String"]["output"];
 };
 
 export type CreateCategoryDto = {
@@ -141,9 +138,7 @@ export type GitHubUserResponse = {
 export type LikeModel = {
   createdAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
-  post: PostModel;
   postId: Scalars["String"]["output"];
-  user: UserModel;
   userId: Scalars["String"]["output"];
 };
 
@@ -493,8 +488,6 @@ export type SignUpEmailMutation = {
       email?: string | null;
       name?: string | null;
       image?: string | null;
-      createdAt: any;
-      updatedAt: any;
     } | null;
   };
 };
@@ -507,11 +500,10 @@ export type SignInEmailMutation = {
   signInEmail: {
     token?: string | null;
     user?: {
-      id: string;
-      name?: string | null;
-      email?: string | null;
-      image?: string | null;
       createdAt: any;
+      id: string;
+      image?: string | null;
+      name?: string | null;
       updatedAt: any;
     } | null;
   };
@@ -544,8 +536,6 @@ export type GetSessionQuery = {
         email?: string | null;
         name?: string | null;
         image?: string | null;
-        createdAt: any;
-        updatedAt: any;
       };
     } | null;
   };
@@ -595,8 +585,6 @@ export type PostFragmentFragment = {
     email?: string | null;
     name?: string | null;
     image?: string | null;
-    createdAt: any;
-    updatedAt: any;
   };
   category?: {
     id: string;
@@ -612,8 +600,6 @@ export type UserFragmentFragment = {
   email?: string | null;
   name?: string | null;
   image?: string | null;
-  createdAt: any;
-  updatedAt: any;
 };
 
 export type CreatePostMutationVariables = Exact<{
@@ -642,8 +628,6 @@ export type CreatePostMutation = {
         email?: string | null;
         name?: string | null;
         image?: string | null;
-        createdAt: any;
-        updatedAt: any;
       };
       category?: {
         id: string;
@@ -683,8 +667,6 @@ export type UpdatePostMutation = {
         email?: string | null;
         name?: string | null;
         image?: string | null;
-        createdAt: any;
-        updatedAt: any;
       };
       category?: {
         id: string;
@@ -736,8 +718,6 @@ export type GetPublishedPostsQuery = {
         email?: string | null;
         name?: string | null;
         image?: string | null;
-        createdAt: any;
-        updatedAt: any;
       };
       category?: {
         id: string;
@@ -784,8 +764,6 @@ export type GetPostBySlugQuery = {
         email?: string | null;
         name?: string | null;
         image?: string | null;
-        createdAt: any;
-        updatedAt: any;
       };
       category?: {
         id: string;
@@ -824,8 +802,6 @@ export type GetAllPostsQuery = {
         email?: string | null;
         name?: string | null;
         image?: string | null;
-        createdAt: any;
-        updatedAt: any;
       };
       category?: {
         id: string;
@@ -860,8 +836,6 @@ export const UserFragmentFragmentDoc = gql`
     email
     name
     image
-    createdAt
-    updatedAt
   }
 `;
 export const CategoryFragmentFragmentDoc = gql`
@@ -956,11 +930,10 @@ export const SignInEmailDocument = gql`
     signInEmail(signInInput: $input) {
       token
       user {
-        id
-        name
-        email
-        image
         createdAt
+        id
+        image
+        name
         updatedAt
       }
     }
@@ -1182,7 +1155,7 @@ export function useGetSessionSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetSessionQuery,
     GetSessionQueryVariables
-  >(GetSessionDocument, options as any);
+  >(GetSessionDocument, options);
 }
 export type GetSessionQueryHookResult = ReturnType<typeof useGetSessionQuery>;
 export type GetSessionLazyQueryHookResult = ReturnType<
@@ -1499,7 +1472,7 @@ export function useGetPublishedPostsSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetPublishedPostsQuery,
     GetPublishedPostsQueryVariables
-  >(GetPublishedPostsDocument, options as any);
+  >(GetPublishedPostsDocument, options);
 }
 export type GetPublishedPostsQueryHookResult = ReturnType<
   typeof useGetPublishedPostsQuery
@@ -1586,7 +1559,7 @@ export function useGetPostBySlugSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetPostBySlugQuery,
     GetPostBySlugQueryVariables
-  >(GetPostBySlugDocument, options as any);
+  >(GetPostBySlugDocument, options);
 }
 export type GetPostBySlugQueryHookResult = ReturnType<
   typeof useGetPostBySlugQuery
@@ -1677,7 +1650,7 @@ export function useGetAllPostsSuspenseQuery(
   return ApolloReactHooks.useSuspenseQuery<
     GetAllPostsQuery,
     GetAllPostsQueryVariables
-  >(GetAllPostsDocument, options as any);
+  >(GetAllPostsDocument, options);
 }
 export type GetAllPostsQueryHookResult = ReturnType<typeof useGetAllPostsQuery>;
 export type GetAllPostsLazyQueryHookResult = ReturnType<

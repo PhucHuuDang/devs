@@ -1,5 +1,7 @@
 import React from "react";
 
+import Link from "next/link";
+
 import { PlusIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -19,7 +21,6 @@ interface EmptyMediaGroupProps {
   title?: string;
   description?: string;
   action: React.ReactNode | string;
-
   className?: string;
 }
 export const EmptyMediaGroup = ({
@@ -59,9 +60,16 @@ export const EmptyMediaGroup = ({
       </EmptyHeader>
       <EmptyContent>
         {typeof action === "string" && typeof action !== "function" ? (
-          <Button size="sm" className=" flex items-center justify-center gap-1">
-            <PlusIcon />
-            {action}
+          <Button size="sm" asChild>
+            <Link
+              href={action}
+              className=" flex items-center justify-center gap-1"
+              aria-description={`The redirect to ${action} page`}
+              aria-label={`The redirect to ${action} page`}
+            >
+              <PlusIcon />
+              {action}
+            </Link>
           </Button>
         ) : (
           <>{action}</>

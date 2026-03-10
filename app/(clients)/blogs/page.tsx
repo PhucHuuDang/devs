@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { NetworkStatus } from "@apollo/client";
 
 import { useGetPublishedPostsQuery } from "@/app/graphql/__generated__/generated";
@@ -23,13 +25,17 @@ const BlogsPage = () => {
         },
       },
       notifyOnNetworkStatusChange: true,
+      ssr: true,
     });
 
-  // console.log({ networkStatus });
+  console.log({ networkStatus, data, error });
 
   if (networkStatus === NetworkStatus.error || error) {
+    console.error("GraphQL Error:", error);
     return <NetworkErrorPage errorCode="NETWORK_CONNECTION_FAILED" />;
   }
+
+  console.log({ data });
 
   // Handle loading state
   if (loading && !data) {
@@ -48,8 +54,10 @@ const BlogsPage = () => {
   // console.log({ dataState });
 
   const publishedPosts = data?.publishedPosts;
+  console.log({ publishedPosts });
 
   const posts = publishedPosts?.data ?? [];
+  console.log({ posts });
   const meta = publishedPosts?.meta ?? {
     total: 0,
     page: 0,
@@ -64,16 +72,16 @@ const BlogsPage = () => {
       <EmptyMediaGroup
         title="No Blogs Found"
         description="There are no published blogs yet. Be the first to create one!"
-        action="Create Blog"
-        // action={
-        //   <Link
-        //     prefetch
-        //     href="/create-blog"
-        //     className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-        //   >
-        //     Create Blog
-        //   </Link>
-        // }
+        // action="/blogs/create"
+        action={
+          <Link
+            prefetch
+            href="/profile/my-cooking"
+            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            Create Blog
+          </Link>
+        }
       />
     );
   }

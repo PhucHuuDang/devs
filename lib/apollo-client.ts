@@ -115,7 +115,6 @@ function createCache(): InMemoryCache {
 export const client = new ApolloClient({
   link: ApolloLink.from([
     createErrorLink(),
-    createRemoveTypenameLink(), // Remove __typename from query documents
     new RemoveTypenameFromVariablesLink(), // Remove __typename from mutation variables
     createHttpLink(),
   ]),
