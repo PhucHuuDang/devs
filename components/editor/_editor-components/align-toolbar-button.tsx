@@ -2,9 +2,6 @@
 
 import * as React from "react";
 
-import type { Alignment } from "@platejs/basic-styles";
-import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { TextAlignPlugin } from "@platejs/basic-styles/react";
 import {
   AlignCenterIcon,
@@ -23,6 +20,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ToolbarButton } from "../control/toolbar";
+
+import type { Alignment } from "@platejs/basic-styles";
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 const items = [
   {

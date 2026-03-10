@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import type { WithRequiredKey } from "platejs";
-
 import {
   FloatingMedia as FloatingMediaPrimitive,
   FloatingMediaStore,
@@ -32,8 +30,10 @@ import { Separator } from "@/components/ui/separator";
 
 import { CaptionButton } from "./caption";
 
+import type { WithRequiredKey } from "platejs";
+
 const inputVariants = cva(
-  "flex h-[28px] w-full rounded-md border-none bg-transparent px-1.5 py-1 text-base placeholder:text-muted-foreground focus-visible:ring-transparent focus-visible:outline-none md:text-sm"
+  "flex h-[28px] w-full rounded-md border-none bg-transparent px-1.5 py-1 text-base placeholder:text-muted-foreground focus-visible:ring-transparent focus-visible:outline-none md:text-sm",
 );
 
 export function MediaToolbar({
@@ -49,7 +49,7 @@ export function MediaToolbar({
   const isFocusedLast = useFocusedLast();
   const selectionCollapsed = useEditorSelector(
     (editor) => !editor.api.isExpanded(),
-    []
+    [],
   );
   const isImagePreviewOpen = useImagePreviewValue("isOpen", editor.id);
   const open =

@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { PlaceholderPlugin } from "@platejs/media/react";
 import {
   AudioLinesIcon,
@@ -41,6 +39,8 @@ import {
   ToolbarSplitButtonPrimary,
   ToolbarSplitButtonSecondary,
 } from "../control/toolbar";
+
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 const MEDIA_CONFIG: Record<
   string,

@@ -2,9 +2,6 @@
 
 import * as React from "react";
 
-import type { TComboboxInputElement, TMentionElement } from "platejs";
-import type { PlateElementProps } from "platejs/react";
-
 import { getMentionOnSelectItem } from "@platejs/mention";
 import { IS_APPLE, KEYS } from "platejs";
 import {
@@ -15,6 +12,7 @@ import {
 } from "platejs/react";
 
 import { cn } from "@/lib/utils";
+
 import { useMounted } from "@/hooks/use-mounted";
 
 import {
@@ -26,10 +24,13 @@ import {
   InlineComboboxItem,
 } from "./inline-combobox";
 
+import type { TComboboxInputElement, TMentionElement } from "platejs";
+import type { PlateElementProps } from "platejs/react";
+
 export function MentionElement(
   props: PlateElementProps<TMentionElement> & {
     prefix?: string;
-  }
+  },
 ) {
   const element = props.element;
 
@@ -47,7 +48,7 @@ export function MentionElement(
         selected && focused && "ring-2 ring-ring",
         element.children[0][KEYS.bold] === true && "font-bold",
         element.children[0][KEYS.italic] === true && "italic",
-        element.children[0][KEYS.underline] === true && "underline"
+        element.children[0][KEYS.underline] === true && "underline",
       )}
       attributes={{
         ...props.attributes,
@@ -78,7 +79,7 @@ export function MentionElement(
 const onSelectItem = getMentionOnSelectItem();
 
 export function MentionInputElement(
-  props: PlateElementProps<TComboboxInputElement>
+  props: PlateElementProps<TComboboxInputElement>,
 ) {
   const { editor, element } = props;
   const [search, setSearch] = React.useState("");

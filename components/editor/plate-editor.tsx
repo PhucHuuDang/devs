@@ -1,5 +1,7 @@
 "use client";
 
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+
 import { normalizeNodeId, Value } from "platejs";
 import {
   Plate,
@@ -9,13 +11,12 @@ import {
   usePlateEditor,
 } from "platejs/react";
 
-import { EditorKit } from "@/components/editor/editor-kit";
-import { SettingsDialog } from "@/components/editor/settings-dialog";
 import {
   Editor,
   EditorContainer,
 } from "@/components/editor/_editor-components/editor";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { EditorKit } from "@/components/editor/editor-kit";
+import { SettingsDialog } from "@/components/editor/settings-dialog";
 
 interface PlateEditorProps {
   value: Value;

@@ -1,5 +1,7 @@
 import React from "react";
-import { FloatingDock } from "@/components/ui/floating-dock";
+
+import Image from "next/image";
+
 import {
   IconBrandGithub,
   IconBrandX,
@@ -8,8 +10,9 @@ import {
   IconNewSection,
   IconTerminal2,
 } from "@tabler/icons-react";
-import Image from "next/image";
 import { Settings2Icon } from "lucide-react";
+
+import { FloatingDock } from "@/components/ui/floating-dock";
 
 export function AppleFloatingDock() {
   return (

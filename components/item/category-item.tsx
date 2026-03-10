@@ -1,10 +1,12 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import GlareHover from "@/components/react-bits/glare-hover";
 import { motion } from "framer-motion";
 import { LucideIcon, TagIcon } from "lucide-react";
 import { useTheme } from "next-themes";
+
+import { cn } from "@/lib/utils";
+
+import GlareHover from "@/components/react-bits/glare-hover";
 
 interface CategoryItemProps {
   title: string;
@@ -56,13 +58,13 @@ export const CategoryItem = ({
               "transition-colors",
               active
                 ? "text-background"
-                : "text-foreground/70 group-hover:text-primary"
+                : "text-foreground/70 group-hover:text-primary",
             )}
           />
           <span
             className={cn(
               "text-xs sm:text-sm font-medium",
-              active ? "text-background" : "text-foreground/80"
+              active ? "text-background" : "text-foreground/80",
             )}
           >
             {title}

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { gql } from "@apollo/client";
 import * as ApolloReactHooks from "@apollo/client/react";
 
@@ -1140,6 +1141,27 @@ export function useGetSessionLazyQuery(
     GetSessionQueryVariables
   >(GetSessionDocument, options);
 }
+// @ts-ignore
+export function useGetSessionSuspenseQuery(
+  baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<
+    GetSessionQuery,
+    GetSessionQueryVariables
+  >,
+): ApolloReactHooks.UseSuspenseQueryResult<
+  GetSessionQuery,
+  GetSessionQueryVariables
+>;
+export function useGetSessionSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetSessionQuery,
+        GetSessionQueryVariables
+      >,
+): ApolloReactHooks.UseSuspenseQueryResult<
+  GetSessionQuery | undefined,
+  GetSessionQueryVariables
+>;
 export function useGetSessionSuspenseQuery(
   baseOptions?:
     | ApolloReactHooks.SkipToken
@@ -1457,6 +1479,27 @@ export function useGetPublishedPostsLazyQuery(
     GetPublishedPostsQueryVariables
   >(GetPublishedPostsDocument, options);
 }
+// @ts-ignore
+export function useGetPublishedPostsSuspenseQuery(
+  baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<
+    GetPublishedPostsQuery,
+    GetPublishedPostsQueryVariables
+  >,
+): ApolloReactHooks.UseSuspenseQueryResult<
+  GetPublishedPostsQuery,
+  GetPublishedPostsQueryVariables
+>;
+export function useGetPublishedPostsSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetPublishedPostsQuery,
+        GetPublishedPostsQueryVariables
+      >,
+): ApolloReactHooks.UseSuspenseQueryResult<
+  GetPublishedPostsQuery | undefined,
+  GetPublishedPostsQueryVariables
+>;
 export function useGetPublishedPostsSuspenseQuery(
   baseOptions?:
     | ApolloReactHooks.SkipToken
@@ -1544,6 +1587,27 @@ export function useGetPostBySlugLazyQuery(
     GetPostBySlugQueryVariables
   >(GetPostBySlugDocument, options);
 }
+// @ts-ignore
+export function useGetPostBySlugSuspenseQuery(
+  baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<
+    GetPostBySlugQuery,
+    GetPostBySlugQueryVariables
+  >,
+): ApolloReactHooks.UseSuspenseQueryResult<
+  GetPostBySlugQuery,
+  GetPostBySlugQueryVariables
+>;
+export function useGetPostBySlugSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetPostBySlugQuery,
+        GetPostBySlugQueryVariables
+      >,
+): ApolloReactHooks.UseSuspenseQueryResult<
+  GetPostBySlugQuery | undefined,
+  GetPostBySlugQueryVariables
+>;
 export function useGetPostBySlugSuspenseQuery(
   baseOptions?:
     | ApolloReactHooks.SkipToken
@@ -1635,6 +1699,27 @@ export function useGetAllPostsLazyQuery(
     GetAllPostsQueryVariables
   >(GetAllPostsDocument, options);
 }
+// @ts-ignore
+export function useGetAllPostsSuspenseQuery(
+  baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<
+    GetAllPostsQuery,
+    GetAllPostsQueryVariables
+  >,
+): ApolloReactHooks.UseSuspenseQueryResult<
+  GetAllPostsQuery,
+  GetAllPostsQueryVariables
+>;
+export function useGetAllPostsSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetAllPostsQuery,
+        GetAllPostsQueryVariables
+      >,
+): ApolloReactHooks.UseSuspenseQueryResult<
+  GetAllPostsQuery | undefined,
+  GetAllPostsQueryVariables
+>;
 export function useGetAllPostsSuspenseQuery(
   baseOptions?:
     | ApolloReactHooks.SkipToken

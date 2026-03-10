@@ -1,6 +1,8 @@
 import React from "react";
-import { BackgroundContent, defaultContent } from "./background-content";
+
 import Lightning from "../Lightning";
+
+import { BackgroundContent, defaultContent } from "./background-content";
 
 export const LightningContent = () => {
   return (

@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import type { PlateEditor, PlateElementProps } from "platejs/react";
-
 import { AIChatPlugin } from "@platejs/ai/react";
 import {
   CalendarIcon,
@@ -42,6 +40,8 @@ import {
   InlineComboboxInput,
   InlineComboboxItem,
 } from "./inline-combobox";
+
+import type { PlateEditor, PlateElementProps } from "platejs/react";
 
 type Group = {
   group: string;
@@ -211,7 +211,7 @@ const groups: Group[] = [
 ];
 
 export function SlashInputElement(
-  props: PlateElementProps<TComboboxInputElement>
+  props: PlateElementProps<TComboboxInputElement>,
 ) {
   const { editor, element } = props;
 
@@ -241,7 +241,7 @@ export function SlashInputElement(
                     <div className="mr-2 text-muted-foreground">{icon}</div>
                     {label ?? value}
                   </InlineComboboxItem>
-                )
+                ),
               )}
             </InlineComboboxGroup>
           ))}

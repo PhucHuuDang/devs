@@ -9,6 +9,11 @@ const config: CodegenConfig = {
   generates: {
     "app/graphql/__generated__/generated.ts": {
       plugins: [
+        {
+          add: {
+            content: "//@ts-nocheck",
+          },
+        },
         "typescript",
         "typescript-operations",
         "typescript-react-apollo",

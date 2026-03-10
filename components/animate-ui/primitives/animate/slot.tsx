@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
+
 import { motion, isMotionComponent, type HTMLMotionProps } from "motion/react";
+
 import { cn } from "@/lib/utils";
 
 type AnyProps = Record<string, unknown>;
@@ -16,7 +18,6 @@ type WithAsChild<Base extends object> =
   | (Base & { asChild?: false | undefined });
 
 type SlotProps<T extends HTMLElement = HTMLElement> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children?: any;
 } & DOMMotionProps<T>;
 
@@ -37,14 +38,14 @@ function mergeRefs<T>(
 
 function mergeProps<T extends HTMLElement>(
   childProps: AnyProps,
-  slotProps: DOMMotionProps<T>
+  slotProps: DOMMotionProps<T>,
 ): AnyProps {
   const merged: AnyProps = { ...childProps, ...slotProps };
 
   if (childProps.className || slotProps.className) {
     merged.className = cn(
       childProps.className as string,
-      slotProps.className as string
+      slotProps.className as string,
     );
   }
 
@@ -73,7 +74,7 @@ function Slot<T extends HTMLElement = HTMLElement>({
       isAlreadyMotion
         ? (children.type as React.ElementType)
         : motion.create(children.type as React.ElementType),
-    [isAlreadyMotion, children.type]
+    [isAlreadyMotion, children.type],
   );
 
   if (!React.isValidElement(children)) return null;

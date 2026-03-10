@@ -2,9 +2,6 @@
 
 import * as React from "react";
 
-import type { TPlaceholderElement } from "platejs";
-import type { PlateElementProps } from "platejs/react";
-
 import {
   PlaceholderPlugin,
   PlaceholderProvider,
@@ -16,7 +13,11 @@ import { PlateElement, useEditorPlugin, withHOC } from "platejs/react";
 import { useFilePicker } from "use-file-picker";
 
 import { cn } from "@/lib/utils";
+
 import { useUploadFile } from "@/hooks/use-upload-file";
+
+import type { TPlaceholderElement } from "platejs";
+import type { PlateElementProps } from "platejs/react";
 
 const CONTENT: Record<
   string,
@@ -86,7 +87,7 @@ export const PlaceholderElement = withHOC(
         void uploadFile(file);
         api.placeholder.addUploadingFile(element.id as string, file);
       },
-      [api.placeholder, element.id, uploadFile]
+      [api.placeholder, element.id, uploadFile],
     );
 
     React.useEffect(() => {
@@ -127,7 +128,7 @@ export const PlaceholderElement = withHOC(
 
       isReplaced.current = true;
       const currentFiles = api.placeholder.getUploadingFile(
-        element.id as string
+        element.id as string,
       );
 
       if (!currentFiles) return;
@@ -142,7 +143,7 @@ export const PlaceholderElement = withHOC(
         {(!loading || !isImage) && (
           <div
             className={cn(
-              "flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10"
+              "flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10",
             )}
             onClick={() => !loading && openFilePicker()}
             contentEditable={false}
@@ -180,7 +181,7 @@ export const PlaceholderElement = withHOC(
         {props.children}
       </PlateElement>
     );
-  }
+  },
 );
 
 export function ImageProgress({
@@ -234,7 +235,7 @@ function formatBytes(
   opts: {
     decimals?: number;
     sizeType?: "accurate" | "normal";
-  } = {}
+  } = {},
 ) {
   const { decimals = 0, sizeType = "normal" } = opts;
 
@@ -246,6 +247,8 @@ function formatBytes(
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
   return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${
-    sizeType === "accurate" ? accurateSizes[i] ?? "Bytest" : sizes[i] ?? "Bytes"
+    sizeType === "accurate"
+      ? (accurateSizes[i] ?? "Bytest")
+      : (sizes[i] ?? "Bytes")
   }`;
 }

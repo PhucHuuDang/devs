@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+
+import Image from "next/image";
+
 import {
   motion,
   useTransform,
@@ -8,7 +11,6 @@ import {
   useMotionValue,
   useSpring,
 } from "motion/react";
-import Image from "next/image";
 
 export interface AnimatedItemsProps {
   id: string;
@@ -24,11 +26,11 @@ export const AnimatedTooltip = ({ items }: { items: AnimatedItemsProps[] }) => {
 
   const rotate = useSpring(
     useTransform(x, [-100, 100], [-45, 45]),
-    springConfig
+    springConfig,
   );
   const translateX = useSpring(
     useTransform(x, [-100, 100], [-50, 50]),
-    springConfig
+    springConfig,
   );
 
   const handleMouseMove = (event: any) => {

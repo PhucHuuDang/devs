@@ -1,8 +1,9 @@
 // utils/fingerprint.ts
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import Cookies from "js-cookie";
-import { getOrCreateGuestIdentifier } from "./guestIdentifier";
 import { v4 as uuidv4 } from "uuid";
+
+import { getOrCreateGuestIdentifier } from "./guestIdentifier";
 
 export const GUEST_ID_COOKIE = "guest_id";
 export const COOKIE_EXPIRY = 365; // days

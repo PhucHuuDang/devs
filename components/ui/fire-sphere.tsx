@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { useEffect, useRef } from "react";
+
+import * as THREE from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
 const vert = `
   varying vec3 vNormal;
@@ -100,7 +101,7 @@ function FireSphere({
   color0 = [74, 30, 0],
   color1 = [201, 158, 72],
   animate = true,
-  className = '',
+  className = "",
 }: FireSphereProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   // keep refs to update when props change
@@ -138,7 +139,12 @@ function FireSphere({
 
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    const bloomPass = new UnrealBloomPass(new THREE.Vector2(width, height), 1.5, 0.4, 0.85);
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(width, height),
+      1.5,
+      0.4,
+      0.85,
+    );
     composer.addPass(bloomPass);
 
     const uniforms = {
@@ -168,7 +174,7 @@ function FireSphere({
       composer.setSize(width, height);
       uniforms.resolution.value.set(width, height, 1, 1);
     };
-    window.addEventListener('resize', onResize);
+    window.addEventListener("resize", onResize);
 
     const clock = new THREE.Clock();
     let raf = 0;
@@ -183,7 +189,7 @@ function FireSphere({
 
     const cleanup = () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener("resize", onResize);
       geometry.dispose();
       material.dispose();
       composer.dispose();
@@ -194,7 +200,17 @@ function FireSphere({
       }
     };
 
-    apiRef.current = { uniforms, bloomPass, renderer, composer, scene, camera, cleanup, clock, raf };
+    apiRef.current = {
+      uniforms,
+      bloomPass,
+      renderer,
+      composer,
+      scene,
+      camera,
+      cleanup,
+      clock,
+      raf,
+    };
 
     return cleanup;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -223,4 +239,4 @@ function FireSphere({
   );
 }
 
-export {FireSphere}
+export { FireSphere };

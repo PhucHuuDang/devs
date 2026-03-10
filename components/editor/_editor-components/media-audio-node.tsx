@@ -2,14 +2,14 @@
 
 import * as React from "react";
 
-import type { TAudioElement } from "platejs";
-import type { PlateElementProps } from "platejs/react";
-
 import { useMediaState } from "@platejs/media/react";
 import { ResizableProvider } from "@platejs/resizable";
 import { PlateElement, withHOC } from "platejs/react";
 
 import { Caption, CaptionTextarea } from "./caption";
+
+import type { TAudioElement } from "platejs";
+import type { PlateElementProps } from "platejs/react";
 
 export const AudioElement = withHOC(
   ResizableProvider,
@@ -37,5 +37,5 @@ export const AudioElement = withHOC(
         {props.children}
       </PlateElement>
     );
-  }
+  },
 );

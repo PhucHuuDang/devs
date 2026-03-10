@@ -2,22 +2,23 @@
 
 import * as React from "react";
 
-import type { TElement } from "platejs";
-
 import { toUnitLess } from "@platejs/basic-styles";
 import { FontSizePlugin } from "@platejs/basic-styles/react";
 import { Minus, Plus } from "lucide-react";
 import { KEYS } from "platejs";
 import { useEditorPlugin, useEditorSelector } from "platejs/react";
 
+import { cn } from "@/lib/utils";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 
 import { ToolbarButton } from "../control/toolbar";
+
+import type { TElement } from "platejs";
 
 const DEFAULT_FONT_SIZE = "16";
 
@@ -98,7 +99,7 @@ export function FontSizeToolbarButton() {
         <PopoverTrigger asChild>
           <input
             className={cn(
-              "h-full w-10 shrink-0 bg-transparent px-1 text-center text-sm hover:bg-muted"
+              "h-full w-10 shrink-0 bg-transparent px-1 text-center text-sm hover:bg-muted",
             )}
             value={displayValue}
             onBlur={() => {
@@ -128,7 +129,7 @@ export function FontSizeToolbarButton() {
             <button
               key={size}
               className={cn(
-                "flex h-8 w-full items-center justify-center text-sm hover:bg-accent data-[highlighted=true]:bg-accent"
+                "flex h-8 w-full items-center justify-center text-sm hover:bg-accent data-[highlighted=true]:bg-accent",
               )}
               onClick={() => {
                 tf.fontSize.addMark(`${size}px`);

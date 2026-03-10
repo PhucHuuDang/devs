@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { TablePlugin, useTableMergeState } from "@platejs/table/react";
 import {
   ArrowDown,
@@ -20,6 +18,8 @@ import {
 import { KEYS } from "platejs";
 import { useEditorPlugin, useEditorSelector } from "platejs/react";
 
+import { cn } from "@/lib/utils";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,14 +30,15 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 
 import { ToolbarButton } from "../control/toolbar";
+
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 export function TableToolbarButton(props: DropdownMenuProps) {
   const tableSelected = useEditorSelector(
     (editor) => editor.api.some({ match: { type: KEYS.table } }),
-    []
+    [],
   );
 
   const { editor, tf } = useEditorPlugin(TablePlugin);
@@ -248,14 +249,14 @@ function TablePicker() {
                 key={`(${rowIndex},${columIndex})`}
                 className={cn(
                   "col-span-1 size-3 border border-solid bg-secondary",
-                  !!value && "border-current"
+                  !!value && "border-current",
                 )}
                 onMouseMove={() => {
                   onCellMove(rowIndex, columIndex);
                 }}
               />
             );
-          })
+          }),
         )}
       </div>
 

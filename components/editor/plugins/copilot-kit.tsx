@@ -1,7 +1,5 @@
 "use client";
 
-import type { TElement } from "platejs";
-
 import { faker } from "@faker-js/faker";
 import { CopilotPlugin } from "@platejs/ai/react";
 import { serializeMd, stripMarkdown } from "@platejs/markdown";
@@ -9,6 +7,8 @@ import { serializeMd, stripMarkdown } from "@platejs/markdown";
 import { GhostText } from "@/components/editor/_editor-components/ghost-text";
 
 import { MarkdownKit } from "./markdown-kit";
+
+import type { TElement } from "platejs";
 
 export const CopilotKit = [
   ...MarkdownKit,

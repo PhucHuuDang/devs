@@ -1,9 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { DualRangeSliderAnimation } from "./dual-range-animation";
+
 import { cn } from "@/lib/utils";
+
 import { Label } from "../ui/label";
+
+import { DualRangeSliderAnimation } from "./dual-range-animation";
 
 interface DualRangeSliderSingleProps {
   min: number;

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
+
 import { cn } from "@/lib/utils";
 
 export interface Tab {
@@ -95,7 +96,7 @@ const VercelTabs = React.forwardRef<HTMLDivElement, VercelTabsProps>(
                   "px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px]",
                   index === activeIndex
                     ? "text-[#0e0e10] dark:text-white bg-[#0e0f1114] dark:bg-[#ffffff1a] rounded-[10px]"
-                    : "text-[#0e0f1199] dark:text-[#ffffff99]"
+                    : "text-[#0e0f1199] dark:text-[#ffffff99]",
                 )}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
@@ -108,7 +109,7 @@ const VercelTabs = React.forwardRef<HTMLDivElement, VercelTabsProps>(
                   className={cn(
                     `text-sm font-medium leading-5 whitespace-nowrap flex items-center justify-center h-full ${
                       tab?.icon && "flex items-center justify-center gap-2"
-                    }`
+                    }`,
                   )}
                 >
                   {tab.icon}
@@ -120,7 +121,7 @@ const VercelTabs = React.forwardRef<HTMLDivElement, VercelTabsProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 VercelTabs.displayName = "VercelTabs";
 

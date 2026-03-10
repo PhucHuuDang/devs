@@ -1,12 +1,15 @@
 "use client";
 
 import * as React from "react";
-import * as SliderPrimitive from "@radix-ui/react-slider";
-import { cn } from "@/lib/utils";
-import NumberFlow from "@number-flow/react";
 
-interface DualRangeSliderProps
-  extends React.ComponentProps<typeof SliderPrimitive.Root> {
+import NumberFlow from "@number-flow/react";
+import * as SliderPrimitive from "@radix-ui/react-slider";
+
+import { cn } from "@/lib/utils";
+
+interface DualRangeSliderProps extends React.ComponentProps<
+  typeof SliderPrimitive.Root
+> {
   labelPosition?: "top" | "bottom" | "static";
   lableContenPos?: "left" | "right";
   label?: React.ReactNode | ((value: number | undefined) => React.ReactNode);
@@ -24,7 +27,7 @@ const DualRangeSliderAnimation = React.forwardRef<
       lableContenPos = "right",
       ...props
     },
-    ref
+    ref,
   ) => {
     const initialValue = Array.isArray(props.value)
       ? props.value
@@ -35,7 +38,7 @@ const DualRangeSliderAnimation = React.forwardRef<
         ref={ref}
         className={cn(
           "relative flex w-full touch-none select-none items-center",
-          className
+          className,
         )}
         {...props}
       >
@@ -51,7 +54,7 @@ const DualRangeSliderAnimation = React.forwardRef<
                     className={cn(
                       "absolute flex w-full justify-center items-start gap-0.5",
                       labelPosition === "top" && "-top-7",
-                      labelPosition === "bottom" && "top-4"
+                      labelPosition === "bottom" && "top-4",
                     )}
                   >
                     {lableContenPos === "left" && (
@@ -107,7 +110,7 @@ const DualRangeSliderAnimation = React.forwardRef<
             {initialValue.map((value, index) => (
               <div
                 className={cn(
-                  "absolute -top-7 w-fit right-0 flex  justify-center items-start gap-0.5"
+                  "absolute -top-7 w-fit right-0 flex  justify-center items-start gap-0.5",
                 )}
                 key={index}
               >
@@ -153,7 +156,7 @@ const DualRangeSliderAnimation = React.forwardRef<
         )}
       </SliderPrimitive.Root>
     );
-  }
+  },
 );
 DualRangeSliderAnimation.displayName = "DualRangeSliderAnimation";
 

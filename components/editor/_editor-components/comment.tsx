@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import type { CreatePlateEditorOptions } from "platejs/react";
-
 import { getCommentKey, getDraftCommentKey } from "@platejs/comment";
 import { CommentPlugin, useCommentId } from "@platejs/comment/react";
 import {
@@ -29,6 +27,13 @@ import {
   usePluginOption,
 } from "platejs/react";
 
+import { cn } from "@/lib/utils";
+
+import { BasicMarksKit } from "@/components/editor/plugins/basic-marks-kit";
+import {
+  type TDiscussion,
+  discussionPlugin,
+} from "@/components/editor/plugins/discussion-kit";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,14 +43,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { BasicMarksKit } from "@/components/editor/plugins/basic-marks-kit";
-import {
-  type TDiscussion,
-  discussionPlugin,
-} from "@/components/editor/plugins/discussion-kit";
 
 import { Editor, EditorContainer } from "./editor";
+
+import type { CreatePlateEditorOptions } from "platejs/react";
 
 export interface TComment {
   id: string;
@@ -140,7 +141,7 @@ export function Comment(props: {
       id: comment.id,
       value: initialValue,
     },
-    [initialValue]
+    [initialValue],
   );
 
   const onCancel = () => {
@@ -322,7 +323,7 @@ function CommentMoreDropdown(props: {
         }
 
         const commentIndex = discussion.comments.findIndex(
-          (c) => c.id === comment.id
+          (c) => c.id === comment.id,
         );
         if (commentIndex === -1) {
           return discussion;
@@ -390,7 +391,7 @@ function CommentMoreDropdown(props: {
 
 const useCommentEditor = (
   options: Omit<CreatePlateEditorOptions, "plugins"> = {},
-  deps: any[] = []
+  deps: any[] = [],
 ) => {
   const commentEditor = usePlateEditor(
     {
@@ -399,7 +400,7 @@ const useCommentEditor = (
       value: [],
       ...options,
     },
-    deps
+    deps,
   );
 
   return commentEditor;
@@ -429,7 +430,7 @@ export function CommentCreateForm({
       commentValue
         ? NodeApi.string({ children: commentValue, type: KEYS.p })
         : "",
-    [commentValue]
+    [commentValue],
   );
   const commentEditor = useCommentEditor();
 
@@ -541,7 +542,7 @@ export function CommentCreateForm({
         {
           [getCommentKey(id)]: true,
         },
-        { at: path, split: true }
+        { at: path, split: true },
       );
       editor.tf.unsetNodes([getDraftCommentKey()], { at: path });
     });

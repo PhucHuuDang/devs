@@ -1,16 +1,17 @@
 import * as React from "react";
 
-import type { TCaptionProps, TImageElement, TResizableProps } from "platejs";
-import type { SlateElementProps } from "platejs/static";
+import Image from "next/image";
 
 import { NodeApi } from "platejs";
 import { SlateElement } from "platejs/static";
 
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+
+import type { TCaptionProps, TImageElement, TResizableProps } from "platejs";
+import type { SlateElementProps } from "platejs/static";
 
 export function ImageElementStatic(
-  props: SlateElementProps<TImageElement & TCaptionProps & TResizableProps>
+  props: SlateElementProps<TImageElement & TCaptionProps & TResizableProps>,
 ) {
   const {
     align = "center",
@@ -32,7 +33,7 @@ export function ImageElementStatic(
             height={initialHeight}
             className={cn(
               "w-full max-w-full cursor-default object-cover px-0",
-              "rounded-sm"
+              "rounded-sm",
             )}
             alt={(props.attributes as any).alt}
             src={url}

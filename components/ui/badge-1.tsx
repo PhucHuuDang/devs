@@ -1,5 +1,7 @@
 import React from "react";
+
 import Link from "next/link";
+
 import clsx from "clsx";
 
 const variants = {
@@ -82,7 +84,7 @@ export const RichBadge = ({
           "!no-underline inline-flex justify-center items-center shrink-0 rounded-[9999px] font-sans font-medium whitespace-nowrap tabular-nums",
           capitalize && "capitalize",
           variants[variant],
-          sizes[size]
+          sizes[size],
         )}
         href={href}
       >
@@ -99,7 +101,7 @@ export const RichBadge = ({
         "inline-flex justify-center items-center shrink-0 rounded-[9999px] font-sans font-medium whitespace-nowrap tabular-nums",
         capitalize && "capitalize",
         variants[variant],
-        sizes[size]
+        sizes[size],
       )}
     >
       <Content icon={icon} size={size}>

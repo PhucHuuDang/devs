@@ -8,8 +8,10 @@ import {
   useRef,
   useState,
 } from "react";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 export type TTag = {
@@ -70,7 +72,7 @@ export const MultipleSelect = ({
             `selected no-scrollbar flex h-20 w-full items-center overflow-x-auto scroll-smooth rounded-2xl bg-white border border-solid border-primary/20 dark:bg-primary-foreground text-accent p-5 ${
               disabled ? "opacity-50 cursor-not-allowed" : ""
             }`,
-            className
+            className,
           )}
         >
           <motion.div

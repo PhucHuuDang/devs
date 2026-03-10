@@ -1,7 +1,5 @@
 "use client";
 
-import type { ExtendConfig, Path } from "platejs";
-
 import {
   type BaseSuggestionConfig,
   BaseSuggestionPlugin,
@@ -15,6 +13,8 @@ import {
 } from "@/components/editor/_editor-components/suggestion-node";
 
 import { discussionPlugin } from "./discussion-kit";
+
+import type { ExtendConfig, Path } from "platejs";
 
 export type SuggestionConfig = ExtendConfig<
   BaseSuggestionConfig,
@@ -34,7 +34,7 @@ export const suggestionPlugin = toTPlatePlugin<SuggestionConfig>(
       hoverId: null,
       uniquePathMap: new Map(),
     },
-  })
+  }),
 ).configure({
   handlers: {
     // unset active suggestion when clicking outside of suggestion

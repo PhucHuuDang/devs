@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
+
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 
 /**
  * Web Vitals Monitor Component
@@ -214,10 +215,10 @@ function calculateSEOScore(metrics: Record<string, Metric>): number {
   if (availableMetrics.length === 0) return 0;
 
   const goodCount = availableMetrics.filter(
-    (name) => metrics[name].rating === "good"
+    (name) => metrics[name].rating === "good",
   ).length;
   const needsImprovementCount = availableMetrics.filter(
-    (name) => metrics[name].rating === "needs-improvement"
+    (name) => metrics[name].rating === "needs-improvement",
   ).length;
 
   // Good = 100%, Needs Improvement = 60%, Poor = 20%

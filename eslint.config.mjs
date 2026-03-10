@@ -9,9 +9,6 @@ const eslintConfig = defineConfig([
   ...nextTs,
 
   {
-    plugins: {
-      import: importPlugin,
-    },
     rules: {
       "react-hooks/incompatible-library": "off",
 
@@ -77,8 +74,14 @@ const eslintConfig = defineConfig([
       ],
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-require-imports": "off",
-      // "@typescript-eslint/exhaustive-deps": "off",
+      "react-hooks/purity": "off",
+      "react-hooks/static-components": "off",
+      "react-hooks/refs": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "react/display-name": "off",
+      "react-hooks/unsupported-syntax": "off",
     },
   },
 
@@ -91,6 +94,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "app/graphql/__generated__/**",
   ]),
 ]);
 

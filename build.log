@@ -1,0 +1,72 @@
+
+> devs@0.1.0 build /Users/harrydang/Documents/Workspace/devs
+> next build
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.10 (Turbopack)
+   - Environments: .env.production, .env
+   - Experiments (use with caution):
+     · optimizePackageImports
+     ✓ viewTransition
+
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ✓ Compiled successfully in 7.5s
+   Running TypeScript ...
+   Collecting page data using 13 workers ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   Generating static pages using 13 workers (0/24) ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+{ data: undefined }
+   Generating static pages using 13 workers (6/24) 
+{ networkStatus: 1, data: undefined, error: undefined }
+{ data: undefined }
+   Generating static pages using 13 workers (12/24) 
+   Generating static pages using 13 workers (18/24) 
+ ✓ Generating static pages using 13 workers (24/24) in 1224.0ms
+   Finalizing page optimization ...
+
+Route (app)                               Revalidate  Expire
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/ai/command
+├ ƒ /api/ai/copilot
+├ ƒ /api/analytics/web-vitals
+├ ƒ /api/auth/callback/github
+├ ƒ /api/uploadthing
+├ ƒ /auth
+├ ○ /blogs
+├ ● /blogs/[slug]                                 5m      1y
+│ └ /blogs/docker-from-beginer-to-master          5m      1y
+├ ○ /dashboard
+├ ○ /dashboard/analytics
+├ ○ /dashboard/create-blog
+├ ○ /dashboard/posts
+├ ○ /dashboard/users
+├ ○ /manifest.webmanifest
+├ ○ /profile
+├ ○ /profile/activities
+├ ○ /profile/general
+├ ○ /profile/my-cooking
+├ ○ /profile/password
+├ ○ /profile/settings
+├ ○ /robots.txt
+└ ƒ /sitemap.xml
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

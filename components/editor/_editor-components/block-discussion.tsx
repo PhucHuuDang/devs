@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import type { PlateElementProps, RenderNodeWrapper } from "platejs/react";
-
 import { getDraftCommentKey } from "@platejs/comment";
 import { CommentPlugin } from "@platejs/comment/react";
 import { getTransientSuggestionKey } from "@platejs/suggestion";
@@ -25,6 +23,12 @@ import {
 } from "platejs";
 import { useEditorPlugin, useEditorRef, usePluginOption } from "platejs/react";
 
+import { commentPlugin } from "@/components/editor/plugins/comment-kit";
+import {
+  type TDiscussion,
+  discussionPlugin,
+} from "@/components/editor/plugins/discussion-kit";
+import { suggestionPlugin } from "@/components/editor/plugins/suggestion-kit";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -32,12 +36,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { commentPlugin } from "@/components/editor/plugins/comment-kit";
-import {
-  type TDiscussion,
-  discussionPlugin,
-} from "@/components/editor/plugins/discussion-kit";
-import { suggestionPlugin } from "@/components/editor/plugins/suggestion-kit";
 
 import {
   BlockSuggestionCard,
@@ -45,6 +43,8 @@ import {
   useResolveSuggestion,
 } from "./block-suggestion";
 import { Comment, CommentCreateForm } from "./comment";
+
+import type { PlateElementProps, RenderNodeWrapper } from "platejs/react";
 
 export const BlockDiscussion: RenderNodeWrapper<AnyPluginConfig> = (props) => {
   const { editor, element } = props;
@@ -144,7 +144,7 @@ const BlockCommentContent = ({
         ([node]) =>
           TextApi.isText(node) &&
           editor.getApi(SuggestionPlugin).suggestion.nodeId(node) ===
-            activeSuggestion.suggestionId
+            activeSuggestion.suggestionId,
       );
     }
 
@@ -155,7 +155,7 @@ const BlockCommentContent = ({
         activeNode = commentNodes.find(
           ([node]) =>
             editor.getApi(commentPlugin).comment.nodeId(node) ===
-            activeCommentId
+            activeCommentId,
         );
       }
     }
@@ -227,7 +227,7 @@ const BlockCommentContent = ({
                       discussion={item}
                       isLast={index === sortedMergedData.length - 1}
                     />
-                  )
+                  ),
                 )
               ) : (
                 <React.Fragment>
@@ -314,7 +314,7 @@ function BlockComment({
 
 const useResolvedDiscussion = (
   commentNodes: NodeEntry<TCommentText>[],
-  blockPath: Path
+  blockPath: Path,
 ) => {
   const { api, getOption, setOption } = useEditorPlugin(commentPlugin);
 
@@ -344,7 +344,7 @@ const useResolvedDiscussion = (
   });
 
   const commentsIds = new Set(
-    commentNodes.map(([node]) => api.comment.nodeId(node)).filter(Boolean)
+    commentNodes.map(([node]) => api.comment.nodeId(node)).filter(Boolean),
   );
 
   const resolvedDiscussions = discussions

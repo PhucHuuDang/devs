@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 import { generateText } from "ai";
-import { NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const {
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (!apiKey) {
     return NextResponse.json(
       { error: "Missing ai gateway API key." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       { error: "Failed to process AI request" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

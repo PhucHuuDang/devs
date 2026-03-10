@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-
 import { MarkdownPlugin } from "@platejs/markdown";
 import { ArrowUpToLineIcon } from "lucide-react";
 import { useEditorRef } from "platejs/react";
@@ -19,6 +17,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ToolbarButton } from "../control/toolbar";
+
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 type ImportType = "html" | "markdown";
 

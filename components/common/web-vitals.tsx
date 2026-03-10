@@ -1,7 +1,8 @@
 "use client";
 
-import { useReportWebVitals } from "next/web-vitals";
 import { useEffect, useRef, useCallback } from "react";
+
+import { useReportWebVitals } from "next/web-vitals";
 
 /**
  * Enhanced Web Vitals Component - Optimized
@@ -41,7 +42,7 @@ const THRESHOLDS = {
 
 function getRating(
   name: string,
-  value: number
+  value: number,
 ): "good" | "needs-improvement" | "poor" {
   const threshold = THRESHOLDS[name as keyof typeof THRESHOLDS];
   if (!threshold) return "good";
@@ -61,7 +62,7 @@ function sendToGoogleAnalytics(metric: Metric) {
   // Send to Google Analytics with proper event tracking
   (window as any).gtag("event", metric.name, {
     value: Math.round(
-      metric.name === "CLS" ? metric.value * 1000 : metric.value
+      metric.name === "CLS" ? metric.value * 1000 : metric.value,
     ),
     event_label: metric.id,
     event_category: "Web Vitals",
@@ -184,7 +185,7 @@ export const WebVitals = () => {
             rating: enhancedMetric.rating,
             timestamp: Date.now(),
           },
-        })
+        }),
       );
     }
 
@@ -209,7 +210,7 @@ export const WebVitals = () => {
         `\nCurrent: ${metric.value}`,
         `\nTarget: < ${
           THRESHOLDS[metric.name as keyof typeof THRESHOLDS]?.good
-        }`
+        }`,
       );
     }
   }, []);
@@ -227,7 +228,7 @@ export const WebVitals = () => {
       if (poorMetrics.length > 0) {
         console.warn(
           "⚠️ Performance Alert: You have poor Core Web Vitals metrics.",
-          "\nThese affect your SEO ranking. Check the console for details."
+          "\nThese affect your SEO ranking. Check the console for details.",
         );
       }
     }, 5000);

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+
 import FuzzyText from "../react-bits/fuzzy-text";
 
 interface NotFoundFuzzyTextProps {

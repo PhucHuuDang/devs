@@ -17,6 +17,8 @@ import {
 import { KEYS } from "platejs";
 import { useEditorReadOnly } from "platejs/react";
 
+import { ToolbarGroup } from "../control/toolbar";
+
 import { AIToolbarButton } from "./ai-toolbar-button";
 import { AlignToolbarButton } from "./align-toolbar-button";
 import { CommentToolbarButton } from "./comment-toolbar-button";
@@ -45,7 +47,6 @@ import { ModeToolbarButton } from "./mode-toolbar-button";
 import { MoreToolbarButton } from "./more-toolbar-button";
 import { TableToolbarButton } from "./table-toolbar-button";
 import { ToggleToolbarButton } from "./toggle-toolbar-button";
-import { ToolbarGroup } from "../control/toolbar";
 import { TurnIntoToolbarButton } from "./turn-into-toolbar-button";
 
 export function FixedToolbarButtons() {

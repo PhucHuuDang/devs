@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from "uuid";
 import Cookies from "js-cookie";
+import { v4 as uuidv4 } from "uuid";
 export const GUEST_ID_COOKIE = "guest_id";
 export const COOKIE_EXPIRY = 365;
 

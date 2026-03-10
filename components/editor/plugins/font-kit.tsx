@@ -1,14 +1,14 @@
-'use client';
-
-import type { PlatePluginConfig } from 'platejs/react';
+"use client";
 
 import {
   FontBackgroundColorPlugin,
   FontColorPlugin,
   FontFamilyPlugin,
   FontSizePlugin,
-} from '@platejs/basic-styles/react';
-import { KEYS } from 'platejs';
+} from "@platejs/basic-styles/react";
+import { KEYS } from "platejs";
+
+import type { PlatePluginConfig } from "platejs/react";
 
 const options = {
   inject: { targetPlugins: [KEYS.p] },
@@ -19,7 +19,7 @@ export const FontKit = [
     inject: {
       ...options.inject,
       nodeProps: {
-        defaultNodeValue: 'black',
+        defaultNodeValue: "black",
       },
     },
   }),

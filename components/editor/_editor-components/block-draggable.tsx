@@ -25,19 +25,20 @@ import {
 } from "platejs/react";
 import { useSelected } from "platejs/react";
 
+import { cn } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 
 const UNDRAGGABLE_KEYS = [KEYS.column, KEYS.tr, KEYS.td];
 
 // @ts-expect-error - BlockDraggable is a function that returns a React component
 export const BlockDraggable: RenderNodeWrapper = (
-  props: RenderNodeWrapperProps<PluginConfig>
+  props: RenderNodeWrapperProps<PluginConfig>,
 ) => {
   const { editor, element, path } = props;
 
@@ -76,7 +77,7 @@ export const BlockDraggable: RenderNodeWrapper = (
   }, [editor, element, path]);
 
   if (!enabled) return;
-  // eslint-disable-next-line react/display-name
+
   return (props: RenderNodeWrapperProps<PluginConfig>) => (
     <Draggable {...props} />
   );
@@ -135,7 +136,7 @@ function Draggable(props: PlateElementProps) {
         isDragging && "opacity-50",
         getPluginByType(editor, element.type)?.node.isContainer
           ? "group/container"
-          : "group"
+          : "group",
       )}
       onMouseEnter={() => {
         if (isDragging) return;
@@ -148,14 +149,14 @@ function Draggable(props: PlateElementProps) {
             className={cn(
               "slate-blockToolbarWrapper",
               "flex h-[1.5em]",
-              isInColumn && "h-4"
+              isInColumn && "h-4",
             )}
           >
             <div
               className={cn(
                 "slate-blockToolbar relative w-4.5",
                 "pointer-events-auto mr-1 flex items-center",
-                isInColumn && "mr-1.5"
+                isInColumn && "mr-1.5",
               )}
             >
               <Button
@@ -209,7 +210,7 @@ function Gutter({
   const element = useElement();
   const isSelectionAreaVisible = usePluginOption(
     BlockSelectionPlugin,
-    "isSelectionAreaVisible"
+    "isSelectionAreaVisible",
   );
   const selected = useSelected();
 
@@ -224,7 +225,7 @@ function Gutter({
           : "group-hover:opacity-100",
         isSelectionAreaVisible && "hidden",
         !selected && "opacity-0",
-        className
+        className,
       )}
       contentEditable={false}
     >
@@ -278,7 +279,7 @@ const DragHandle = React.memo(function DragHandle({
             // Process selection nodes to include list children
             const blocks = expandListItemsWithChildren(
               editor,
-              selectionNodes
+              selectionNodes,
             ).map(([node]) => node);
 
             if (blockSelection.length === 0) {
@@ -316,7 +317,7 @@ const DragHandle = React.memo(function DragHandle({
             // Process selection to include list children
             const processedBlocks = expandListItemsWithChildren(
               editor,
-              selectedBlocks
+              selectedBlocks,
             );
 
             const ids = processedBlocks.map((block) => block[0].id as string);
@@ -362,7 +363,7 @@ const DropLine = React.memo(function DropLine({
         "bg-brand/50",
         dropLine === "top" && "-top-px",
         dropLine === "bottom" && "-bottom-px",
-        className
+        className,
       )}
     />
   );
@@ -370,7 +371,7 @@ const DropLine = React.memo(function DropLine({
 
 const createDragPreviewElements = (
   editor: PlateEditor,
-  blocks: TElement[]
+  blocks: TElement[],
 ): HTMLElement[] => {
   const elements: HTMLElement[] = [];
   const ids: string[] = [];
@@ -401,7 +402,7 @@ const createDragPreviewElements = (
     // Apply visual compensation for horizontal scroll
     const applyScrollCompensation = (
       original: Element,
-      cloned: HTMLElement
+      cloned: HTMLElement,
     ) => {
       const scrollLeft = original.scrollLeft;
 
@@ -474,7 +475,7 @@ const calculatePreviewTop = (
   }: {
     blocks: TElement[];
     element: TElement;
-  }
+  },
 ): number => {
   const child = editor.api.toDOMNode(element)!;
   const editable = editor.api.toDOMNode(editor)!;
@@ -483,7 +484,7 @@ const calculatePreviewTop = (
   const firstDomNode = editor.api.toDOMNode(firstSelectedChild)!;
   // Get editor's top padding
   const editorPaddingTop = Number(
-    window.getComputedStyle(editable).paddingTop.replace("px", "")
+    window.getComputedStyle(editable).paddingTop.replace("px", ""),
   );
 
   // Calculate distance from first selected node to editor top

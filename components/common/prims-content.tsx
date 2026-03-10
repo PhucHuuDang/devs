@@ -1,6 +1,8 @@
 import React from "react";
-import { BackgroundContent, defaultContent } from "./background-content";
+
 import Prism from "../Prism";
+
+import { BackgroundContent, defaultContent } from "./background-content";
 
 export const PrimsContent = () => {
   return (
