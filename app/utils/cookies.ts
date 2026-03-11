@@ -61,7 +61,7 @@ export async function deleteCookies() {
 
 export async function getSession() {
   const data = await fetchGraphql<GetSessionQuery>(GET_SESSION_STRING);
-  console.log({ data });
+  // console.log({ data });
   return data?.getSession ?? null;
 }
 

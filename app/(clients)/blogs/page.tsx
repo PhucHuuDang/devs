@@ -28,16 +28,11 @@ const BlogsPage = () => {
       ssr: true,
     });
 
-  console.log({ networkStatus, data, error });
-
   if (networkStatus === NetworkStatus.error || error) {
     console.error("GraphQL Error:", error);
     return <NetworkErrorPage errorCode="NETWORK_CONNECTION_FAILED" />;
   }
 
-  console.log({ data });
-
-  // Handle loading state
   if (loading && !data) {
     return (
       <div className="mt-4 p-2">
@@ -50,14 +45,9 @@ const BlogsPage = () => {
     );
   }
 
-  // console.log(data );
-  // console.log({ dataState });
-
   const publishedPosts = data?.publishedPosts;
-  console.log({ publishedPosts });
 
   const posts = publishedPosts?.data ?? [];
-  console.log({ posts });
   const meta = publishedPosts?.meta ?? {
     total: 0,
     page: 0,
