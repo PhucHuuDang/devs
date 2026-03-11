@@ -18,10 +18,7 @@ import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 
-import {
-  useGetSessionQuery,
-  useSignOutMutation,
-} from "@/app/graphql/__generated__/generated";
+import { useSignOutMutation } from "@/app/graphql/__generated__/generated";
 import { getSessionData } from "@/app/utils/cookies";
 import { useAuthClient } from "@/hooks/use-auth-client";
 
@@ -72,11 +69,15 @@ const Trigger = forwardRef<HTMLDivElement, TriggerProps>(
 Trigger.displayName = "Trigger";
 
 export const UserControl = () => {
-  const { data: sessionData } = useGetSessionQuery();
-
   const [
     signOutMutation,
-    { loading, client, error, called, data: signOutData },
+    {
+      loading: isSignOutLoading,
+      client,
+      error: signOutError,
+      called,
+      data: signOutData,
+    },
   ] = useSignOutMutation({
     context: {
       fetchOptions: {
@@ -94,20 +95,12 @@ export const UserControl = () => {
     },
   });
 
-  // console.log({ sessionData });
-
-  const { isAuth } = useAuthClient();
-
-  // sessionData?.getSession.data?.session.
+  const { isAuth, user } = useAuthClient();
 
   return (
     <HoverCardCustom
       classNameTrigger="p-1"
-      trigger={
-        <Trigger
-          image={sessionData?.getSession?.data?.user.image ?? "/image.jpg"}
-        />
-      }
+      trigger={<Trigger image={user?.image ?? "/image.jpg"} />}
       asChild={true}
       openDelay={200}
       sideOffset={10}

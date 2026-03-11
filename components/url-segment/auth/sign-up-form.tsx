@@ -2,116 +2,21 @@
 
 import { memo } from "react";
 
-import { useMutation } from "@apollo/client/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isEmpty } from "lodash";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import z from "zod";
-
-import {
-  SignUpEmailMutation,
-  SignUpEmailMutationVariables,
-  useSignUpEmailMutation,
-} from "@/app/graphql/__generated__/generated";
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
-import {
-  PasswordControlled,
-  passwordSchema,
-} from "@/components/custom/form/fields/password-controlled";
+import { PasswordControlled } from "@/components/custom/form/fields/password-controlled";
 import FormWrapper from "@/components/custom/form/form-wrapper";
 import { Spinner } from "@/components/ui/spinner";
+import { useSignUp } from "@/hooks/use-sign-up";
 
 interface SignUpFormProps {
   toggleSignUp: () => void;
 }
 
-// Leverage graphql-codegen generated hooks and types from .graphql
-const signUpSchema = z
-  .object({
-    email: z.string().email({
-      message: "Invalid email address",
-    }),
-    name: z.string().min(1, {
-      message: "Name is too short (min 1 character)",
-    }),
-    password: passwordSchema,
-    rememberMe: z.boolean().default(false).optional(),
-  })
-  .refine((data) => data.password.length >= 8, {
-    message: "Password must be at least 8 characters",
-    path: ["password"],
-  });
-
 export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
-  const signUpForm = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      email: "",
-      name: "",
-      password: "",
-      rememberMe: false,
-    },
-  });
-
-  // Use codegen-generated hook (from .graphql file)
-  const [signUpMutation, { loading, error, data: signUpData }] =
-    useSignUpEmailMutation();
-
-  const onSignUp = async (formData: z.infer<typeof signUpSchema>) => {
-    if (isEmpty(formData)) {
-      toast.warning("Please fill in all fields");
-      return;
-    }
-
-    try {
-      // The returned object from signUpMutation does not have an 'errors' property;
-      // instead, error handling is done through the 'error' object returned by the useSignUpEmailMutation hook,
-      // or via try/catch for network/GraphQL errors.
-      const { data, error } = await signUpMutation({
-        variables: {
-          input: {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-            rememberMe: formData.rememberMe,
-          },
-        },
-        context: {
-          fetchOptions: {
-            credentials: "include",
-          },
-        },
-      });
-
-      const signUpResponse = data?.signUpEmail;
-
-      if (
-        signUpResponse?.token != null &&
-        signUpResponse?.user != null &&
-        !error
-      ) {
-        toast.success(
-          `Thanks for your registration, ${signUpResponse.user.name?.toUpperCase()}!`,
-        );
-        toggleSignUp();
-        signUpForm.reset();
-      } else if (error && error.message) {
-        console.warn("sign up error: ", error.message);
-        toast.error(error.message);
-      } else if (error) {
-        // fallback error handling
-        console.warn("sign up error: ", error.message);
-        toast.error(error.message);
-      }
-    } catch (err: any) {
-      console.error("Sign up error:", err);
-      toast.error(`Error: ${err.message}`);
-    }
-  };
+  const { form, loading, handleSignUp } = useSignUp({ toggleSignUp });
 
   return (
-    <FormWrapper form={signUpForm} className="space-y-5" onSubmit={onSignUp}>
+    <FormWrapper form={form} className="space-y-5" onSubmit={handleSignUp}>
       <InputControlled
         label="Name"
         placeholder="John Doe"
@@ -143,9 +48,9 @@ export const SignUpForm = memo<SignUpFormProps>(({ toggleSignUp }) => {
             type="checkbox"
             name="rememberMe"
             className="custom-checkbox"
-            checked={signUpForm.watch("rememberMe")}
+            checked={form.watch("rememberMe")}
             onChange={(e) => {
-              signUpForm.setValue("rememberMe", e.target.checked);
+              form.setValue("rememberMe", e.target.checked);
             }}
           />
           <span className="text-foreground/90">Keep me signed in</span>

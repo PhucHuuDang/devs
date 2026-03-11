@@ -2,204 +2,142 @@
 
 import { useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   FacebookIcon,
   GithubIcon,
-  LucideIcon,
   RectangleEllipsisIcon,
   ShieldUser,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import z from "zod";
 
-import {
-  PasswordControlled,
-  passwordSchema,
-} from "@/components/custom/form/fields/password-controlled";
+import { PasswordControlled } from "@/components/custom/form/fields/password-controlled";
 import FormWrapper from "@/components/custom/form/form-wrapper";
 import { Button } from "@/components/ui/button";
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemGroup,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
+import { ItemGroup } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
+import { useChangePassword } from "@/hooks/use-change-password";
 import { GoogleIcon } from "@/icons/social-icon";
 
-interface AuthenticateItemProps {
-  title: string;
-  labelButton: string;
-  description: string;
+import { AuthenticateItem } from "./authenticate-item";
 
-  icon: React.ReactNode | LucideIcon;
-
-  onClick?: () => void;
-
-  children?: React.ReactNode;
-}
-
-const AuthenticateItem = ({
-  title,
-  description,
-  icon,
-  labelButton,
-  onClick,
-  children,
-}: AuthenticateItemProps) => {
-  const Icon =
-    typeof icon === "function" ? icon : (icon as unknown as LucideIcon);
-
-  return (
-    <Item variant="outline">
-      <ItemMedia>{typeof icon === "function" ? <Icon /> : icon}</ItemMedia>
-      <ItemContent>
-        <ItemTitle>{title}</ItemTitle>
-        <ItemDescription>{description}</ItemDescription>
-        {children}
-      </ItemContent>
-
-      <ItemActions>
-        <Button variant="outline" onClick={onClick}>
-          {labelButton}
-        </Button>
-      </ItemActions>
-    </Item>
-  );
-};
-
-const changePasswordSchema = z
-  .object({
-    oldPassword: passwordSchema,
-    password: passwordSchema,
-    confirmNewPassword: z
-      .string()
-      .min(8, { message: "New password must be at least 8 characters" }),
-  })
-  .refine((data) => data.password === data.confirmNewPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+const AUTH_METHODS = [
+  {
+    title: "Google",
+    description: "Sign in with Google",
+    icon: <GoogleIcon />,
+    labelButton: "Sign in with Google",
+  },
+  {
+    title: "GitHub",
+    description: "Sign in with GitHub",
+    icon: <GithubIcon />,
+    labelButton: "Sign in with GitHub",
+  },
+  {
+    title: "Facebook",
+    description: "Sign in with Facebook",
+    icon: <FacebookIcon />,
+    labelButton: "Sign in with Facebook",
+  },
+];
 
 export const PasswordContainer = () => {
-  const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
+  const [isChangingPassword, setIsChangingPassword] = useState<boolean>(false);
+  const { form, handleChangePassword } = useChangePassword();
 
-  const form = useForm<z.infer<typeof changePasswordSchema>>({
-    resolver: zodResolver(changePasswordSchema),
-    defaultValues: {
-      oldPassword: "",
-      password: "",
-      confirmNewPassword: "",
-    },
-    // shouldFocusError: true,
-    mode: "onChange",
-  });
-
-  const onChangePassword = async (
-    values: z.infer<typeof changePasswordSchema>,
-  ) => {
-    toast.success(JSON.stringify(values));
+  const togglePasswordChange = () => {
+    setIsChangingPassword((prev) => !prev);
+    form.reset();
   };
 
   return (
-    <div className="px-4 space-y-2">
-      <div className="flex flex-col ">
+    <div className="px-4 space-y-6">
+      <section className="flex flex-col">
         <h1 className="text-2xl font-bold mb-4">Sign in methods</h1>
 
         <ItemGroup>
-          <AuthenticateItem
-            title="Google"
-            description="Sign in with Google"
-            icon={<GoogleIcon />}
-            labelButton="Sign in with Google"
-          />
+          {AUTH_METHODS.map((method) => (
+            <AuthenticateItem key={method.title} {...method} />
+          ))}
 
           <AuthenticateItem
             title={
-              isChangePassword
-                ? "Cancel change password"
-                : "Change your password"
+              isChangingPassword ? "Changing password" : "Change your password"
             }
             description={
-              isChangePassword
-                ? "Let's change your password"
+              isChangingPassword
+                ? "Update your security settings"
                 : "Let's secure your account"
             }
             icon={<RectangleEllipsisIcon />}
-            labelButton={isChangePassword ? "Cancel" : "Change password"}
-            onClick={() => {
-              setIsChangePassword((prev) => !prev);
-              form.reset();
-            }}
+            isOpen={isChangingPassword}
+            labelButton="Change password"
+            onClick={togglePasswordChange}
+            onSecondaryAction={() => form.reset()}
+            hideLabelButtonOnOpen
+            classNameDescription="mb-2"
           >
             <AnimatePresence>
-              {isChangePassword && (
+              {isChangingPassword && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  transition={{
-                    duration: 0.3,
-                    ease: "easeInOut",
-                  }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
                   <FormWrapper
                     form={form}
-                    onSubmit={onChangePassword}
-                    className="flex flex-col gap-2 space-y-2"
+                    onSubmit={handleChangePassword}
+                    className="flex flex-col gap-6 py-6"
                   >
-                    <PasswordControlled
-                      name="oldPassword"
-                      label="Old password"
-                    />
-                    <PasswordControlled name="password" label="New password" />
-                    <PasswordControlled
-                      name="confirmNewPassword"
-                      label="Confirm new password"
-                    />
-
-                    <div className="cursor-pointer">
-                      <span className="text-muted-foreground hover:underline hover:text-sky-500 transition-all duration-300">
-                        Forgot password?
-                      </span>
+                    <div className="space-y-4">
+                      <PasswordControlled
+                        name="oldPassword"
+                        label="Old password"
+                      />
+                      <PasswordControlled
+                        name="password"
+                        label="New password"
+                      />
+                      <PasswordControlled
+                        name="confirmNewPassword"
+                        label="Confirm new password"
+                      />
                     </div>
 
-                    <Button
-                      type="submit"
-                      variant="secondary"
-                      className="w-40 focus:ring-1 focus:ring-offset-1 focus:outline-none focus:ring-ring/50"
-                    >
-                      Save
-                    </Button>
+                    <div className="flex flex-col gap-4">
+                      <div className="cursor-pointer">
+                        <span className="text-sm text-muted-foreground hover:underline hover:text-sky-500 transition-all duration-300">
+                          Forgot password?
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <Button
+                          type="submit"
+                          className="w-32 bg-primary text-primary-foreground hover:bg-primary/90"
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={togglePasswordChange}
+                          className="w-32"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
                   </FormWrapper>
                 </motion.div>
               )}
             </AnimatePresence>
           </AuthenticateItem>
-
-          <AuthenticateItem
-            title="GitHub"
-            description="Sign in with GitHub"
-            icon={<GithubIcon />}
-            labelButton="Sign in with GitHub"
-          />
-
-          <AuthenticateItem
-            title="Facebook"
-            description="Sign in with Facebook"
-            icon={<FacebookIcon />}
-            labelButton="Sign in with Facebook"
-          />
         </ItemGroup>
-      </div>
+      </section>
 
-      <div>
+      <section>
         <h1 className="text-2xl font-bold">Two-factor authentication</h1>
         <Separator className="my-4 h-[3px]" />
         <AuthenticateItem
@@ -208,12 +146,7 @@ export const PasswordContainer = () => {
           icon={<ShieldUser />}
           labelButton="Enable two-factor authentication"
         />
-      </div>
-
-      <div>
-        <h1 className="text-2xl font-bold">Change password</h1>
-        <Separator className="my-4 h-[3px]" />
-      </div>
+      </section>
     </div>
   );
 };

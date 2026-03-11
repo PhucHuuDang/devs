@@ -2,114 +2,21 @@
 
 import { memo } from "react";
 
-import { useRouter } from "next/navigation";
-
-import { useMutation } from "@apollo/client/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isEmpty } from "lodash";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import z from "zod";
-
-import {
-  SignInEmailMutation,
-  SignInEmailMutationVariables,
-  useSignInEmailMutation,
-} from "@/app/graphql/__generated__/generated";
 import { InputControlled } from "@/components/custom/form/fields/input-controlled";
-import {
-  PasswordControlled,
-  passwordSchema,
-} from "@/components/custom/form/fields/password-controlled";
+import { PasswordControlled } from "@/components/custom/form/fields/password-controlled";
 import FormWrapper from "@/components/custom/form/form-wrapper";
 import { Spinner } from "@/components/ui/spinner";
+import { useSignIn } from "@/hooks/use-sign-in";
 
 interface SignInFormProps {
   toggleSignIn: () => void;
 }
 
-// Unify with SignUpForm conventions: use codegen hook, blank defaults, optional rememberMe defaulted false
-const signInSchema = z
-  .object({
-    email: z.string().email({
-      message: "Invalid email address",
-    }),
-    password: passwordSchema,
-    rememberMe: z.boolean().default(false).optional(),
-  })
-  .refine((data) => data.password.length >= 8, {
-    message: "Password must be at least 8 characters",
-    path: ["password"],
-  });
-
 export const SignInForm = memo<SignInFormProps>(({ toggleSignIn }) => {
-  const signInForm = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      rememberMe: false,
-    },
-  });
-
-  // Use graphql-codegen generated hook for type safety and simplicity
-  const [signInMutation, { loading, error, data: signInData }] =
-    useSignInEmailMutation();
-
-  const router = useRouter();
-
-  const onSignIn = async (formData: z.infer<typeof signInSchema>) => {
-    if (isEmpty(formData)) {
-      toast.warning("Please fill in all fields");
-      return;
-    }
-
-    try {
-      const { data, error } = await signInMutation({
-        variables: {
-          input: {
-            email: formData.email,
-            password: formData.password,
-            rememberMe: formData.rememberMe,
-          },
-        },
-        context: {
-          fetchOptions: {
-            credentials: "include",
-          },
-        },
-      });
-
-      const signInResponse = data?.signInEmail;
-
-      if (
-        signInResponse?.token != null &&
-        signInResponse?.user != null &&
-        !error
-      ) {
-        toast.success(`Welcome, ${signInResponse.user.name?.toUpperCase()}!`);
-        router.push("/blogs");
-        signInForm.reset();
-      } else if (error && error.message) {
-        // GraphQL or network error
-        console.warn("Sign in error:", error.message);
-        toast.error(error.message);
-      } else if (error) {
-        // fallback generic error
-        console.warn("Sign in error:", error.message);
-        toast.error(error.message);
-      } else {
-        // Unexpected case: neither user+token nor error
-        toast.error("Failed to sign in");
-      }
-    } catch (err: any) {
-      console.error("Sign in error:", err);
-      toast.error(`Error: ${err.message}`);
-    }
-  };
+  const { form, loading, handleSignIn } = useSignIn({ toggleSignIn });
 
   return (
-    <FormWrapper form={signInForm} className="space-y-5" onSubmit={onSignIn}>
+    <FormWrapper form={form} className="space-y-5" onSubmit={handleSignIn}>
       <InputControlled
         label="Email"
         placeholder="@example.com"
@@ -133,9 +40,9 @@ export const SignInForm = memo<SignInFormProps>(({ toggleSignIn }) => {
             type="checkbox"
             name="rememberMe"
             className="custom-checkbox"
-            checked={signInForm.watch("rememberMe")}
+            checked={form.watch("rememberMe")}
             onChange={(e) => {
-              signInForm.setValue("rememberMe", e.target.checked);
+              form.setValue("rememberMe", e.target.checked);
             }}
           />
           <span className="text-foreground/90">Keep me signed in</span>
