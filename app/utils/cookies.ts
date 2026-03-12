@@ -46,16 +46,19 @@ export async function getSessionData() {
 // };
 export async function setAuthCookies(
   accessToken: string,
+  sessionToken: string,
   refreshToken: string,
 ) {
   const store = await cookies();
   store.set("devs:access-token", accessToken, { httpOnly: true });
+  store.set("devs:session-token", sessionToken, { httpOnly: true });
   store.set("devs:refresh-token", refreshToken, { httpOnly: true });
 }
 
 export async function deleteCookies() {
   const store = await cookies();
   store.delete("devs:access-token");
+  store.delete("devs:session-token");
   store.delete("devs:refresh-token");
 }
 

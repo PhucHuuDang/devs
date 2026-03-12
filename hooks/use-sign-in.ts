@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import z from "zod";
 
 import { useSignInEmailMutation } from "@/app/graphql/__generated__/generated";
+import { setAuthCookies } from "@/app/utils/cookies";
 import { passwordSchema } from "@/components/custom/form/fields/password-controlled";
 
 export const signInSchema = z
@@ -69,6 +70,14 @@ export const useSignIn = ({ toggleSignIn }: UseSignInProps) => {
 
       if (signInResponse?.token && signInResponse?.user && !error) {
         toast.success(`Welcome, ${signInResponse.user.name?.toUpperCase()}!`);
+
+        // Set cookies locally for the frontend domain so server components can see them
+        await setAuthCookies(
+          signInResponse.token, // Use same token for access if separate not provided
+          signInResponse.token, // Session token
+          "", // Refresh token (placeholder)
+        );
+
         await client.resetStore();
         router.push("/blogs");
         form.reset();
