@@ -2,7 +2,12 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   schema:
-    process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "http://localhost:3001/graphql",
+    process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT_PRODUCTION ||
+        process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+        "http://localhost:3001/graphql"
+      : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+        "http://localhost:3001/graphql",
 
   documents: ["app/graphql/**/*.graphql"],
 

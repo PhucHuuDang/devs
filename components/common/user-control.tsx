@@ -95,7 +95,7 @@ export const UserControl = () => {
     },
   });
 
-  const { isAuth, user } = useAuthClient();
+  const { isAuth, user, loading: isAuthLoading } = useAuthClient();
 
   return (
     <HoverCardCustom
@@ -107,7 +107,7 @@ export const UserControl = () => {
       className="p-2"
     >
       <div className="w-[200px]">
-        {!isAuth && (
+        {!isAuth && !isAuthLoading && (
           <Link href="/auth" prefetch>
             <HoverCardItem className="" onClick={() => {}}>
               <div className="flex items-center gap-1">

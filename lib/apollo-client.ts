@@ -16,7 +16,12 @@ import type { DocumentNode, GraphQLError } from "graphql";
  * Falls back to localhost for development
  */
 const GRAPHQL_ENDPOINT =
-  process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "http://localhost:3001/graphql";
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT_PRODUCTION ||
+      process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+      "http://localhost:3001/graphql"
+    : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+      "http://localhost:3001/graphql";
 
 /**
  * Creates the HTTP link for Apollo Client

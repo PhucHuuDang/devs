@@ -14,12 +14,14 @@ export const useAuthClient = () => {
     refetch,
     client,
   } = useQuery<GetSessionQuery>(GET_SESSION, {
-    fetchPolicy: "cache-first",
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true,
   });
 
   const session = sessionData?.getSession;
-  const isAuth = session?.success === true && !!session?.data?.user;
-  const user = session?.data?.user ?? null;
+  // Support both { getSession: { data: { user } } } and { getSession: { user } } if API structure varies
+  const user = session?.data?.user ?? (session as any)?.user ?? null;
+  const isAuth = (session?.success === true || !!user) && !!user;
 
   return {
     isAuth,

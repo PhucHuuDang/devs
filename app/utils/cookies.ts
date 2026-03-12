@@ -16,16 +16,16 @@ export async function getAuthCookies() {
   const store = await cookies();
 
   return {
-    accessToken: store.get("devs:access_token")?.value ?? null,
-    sessionToken: store.get("devs.session_token")?.value ?? null,
-    refreshToken: store.get("devs:refresh_token")?.value ?? null,
+    accessToken: store.get("devs:access-token")?.value ?? null,
+    sessionToken: store.get("devs:session-token")?.value ?? null,
+    refreshToken: store.get("devs:refresh-token")?.value ?? null,
   };
 }
 
 export async function getSessionData() {
   const store = await cookies();
   const sessionData = store.get("")?.value ?? null;
-  const sessionToken = store.get("devs.session_token")?.value ?? null;
+  const sessionToken = store.get("devs:session-token")?.value ?? null;
 
   if (!sessionData || !sessionToken) {
     return {
