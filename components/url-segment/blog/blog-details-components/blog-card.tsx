@@ -85,12 +85,19 @@ export const BlogCard = ({
 
       {isBorderDefault && <BorderBeam />}
       <CardHeader>
-        <div className="flex flex-row items-center justify-start gap-2 mb-2">
-          <AnimatedTooltip items={author} />
+        <div className="flex flex-row items-center justify-start gap-1 sm:gap-2 mb-1 sm:mb-2">
+          <AnimatedTooltip
+            items={[
+              {
+                ...author[0],
+                classNameImg: "size-10 sm:size-11 border hover:border-primary",
+              },
+            ]}
+          />
 
           <div className="flex flex-col items-start justify-start ml-4">
-            <div className="text-sm font-semibold">{author[0].name}</div>
-            <div className="text-sm text-gray-500">{author[0].designation}</div>
+            <div className="text-base font-semibold">{author[0].name}</div>
+            <div className="text-xs text-gray-500">{author[0].designation}</div>
           </div>
         </div>
 
@@ -111,14 +118,14 @@ export const BlogCard = ({
           />
         </div>
 
-        <CardTitle className="mt-4">{title}</CardTitle>
-        <CardDescription className=" h-auto min-h-20">
+        <CardTitle className="mt-4 text-base">{title}</CardTitle>
+        <CardDescription className="h-auto min-h-8 sm:min-h-10 text-xs">
           {truncate(description, options)}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="w-full">
-        <div className="flex items-center gap-1 h-auto flex-wrap min-h-14">
+        <div className="flex items-center gap-1 h-auto flex-wrap min-h-10">
           {tags
             .map((tag: string, index: number) => {
               return (

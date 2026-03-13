@@ -2,7 +2,7 @@ import React from "react";
 
 import Link from "next/link";
 
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 const variants = {
   gray: "bg-gray-700 text-white fill-white",
@@ -35,7 +35,7 @@ const sizes = {
   lg: "text-[14px] h-8 px-3 tracking-normal gap-1.5",
 };
 
-interface BadgeProps {
+export interface BadgeProps {
   children?: React.ReactNode;
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
@@ -43,6 +43,7 @@ interface BadgeProps {
   icon?: React.ReactNode;
   as?: typeof Link;
   href?: string;
+  className?: string;
 }
 
 const Content = ({ icon, size, children }: BadgeProps) => (
@@ -76,15 +77,17 @@ export const RichBadge = ({
   icon,
   as,
   href,
+  className,
 }: BadgeProps) => {
   if (as === Link && href) {
     return (
       <Link
-        className={clsx(
-          "!no-underline inline-flex justify-center items-center shrink-0 rounded-[9999px] font-sans font-medium whitespace-nowrap tabular-nums",
+        className={cn(
+          "no-underline! inline-flex justify-center items-center shrink-0 rounded-[9999px] font-sans font-medium whitespace-nowrap tabular-nums",
           capitalize && "capitalize",
           variants[variant],
           sizes[size],
+          className,
         )}
         href={href}
       >
@@ -97,11 +100,12 @@ export const RichBadge = ({
 
   return (
     <div
-      className={clsx(
+      className={cn(
         "inline-flex justify-center items-center shrink-0 rounded-[9999px] font-sans font-medium whitespace-nowrap tabular-nums",
         capitalize && "capitalize",
         variants[variant],
         sizes[size],
+        className,
       )}
     >
       <Content icon={icon} size={size}>

@@ -9,9 +9,9 @@ import {
   SidebarRail,
 } from "@/components/animate-ui/components/radix/sidebar";
 import {
-  SidebarFooterChunk,
-  SidebarGroupProjectChunk,
-  SidebarHeaderChunk,
+  SidebarNavProjects,
+  SidebarNavUser,
+  SidebarTeamSwitcher,
 } from "@/components/animate-ui/split/sidebar-chunks";
 import { SIDEBAR_ROUTES } from "@/constants/sidebar-routes";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -31,10 +31,10 @@ export const SidebarProfile = ({ children }: SidebarProfileProps) => {
   return (
     <SidebarProvider className="">
       <Sidebar collapsible="none">
-        <SidebarHeaderChunk
+        <SidebarTeamSwitcher
           isMobile={isMobile}
           activeTeam={activeTeam as any}
-          setActiveTeam={setActiveTeam}
+          onTeamChangeAction={setActiveTeam}
           teams={{
             label: "Harry's Teams",
             items: SIDEBAR_ROUTES.teams?.items ?? [],
@@ -42,29 +42,17 @@ export const SidebarProfile = ({ children }: SidebarProfileProps) => {
         />
 
         <SidebarContent>
-          {/* <SidebarGroupCollapseChunk
-            navMain={{ label: "Platform", items: SIDEBAR_ROUTES.navMain }}
-          /> */}
-
-          {/* Nav Project */}
-          <SidebarGroupProjectChunk
+          <SidebarNavProjects
             isMobile={isMobile}
             projects={{
               label: "Settings",
               items: SIDEBAR_ROUTES.projects?.items ?? [],
             }}
           />
-
-          {/* <SidebarGroupProjectChunk
-            isMobile={isMobile}
-            projects={{
-              label: "Platform",
-              items: SIDEBAR_ROUTES.projects?.items ?? [],
-            }}
-          /> */}
         </SidebarContent>
 
-        <SidebarFooterChunk user={SIDEBAR_ROUTES.user} isMobile={isMobile} />
+        <SidebarNavUser user={SIDEBAR_ROUTES.user} isMobile={isMobile} />
+
         <SidebarRail />
       </Sidebar>
 

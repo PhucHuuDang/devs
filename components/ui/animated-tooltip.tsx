@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 
 import Image from "next/image";
 
+import { cn } from "@udecode/cn";
 import {
   motion,
   useTransform,
@@ -17,6 +18,11 @@ export interface AnimatedItemsProps {
   name: string;
   designation: string;
   image: string;
+
+  height?: number;
+  width?: number;
+
+  classNameImg?: string;
 }
 export const AnimatedTooltip = ({ items }: { items: AnimatedItemsProps[] }) => {
   const [hoveredIndex, setHoveredIndex] = useState<string | null>(null);
@@ -46,7 +52,7 @@ export const AnimatedTooltip = ({ items }: { items: AnimatedItemsProps[] }) => {
 
   return (
     <>
-      {items.map((item, idx) => (
+      {items.map((item: AnimatedItemsProps, idx: number) => (
         <div
           className="group relative -mr-4"
           key={item.name}
@@ -86,12 +92,15 @@ export const AnimatedTooltip = ({ items }: { items: AnimatedItemsProps[] }) => {
           </AnimatePresence>
           <Image
             onMouseMove={handleMouseMove}
-            height={100}
-            width={100}
+            height={item.height ?? 100}
+            width={item.width ?? 100}
             src={item.image}
             alt={item.name}
             loading="lazy"
-            className="relative !m-0 h-14 w-14 rounded-full border-2 border-white object-cover object-top !p-0 transition duration-500 group-hover:z-30 group-hover:scale-105"
+            className={cn(
+              "relative !m-0 h-14 w-14 rounded-full border-2 border-white object-cover object-top !p-0 transition duration-500 group-hover:z-30 group-hover:scale-105",
+              item.classNameImg,
+            )}
           />
         </div>
       ))}

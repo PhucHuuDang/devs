@@ -9,11 +9,8 @@ import {
   SidebarRail,
 } from "@/components/animate-ui/components/radix/sidebar";
 import {
-  DataProps,
-  SidebarFooterChunk,
-  SidebarGroupCollapseChunk,
-  SidebarGroupProjectChunk,
-  SidebarHeaderChunk,
+  SidebarNavMain,
+  SidebarNavProjects,
 } from "@/components/animate-ui/split/sidebar-chunks";
 import { DASHBOARD_SIDEBAR, SIDEBAR_ROUTES } from "@/constants/sidebar-routes";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -33,18 +30,8 @@ export const SidebarDashboard = ({ children }: SidebarDashboardProps) => {
   return (
     <SidebarProvider className="">
       <Sidebar collapsible="offcanvas">
-        {/* <SidebarHeaderChunk
-          isMobile={isMobile}
-          activeTeam={activeTeam as any}
-          setActiveTeam={setActiveTeam}
-          teams={{
-            label: "Harry's Teams",
-            items: SIDEBAR_ROUTES.teams?.items ?? [],
-          }}
-        /> */}
-
         <SidebarContent>
-          <SidebarGroupProjectChunk
+          <SidebarNavProjects
             isMobile={isMobile}
             projects={{
               label: "Dashboard",
@@ -52,10 +39,9 @@ export const SidebarDashboard = ({ children }: SidebarDashboardProps) => {
             }}
           />
 
-          <SidebarGroupCollapseChunk navMain={DASHBOARD_SIDEBAR.navMain} />
+          <SidebarNavMain navMain={DASHBOARD_SIDEBAR.navMain} />
         </SidebarContent>
 
-        {/* <SidebarF`ooterChunk user={SIDEBAR_ROUTES.user} isMobile={isMobile} /> */}
         <SidebarRail />
       </Sidebar>
 

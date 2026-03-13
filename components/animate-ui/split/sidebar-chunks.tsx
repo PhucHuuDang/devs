@@ -1,5 +1,7 @@
 "use client";
 
+import * as React from "react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -56,6 +58,8 @@ import { Separator } from "@/components/ui/separator";
 
 import { DynamicBreadcrumbs } from "./dynamic-breadcrumbs";
 
+// --- Types ---
+
 export interface UserProps {
   name: string;
   email: string;
@@ -68,22 +72,21 @@ export interface TeamProps {
   plan: string;
 }
 
-export interface NavMainProps {
-  title: string;
-  url: string;
-  icon: LucideIcon;
-  isActive?: boolean;
-
-  items: NavMainItemProps[];
-}
-
-interface NavMainItemProps {
+export interface NavMainItemProps {
   title: string;
   url: string;
   logo?: LucideIcon;
 }
 
-interface ProjectProps {
+export interface NavMainProps {
+  title: string;
+  url: string;
+  icon: LucideIcon;
+  isActive?: boolean;
+  items: NavMainItemProps[];
+}
+
+export interface ProjectProps {
   name: string;
   url: string;
   icon: LucideIcon;
@@ -101,7 +104,6 @@ export interface DataProps {
     label: string;
     items: TeamProps[];
   };
-
   navMain?: {
     label: string;
     items: NavMainProps[];
@@ -112,36 +114,53 @@ export interface DataProps {
   };
 }
 
-export const SidebarInsetHeader = ({
-  className,
+// --- Internal Helper ---
+
+const ActiveLink = ({
+  href,
   children,
+  className,
+  activeClassName,
+  ...props
 }: {
-  className?: string;
+  href: string;
   children: React.ReactNode;
-}) => {
+  className?: string;
+  activeClassName?: string;
+} & React.ComponentPropsWithoutRef<typeof Link>) => {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
   return (
-    <header
-      className={cn(
-        "flex h-16  shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12",
-        className,
-      )}
+    <Link
+      href={href}
+      className={cn(className, isActive && activeClassName)}
+      {...props}
     >
       {children}
-    </header>
+    </Link>
   );
 };
 
-export const SidebarHeaderChunk = ({
-  isMobile,
-  activeTeam,
-  setActiveTeam,
+// --- Modern Components ---
+
+/**
+ * Team Switcher component for the sidebar header.
+ * Allows switching between different workspace teams.
+ */
+export const SidebarTeamSwitcher = ({
   teams,
+  activeTeam,
+  onTeamChangeAction,
+  isMobile,
 }: {
-  isMobile: boolean;
-  activeTeam: TeamProps;
-  setActiveTeam: (team: TeamProps) => void;
   teams: DataProps["teams"];
+  activeTeam: TeamProps;
+  onTeamChangeAction: (team: TeamProps) => void;
+  isMobile: boolean;
 }) => {
+  if (!teams) return null;
+
   return (
     <SidebarHeader>
       <SidebarMenu>
@@ -159,39 +178,38 @@ export const SidebarHeaderChunk = ({
                   <span className="truncate font-semibold">
                     {activeTeam.name}
                   </span>
-                  <span className="truncate text-xs">{activeTeam.plan}</span>
+                  <span className="truncate text-xs opacity-70">
+                    {activeTeam.plan}
+                  </span>
                 </div>
-                <ChevronsUpDown className="ml-auto group-data-[collapsible=icon]:hidden" />
+                <ChevronsUpDown className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
-
             <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg bg-sidebar-accent"
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
               align="start"
               side={isMobile ? "bottom" : "right"}
-              sideOffset={14}
+              sideOffset={4}
             >
-              <DropdownMenuLabel className="text-sm font-semibold text-center text-muted-foreground flex items-center gap-1 justify-center">
-                <UserIcon className="size-4" />
-                {teams?.label}
+              <DropdownMenuLabel className="text-xs text-muted-foreground px-2 py-1.5 flex items-center gap-1">
+                <UserIcon className="size-3" />
+                {teams.label}
               </DropdownMenuLabel>
-              {teams?.items.map((team, index) => (
+              {teams.items.map((team, index) => (
                 <DropdownMenuItem
                   key={team.name}
-                  onClick={() => setActiveTeam(team)}
-                  className="gap-2 p-2 flex items-center justify-between"
+                  onClick={() => onTeamChangeAction(team)}
+                  className="gap-2 p-2 cursor-pointer"
                 >
-                  <div className="flex items-center gap-2">
-                    <div className="flex size-6 items-center justify-center rounded-sm border">
-                      <team.logo className="size-4 shrink-0" />
-                    </div>
-                    {team.name}
+                  <div className="flex size-6 items-center justify-center rounded-sm border">
+                    <team.logo className="size-4 shrink-0" />
                   </div>
+                  <span className="flex-1 truncate">{team.name}</span>
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-2 p-2 flex items-centers">
+              <DropdownMenuItem className="gap-2 p-2 cursor-pointer">
                 <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                   <Plus className="size-4" />
                 </div>
@@ -207,22 +225,47 @@ export const SidebarHeaderChunk = ({
   );
 };
 
-export const SidebarGroupCollapseChunk = ({
+/**
+ * Main navigation group with support for nested items and collapsibles.
+ */
+export const SidebarNavMain = ({
   navMain,
   className,
   ...props
-}: React.ComponentProps<"div"> & {
-  navMain: DataProps["navMain"];
+}: React.ComponentProps<typeof SidebarGroup> & {
+  navMain?: DataProps["navMain"];
 }) => {
-  const pathName = usePathname();
+  const pathname = usePathname();
+  if (!navMain) return null;
 
   return (
     <SidebarGroup className={className} {...props}>
-      <SidebarGroupLabel>{navMain?.label}</SidebarGroupLabel>
-
+      {navMain.label && <SidebarGroupLabel>{navMain.label}</SidebarGroupLabel>}
       <SidebarMenu>
-        {navMain?.items.map((item) => {
-          const isActive = pathName === item.url;
+        {navMain.items.map((item) => {
+          const isActive = pathname === item.url;
+          const hasChildren = item.items && item.items.length > 0;
+
+          if (!hasChildren) {
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
+                  className={cn(
+                    isActive &&
+                      "bg-sidebar-accent text-sidebar-accent-foreground font-medium",
+                  )}
+                >
+                  <Link href={item.url}>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          }
+
           return (
             <Collapsible
               key={item.title}
@@ -236,7 +279,7 @@ export const SidebarGroupCollapseChunk = ({
                     tooltip={item.title}
                     className={cn(
                       isActive &&
-                        "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
+                        "bg-sidebar-accent text-sidebar-accent-foreground font-medium",
                     )}
                   >
                     {item.icon && <item.icon />}
@@ -244,28 +287,21 @@ export const SidebarGroupCollapseChunk = ({
                     <ChevronRight className="ml-auto transition-transform duration-300 group-data-[state=open]/collapsible:rotate-90" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
-
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {item.items.map((subItem) => {
-                      const isActiveChild = pathName === subItem.url;
-                      return (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton
-                            asChild
-                            className={cn(
-                              isActiveChild &&
-                                "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
-                            )}
+                    {item.items.map((subItem) => (
+                      <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubButton asChild>
+                          <ActiveLink
+                            href={subItem.url}
+                            activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium ring-1 ring-ring"
                           >
-                            <Link prefetch href={subItem.url}>
-                              {subItem.logo && <subItem.logo />}
-                              <span>{subItem.title}</span>
-                            </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      );
-                    })}
+                            {subItem.logo && <subItem.logo />}
+                            <span>{subItem.title}</span>
+                          </ActiveLink>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
@@ -277,24 +313,30 @@ export const SidebarGroupCollapseChunk = ({
   );
 };
 
-export const SidebarGroupProjectChunk = ({
+/**
+ * Project navigation group with support for dropdown actions per project.
+ */
+export const SidebarNavProjects = ({
   projects,
   isMobile,
   className,
   ...props
-}: React.ComponentProps<"div"> & {
+}: React.ComponentProps<typeof SidebarGroup> & {
   isMobile: boolean;
-  projects: DataProps["projects"];
+  projects?: DataProps["projects"];
 }) => {
-  const pathName = usePathname();
+  const pathname = usePathname();
+  if (!projects) return null;
 
   return (
     <SidebarGroup className={className} {...props}>
-      <SidebarGroupLabel>{projects?.label}</SidebarGroupLabel>
-
+      {projects.label && (
+        <SidebarGroupLabel>{projects.label}</SidebarGroupLabel>
+      )}
       <SidebarMenu>
-        {projects?.items.map((item) => {
-          const isActive = pathName === item.url;
+        {projects.items.map((item) => {
+          const isActive = pathname === item.url;
+
           return (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton
@@ -302,61 +344,58 @@ export const SidebarGroupProjectChunk = ({
                 tooltip={item.name}
                 className={cn(
                   isActive &&
-                    "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
+                    "bg-sidebar-accent text-sidebar-accent-foreground font-medium",
                 )}
               >
-                <Link prefetch href={item.url}>
-                  <item.icon />
+                <Link href={item.url}>
+                  {item.icon && <item.icon />}
                   <span>{item.name}</span>
                 </Link>
               </SidebarMenuButton>
 
-              {item.dropdownItems && item.dropdownItems.length > 0 ? (
+              {item.dropdownItems && item.dropdownItems.length > 0 && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuAction showOnHover>
                       <MoreHorizontal />
-                      <span className="sr-only">More</span>
+                      <span className="sr-only">Toggle Menu</span>
                     </SidebarMenuAction>
                   </DropdownMenuTrigger>
-
                   <DropdownMenuContent
-                    className="min-w-52 rounded-lg bg-sidebar-accent p-1"
+                    className="w-48 rounded-lg"
                     side={isMobile ? "bottom" : "right"}
                     align={isMobile ? "end" : "start"}
-                    sideOffset={14}
                   >
-                    {item?.dropdownItems?.map((dropdownItem, index) => {
-                      const isActiveChild = pathName === dropdownItem.url;
-                      return (
-                        <DropdownMenuItem
-                          key={dropdownItem.title}
-                          onClick={dropdownItem?.onClick}
-                          className={cn(
-                            "flex justify-between items-center p-1 hover:bg-primary cursor-pointer",
-                            isActiveChild &&
-                              "bg-white dark:bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-offset-1 ring-offset-background",
-                          )}
-                        >
-                          <div className="flex items-center gap-2">
-                            {<dropdownItem.icon />}
+                    {item.dropdownItems.map((dropdownItem) => (
+                      <DropdownMenuItem
+                        key={dropdownItem.title}
+                        onClick={dropdownItem.onClick}
+                        className="cursor-pointer"
+                      >
+                        {dropdownItem.url ? (
+                          <Link
+                            href={dropdownItem.url}
+                            className="flex items-center gap-2 w-full"
+                          >
+                            <dropdownItem.icon className="size-4" />
+                            <span>{dropdownItem.title}</span>
+                          </Link>
+                        ) : (
+                          <div className="flex items-center gap-2 w-full">
+                            <dropdownItem.icon className="size-4" />
                             <span>{dropdownItem.title}</span>
                           </div>
-                          <DropdownMenuShortcut>
-                            ⌘{index + 1}
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                      );
-                    })}
+                        )}
+                      </DropdownMenuItem>
+                    ))}
                     <SidebarSeparator className="my-2" />
-
-                    <SidebarMenuItem className="flex gap-2">
-                      <MoreHorizontal className="ml-2" />
-                      <span>More</span>
-                    </SidebarMenuItem>
+                    <DropdownMenuItem className="gap-2 cursor-pointer">
+                      <MoreHorizontal className="size-4" />
+                      <span>More Actions</span>
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              ) : null}
+              )}
             </SidebarMenuItem>
           );
         })}
@@ -365,68 +404,20 @@ export const SidebarGroupProjectChunk = ({
   );
 };
 
-export const SidebarInsetContent = ({
-  isSidebarInset = true,
-  children,
-  className,
-  classNameContainer,
-  isShowSidebarInsetHeader = true,
-  isShowToggleTheme = true,
-}: {
-  isSidebarInset?: boolean;
-  children: React.ReactNode;
-  className?: string;
-  classNameContainer?: string;
-  isShowSidebarInsetHeader?: boolean;
-  isShowToggleTheme?: boolean;
-}) => {
-  return (
-    <SidebarInset>
-      {isShowSidebarInsetHeader && (
-        <SidebarInsetHeader>
-          <div
-            className={cn(
-              "flex items-center justify-between w-full px-1 ",
-              classNameContainer,
-            )}
-          >
-            <div className="flex items-center gap-2 px-4">
-              {isSidebarInset && (
-                <SidebarTrigger className="-ml-1 cursor-pointer" />
-              )}
-              <Separator
-                orientation="vertical"
-                className="mr-2 h-4 hover:text-accent-foreground"
-              />
-              <DynamicBreadcrumbs />
-            </div>
-
-            {isShowToggleTheme && (
-              <div className="transition-colors z-20 duration-700 ease-in-out ">
-                <CinematicThemeSwitcher size="sm" className="cursor-pointer" />
-              </div>
-            )}
-          </div>
-        </SidebarInsetHeader>
-      )}
-
-      <div className={cn("p-4", className)}>{children}</div>
-    </SidebarInset>
-  );
-};
-
-export const SidebarFooterChunk = ({
+/**
+ * User profile and settings menu in the sidebar footer.
+ */
+export const SidebarNavUser = ({
   user,
   isMobile,
 }: {
-  user: DataProps["user"];
+  user?: UserProps;
   isMobile: boolean;
 }) => {
   if (!user) return null;
 
   return (
     <SidebarFooter>
-      {/* Nav User */}
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
@@ -436,18 +427,22 @@ export const SidebarFooterChunk = ({
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user?.avatarUrl} alt={user?.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src={user.avatarUrl} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">
+                    {user.name.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                  <span className="truncate font-semibold">{user?.name}</span>
-                  <span className="truncate text-xs">{user?.email}</span>
+                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate text-xs opacity-70">
+                    {user.email}
+                  </span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg "
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
               side={isMobile ? "bottom" : "right"}
               align="end"
               sideOffset={4}
@@ -455,47 +450,181 @@ export const SidebarFooterChunk = ({
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={user?.avatarUrl} alt={user?.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                    <AvatarImage src={user.avatarUrl} alt={user.name} />
+                    <AvatarFallback className="rounded-lg">
+                      {user.name.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{user?.name}</span>
-                    <span className="truncate text-xs">{user?.email}</span>
+                    <span className="truncate font-semibold">{user.name}</span>
+                    <span className="truncate text-xs opacity-70">
+                      {user.email}
+                    </span>
                   </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <SparklesIcon />
+                <DropdownMenuItem className="cursor-pointer">
+                  <SparklesIcon className="mr-2 h-4 w-4" />
                   Upgrade to Pro
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <BadgeCheckIcon />
+                <DropdownMenuItem className="cursor-pointer">
+                  <BadgeCheckIcon className="mr-2 h-4 w-4" />
                   Account
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CreditCardIcon />
+                <DropdownMenuItem className="cursor-pointer">
+                  <CreditCardIcon className="mr-2 h-4 w-4" />
                   Billing
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <BellIcon />
+                <DropdownMenuItem className="cursor-pointer">
+                  <BellIcon className="mr-2 h-4 w-4" />
                   Notifications
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LogOutIcon />
+              <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                <LogOutIcon className="mr-2 h-4 w-4" />
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>
       </SidebarMenu>
-      {/* Nav User */}
     </SidebarFooter>
   );
 };
+
+// --- Sidebar Inset Compound Components ---
+
+/**
+ * Header for the SidebarInset area. Use composition to add triggers, breadcrumbs, etc.
+ */
+export const SidebarInsetHeader = ({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) => (
+  <header
+    className={cn(
+      "flex h-16 shrink-0 items-center gap-2 px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 sticky top-0 z-30",
+      className,
+    )}
+  >
+    {children}
+  </header>
+);
+
+/**
+ * Main content area for the SidebarInset.
+ */
+export const SidebarInsetContentArea = ({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) => (
+  <div
+    className={cn(
+      "flex-1 p-4 md:p-6 lg:p-8 animate-in fade-in duration-500",
+      className,
+    )}
+  >
+    {children}
+  </div>
+);
+
+/**
+ * Utility for header actions (like theme switcher).
+ */
+export const SidebarInsetActions = ({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) => (
+  <div className={cn("ml-auto flex items-center gap-2", className)}>
+    {children}
+  </div>
+);
+
+/**
+ * Modern Sidebar Inset Layout container.
+ */
+export const SidebarInsetContainer = ({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) => (
+  <SidebarInset
+    className={cn("flex flex-col flex-1 overflow-hidden", className)}
+  >
+    {children}
+  </SidebarInset>
+);
+
+// --- Compound Component Namespace ---
+
+export const SidebarChunks = {
+  TeamSwitcher: SidebarTeamSwitcher,
+  NavMain: SidebarNavMain,
+  NavProjects: SidebarNavProjects,
+  NavUser: SidebarNavUser,
+  Inset: {
+    Container: SidebarInsetContainer,
+    Header: SidebarInsetHeader,
+    Content: SidebarInsetContentArea,
+    Actions: SidebarInsetActions,
+  },
+};
+
+// --- Backward Compatibility ---
+
+/** @deprecated Use SidebarTeamSwitcher instead */
+export const SidebarHeaderChunk = ({ onTeamChangeAction, ...props }: any) => (
+  <SidebarTeamSwitcher onTeamChangeAction={onTeamChangeAction} {...props} />
+);
+/** @deprecated Use SidebarNavMain instead */
+export const SidebarGroupCollapseChunk = SidebarNavMain;
+/** @deprecated Use SidebarNavProjects instead */
+export const SidebarGroupProjectChunk = SidebarNavProjects;
+/** @deprecated Use SidebarNavUser instead */
+export const SidebarFooterChunk = SidebarNavUser;
+
+/** @deprecated Use SidebarChunks.Inset wrapper instead */
+export const SidebarInsetContent = ({
+  children,
+  className,
+  isShowSidebarInsetHeader = true,
+  isShowToggleTheme = true,
+  isSidebarInset = true,
+}: any) => (
+  <SidebarInsetContainer>
+    {isShowSidebarInsetHeader && (
+      <SidebarInsetHeader>
+        <div className="flex items-center gap-2">
+          {isSidebarInset && <SidebarTrigger className="-ml-1" />}
+          <Separator orientation="vertical" className="h-4" />
+          <DynamicBreadcrumbs />
+        </div>
+        {isShowToggleTheme && (
+          <SidebarInsetActions>
+            <CinematicThemeSwitcher size="sm" />
+          </SidebarInsetActions>
+        )}
+      </SidebarInsetHeader>
+    )}
+    <SidebarInsetContentArea className={className}>
+      {children}
+    </SidebarInsetContentArea>
+  </SidebarInsetContainer>
+);
