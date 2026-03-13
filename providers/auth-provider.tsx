@@ -7,7 +7,11 @@ export interface AuthContextType {
     accessToken: string | null | undefined;
     refreshToken: string | null | undefined;
   }>;
-  setCookies: (accessToken: string, refreshToken: string) => Promise<void>;
+  setCookies: (
+    accessToken: string,
+    sessionToken: string,
+    refreshToken: string,
+  ) => Promise<void>;
   deleteCookies: () => Promise<void>;
 }
 
