@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "playwright-generate-test": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "8f963da3e25f705ff39755b8b990f20da0c0320cb86ac83fcc4d2d4eca91f6e4"
+    },
     "shadcn": {
       "source": "shadcn/ui",
       "sourceType": "github",
