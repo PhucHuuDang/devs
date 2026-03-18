@@ -43,12 +43,6 @@ export const CategoryItem = ({
         background={active ? "var(--foreground)" : "var(--background)"}
         borderRadius="20px"
         borderColor="var(--border)"
-        // className={cn(
-        //   "p-3 sm:p-4 rounded-2xl border border-border hover:border-primary/40 transition-colors",
-        //   "shadow-sm hover:shadow-md backdrop-blur-sm",
-        //   "flex items-center justify-center text-center  min-w-20 min-h-20 "
-        // )}
-
         className="rounded-2xl hover:border-primary/40 transition-all p-1 hover:shadow-md flex items-center mx-auto min-w-20"
       >
         <div className="flex items-center gap-2 ">
