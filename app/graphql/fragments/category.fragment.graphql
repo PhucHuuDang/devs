@@ -2,6 +2,7 @@ fragment CategoryFragment on CategoryModel {
   id
   name
   slug
+  description
   createdAt
   updatedAt
 }

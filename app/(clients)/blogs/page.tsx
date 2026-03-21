@@ -3,11 +3,13 @@
 import Link from "next/link";
 
 import { NetworkStatus } from "@apollo/client";
+import { Loader2 } from "lucide-react";
 
 import { useGetPublishedPostsQuery } from "@/app/graphql/__generated__/generated";
 import { ListCategory } from "@/components/common/list-category.";
 import { EmptyMediaGroup } from "@/components/empty-state/empty-media-group";
 import { NetworkErrorPage } from "@/components/exceptions/network-error-page";
+import { Button } from "@/components/ui/button";
 import {
   BlogCard,
   BlogCardSkeleton,
@@ -33,7 +35,10 @@ const BlogsPage = () => {
     return <NetworkErrorPage errorCode="NETWORK_CONNECTION_FAILED" />;
   }
 
-  if (loading && !data) {
+  const isInitialLoading = networkStatus === NetworkStatus.loading;
+  const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
+
+  if (isInitialLoading && !data) {
     return (
       <div className="mt-4 p-2">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
@@ -112,9 +117,39 @@ const BlogsPage = () => {
 
         {/* Pagination info */}
         {meta && meta.totalPages > 1 && (
-          <div className="mt-8 flex items-center justify-center text-sm text-muted-foreground">
-            <p>
-              Page {meta.page} of {meta.totalPages} • {meta.total} total posts
+          <div className="mt-8 flex flex-col items-center justify-center gap-4">
+            {meta.page < meta.totalPages && (
+              <Button
+                variant="outline"
+                size="lg"
+                disabled={isFetchingMore}
+                onClick={async () => {
+                  try {
+                    await fetchMore({
+                      variables: {
+                        filters: {
+                          ...variables?.filters,
+                          page: meta.page + 1,
+                        },
+                      },
+                    });
+                  } catch (err) {
+                    console.error("Failed to load more posts:", err);
+                  }
+                }}
+              >
+                {isFetchingMore ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  "Load More"
+                )}
+              </Button>
+            )}
+            <p className="text-sm text-muted-foreground">
+              Showing {posts.length} of {meta.total} total posts
             </p>
           </div>
         )}

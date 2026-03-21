@@ -7,6 +7,8 @@ import Image from "next/image";
 
 // Import the generated GraphQL hooks/types
 
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TrashIcon } from "lucide-react";
 import { Value } from "platejs";
@@ -37,7 +39,6 @@ import {
 } from "@/components/ui/card";
 import { FormMessage } from "@/components/ui/form";
 import { TTag } from "@/components/ui/multiple-select";
-import { categoryOptions } from "@/mock/category";
 import { TAGS } from "@/mock/tags";
 import { useDebounce } from "@/stores/use-debounce";
 import { cardStyle } from "@/styles/common-style";
@@ -58,7 +59,7 @@ const PlateEditor = dynamic(
 
 // The form schema can remain unchanged since it helps for validation.
 export const formSchema = z.object({
-  title: z.string().min(2, {
+  title: z.string().min(10, {
     message: "Title must be at least 10 characters.",
   }),
   description: z.string().min(20, {
@@ -87,6 +88,20 @@ export const formSchema = z.object({
 export const createBlogSchema = formSchema;
 export type CreateBlogFormValues = z.infer<typeof createBlogSchema>;
 
+// --- GraphQL Query ---
+const GET_CATEGORIES = gql`
+  query GetCategories {
+    categories {
+      success
+      data {
+        id
+        name
+        description
+      }
+    }
+  }
+`;
+
 export const CreateBlog = () => {
   const [content, setContent] = useState<Value>([]);
 
@@ -101,6 +116,20 @@ export const CreateBlog = () => {
     },
   ] = useCreatePostMutation();
 
+  // Fetch categories from real API
+  const { data: categoriesData, loading: categoriesLoading } = useQuery<any>(
+    GET_CATEGORIES,
+    {
+      fetchPolicy: "cache-first",
+    },
+  );
+
+  const categoryOptions =
+    categoriesData?.categories?.data?.map((cat: any) => ({
+      label: cat.name,
+      value: cat.id,
+    })) || [];
+
   const form = useForm<CreateBlogFormValues>({
     resolver: zodResolver(createBlogSchema),
     defaultValues: {
@@ -108,7 +137,7 @@ export const CreateBlog = () => {
       description: "",
       mainImage: "",
       tags: [TAGS[0]! as TTag],
-      categoryId: categoryOptions[0]!.value,
+      categoryId: "",
       content: [],
       isPublished: false,
     },
@@ -284,8 +313,13 @@ export const CreateBlog = () => {
               <SelectControlled
                 name="categoryId"
                 label=""
-                placeholder="Select the category of the blog post..."
+                placeholder={
+                  categoriesLoading
+                    ? "Loading categories..."
+                    : "Select the category of the blog post..."
+                }
                 selectOptions={categoryOptions}
+                disabled={categoriesLoading || categoryOptions.length === 0}
               />
             </CardContent>
           </Card>
@@ -313,6 +347,7 @@ export const CreateBlog = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         title={titleDebounced}
         description={descriptionDebounced}
+        isSubmitting={createBlogLoading}
       />
     </div>
   );

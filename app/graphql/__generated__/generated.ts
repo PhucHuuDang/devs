@@ -1,8 +1,7 @@
 //@ts-nocheck
 import { gql } from "@apollo/client";
-import * as ApolloReactHooks from "@apollo/client/react";
-
 import type * as ApolloReactCommon from "../../../lib/apollo-compat";
+import * as ApolloReactHooks from "@apollo/client/react";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -48,7 +47,15 @@ export type AccountModel = {
   refreshTokenExpiresAt?: Maybe<Scalars["DateTime"]["output"]>;
   scope?: Maybe<Scalars["String"]["output"]>;
   updatedAt: Scalars["DateTime"]["output"];
+  user: UserModel;
   userId: Scalars["String"]["output"];
+};
+
+export type CastVoteInput = {
+  /** Post ID to vote on */
+  postId: Scalars["String"]["input"];
+  /** Vote type: UPVOTE or DOWNVOTE */
+  value: Scalars["String"]["input"];
 };
 
 export type CategoriesResponse = {
@@ -87,11 +94,50 @@ export type Comment = {
   userId: Scalars["String"]["output"];
 };
 
+export type CommentModel = {
+  content: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  id: Scalars["String"]["output"];
+  isDeleted: Scalars["Boolean"]["output"];
+  isEdited: Scalars["Boolean"]["output"];
+  parentId?: Maybe<Scalars["String"]["output"]>;
+  postId?: Maybe<Scalars["String"]["output"]>;
+  replies: Array<CommentModel>;
+  updatedAt: Scalars["DateTime"]["output"];
+  user?: Maybe<UserModel>;
+  userId: Scalars["String"]["output"];
+};
+
+export type CommentResponse = {
+  /** Response data */
+  data?: Maybe<CommentModel>;
+  message?: Maybe<Scalars["String"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type CommentsResponse = {
+  /** Total count */
+  count: Scalars["Int"]["output"];
+  /** Array of items */
+  data: Array<CommentModel>;
+  message?: Maybe<Scalars["String"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
 export type CreateCategoryDto = {
   /** Description of the category */
   description: Scalars["String"]["input"];
   /** Name of the category */
   name: Scalars["String"]["input"];
+};
+
+export type CreateCommentInput = {
+  /** Comment content */
+  content: Scalars["String"]["input"];
+  /** Parent comment ID for replies */
+  parentId?: InputMaybe<Scalars["String"]["input"]>;
+  /** Post ID to comment on */
+  postId: Scalars["String"]["input"];
 };
 
 export type CreatePostInput = {
@@ -109,6 +155,13 @@ export type CreatePostInput = {
   tags?: Array<Scalars["String"]["input"]>;
   /** Post title */
   title: Scalars["String"]["input"];
+};
+
+export type DeleteCommentResponse = {
+  code?: Maybe<Scalars["String"]["output"]>;
+  deletedId?: Maybe<Scalars["String"]["output"]>;
+  message: Scalars["String"]["output"];
+  success: Scalars["Boolean"]["output"];
 };
 
 export type DeletePostResponse = {
@@ -144,30 +197,48 @@ export type LikeModel = {
 };
 
 export type Mutation = {
-  /** Create a new category */
+  /** Cast a vote on a post (toggle behavior) */
+  castVote: VoteResponse;
+  /** Create a new category (requires authentication) */
   createCategory: CategoryResponse;
+  /** Create a comment on a post (requires authentication) */
+  createComment: CommentResponse;
   /** Create a new post (requires authentication) */
   createPost: PostResponse;
-  /** Delete a category */
+  /** Delete a category (requires authentication) */
   deleteCategory: CategoryResponse;
+  /** Delete a comment (requires ownership) */
+  deleteComment: DeleteCommentResponse;
   /** Delete a post (requires ownership) */
   deletePost: DeletePostResponse;
   gitHub: GitHubUserResponse;
   /** Increment post view count */
   incrementViews: PostResponse;
+  /** Remove your vote from a post */
+  removeVote: RemoveVoteResponse;
   signInEmail: SignInEmailUser;
   signOut: SignOutResponse;
   /** Sign up email user */
   signUpEmail: SignUpEmailUser;
-  /** Update a category */
+  /** Update a category (requires authentication) */
   updateCategory: CategoryResponse;
+  /** Update a comment (requires ownership) */
+  updateComment: CommentResponse;
   /** Update a post (requires ownership) */
   updatePost: PostResponse;
   updateProfile: UserModel;
 };
 
+export type MutationCastVoteArgs = {
+  input: CastVoteInput;
+};
+
 export type MutationCreateCategoryArgs = {
   input: CreateCategoryDto;
+};
+
+export type MutationCreateCommentArgs = {
+  input: CreateCommentInput;
 };
 
 export type MutationCreatePostArgs = {
@@ -178,6 +249,10 @@ export type MutationDeleteCategoryArgs = {
   id: Scalars["String"]["input"];
 };
 
+export type MutationDeleteCommentArgs = {
+  id: Scalars["String"]["input"];
+};
+
 export type MutationDeletePostArgs = {
   id: Scalars["String"]["input"];
 };
@@ -185,6 +260,10 @@ export type MutationDeletePostArgs = {
 export type MutationIncrementViewsArgs = {
   id: Scalars["String"]["input"];
   identifier?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type MutationRemoveVoteArgs = {
+  postId: Scalars["String"]["input"];
 };
 
 export type MutationSignInEmailArgs = {
@@ -198,6 +277,11 @@ export type MutationSignUpEmailArgs = {
 export type MutationUpdateCategoryArgs = {
   id: Scalars["String"]["input"];
   input: UpdateCategoryDto;
+};
+
+export type MutationUpdateCommentArgs = {
+  id: Scalars["String"]["input"];
+  input: UpdateCommentInput;
 };
 
 export type MutationUpdatePostArgs = {
@@ -329,6 +413,8 @@ export type PostsArrayResponse = {
 
 export type Query = {
   categories: CategoriesResponse;
+  /** Get all comments for a post (with nested replies) */
+  commentsByPost: CommentsResponse;
   getAccounts: Array<AccountModel>;
   getProfile: SingleProfileResponse;
   getSession: SessionSingleResponse;
@@ -343,6 +429,12 @@ export type Query = {
   priorityPosts: PostsArrayResponse;
   /** Get only published posts */
   publishedPosts: PaginatedPostsResponse;
+  /** Get vote counts and current user vote for a post */
+  voteStatus: VoteStatusResponse;
+};
+
+export type QueryCommentsByPostArgs = {
+  postId: Scalars["String"]["input"];
 };
 
 export type QueryMyPostsArgs = {
@@ -367,6 +459,17 @@ export type QueryPriorityPostsArgs = {
 
 export type QueryPublishedPostsArgs = {
   filters: PostFiltersInput;
+};
+
+export type QueryVoteStatusArgs = {
+  postId: Scalars["String"]["input"];
+};
+
+export type RemoveVoteResponse = {
+  code?: Maybe<Scalars["String"]["output"]>;
+  deletedId?: Maybe<Scalars["String"]["output"]>;
+  message: Scalars["String"]["output"];
+  success: Scalars["Boolean"]["output"];
 };
 
 export type SessionModel = {
@@ -449,6 +552,11 @@ export type UpdateCategoryDto = {
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type UpdateCommentInput = {
+  /** Updated comment content */
+  content: Scalars["String"]["input"];
+};
+
 export type UpdatePostInput = {
   categoryId?: InputMaybe<Scalars["String"]["input"]>;
   content?: InputMaybe<Scalars["JSON"]["input"]>;
@@ -476,6 +584,43 @@ export type UserModel = {
   sessions: Array<SessionModel>;
   updatedAt: Scalars["DateTime"]["output"];
 };
+
+export type VoteModel = {
+  createdAt: Scalars["DateTime"]["output"];
+  id: Scalars["String"]["output"];
+  postId: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  user?: Maybe<UserModel>;
+  userId: Scalars["String"]["output"];
+  value: VoteType;
+};
+
+export type VoteResponse = {
+  /** Response data */
+  data?: Maybe<VoteModel>;
+  message?: Maybe<Scalars["String"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type VoteStatusModel = {
+  downvotes: Scalars["Float"]["output"];
+  score: Scalars["Float"]["output"];
+  upvotes: Scalars["Float"]["output"];
+  userVote?: Maybe<VoteType>;
+};
+
+export type VoteStatusResponse = {
+  /** Response data */
+  data?: Maybe<VoteStatusModel>;
+  message?: Maybe<Scalars["String"]["output"]>;
+  success: Scalars["Boolean"]["output"];
+};
+
+/** Type of vote (UPVOTE or DOWNVOTE) */
+export enum VoteType {
+  Downvote = "DOWNVOTE",
+  Upvote = "UPVOTE",
+}
 
 export type SignUpEmailMutationVariables = Exact<{
   input: SignUpInput;
@@ -542,6 +687,24 @@ export type GetSessionQuery = {
   };
 };
 
+export type GetCategoriesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetCategoriesQuery = {
+  categories: {
+    success: boolean;
+    message?: string | null;
+    count: number;
+    data: Array<{
+      id: string;
+      name: string;
+      slug: string;
+      description: string;
+      createdAt: any;
+      updatedAt: any;
+    }>;
+  };
+};
+
 export type CreateCategoryMutationVariables = Exact<{
   input: CreateCategoryDto;
 }>;
@@ -554,9 +717,218 @@ export type CreateCategoryMutation = {
       id: string;
       name: string;
       slug: string;
+      description: string;
       createdAt: any;
       updatedAt: any;
     } | null;
+  };
+};
+
+export type UpdateCategoryMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+  input: UpdateCategoryDto;
+}>;
+
+export type UpdateCategoryMutation = {
+  updateCategory: {
+    success: boolean;
+    message?: string | null;
+    data?: {
+      id: string;
+      name: string;
+      slug: string;
+      description: string;
+      createdAt: any;
+      updatedAt: any;
+    } | null;
+  };
+};
+
+export type DeleteCategoryMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+}>;
+
+export type DeleteCategoryMutation = {
+  deleteCategory: { success: boolean; message?: string | null };
+};
+
+export type CommentFragmentFragment = {
+  id: string;
+  content: string;
+  createdAt: any;
+  updatedAt: any;
+  isEdited: boolean;
+  isDeleted: boolean;
+  parentId?: string | null;
+  postId?: string | null;
+  userId: string;
+  user?: {
+    id: string;
+    email?: string | null;
+    name?: string | null;
+    image?: string | null;
+  } | null;
+  replies: Array<{
+    id: string;
+    content: string;
+    createdAt: any;
+    updatedAt: any;
+    isEdited: boolean;
+    isDeleted: boolean;
+    parentId?: string | null;
+    userId: string;
+    user?: {
+      id: string;
+      email?: string | null;
+      name?: string | null;
+      image?: string | null;
+    } | null;
+  }>;
+};
+
+export type GetCommentsByPostQueryVariables = Exact<{
+  postId: Scalars["String"]["input"];
+}>;
+
+export type GetCommentsByPostQuery = {
+  commentsByPost: {
+    success: boolean;
+    message?: string | null;
+    count: number;
+    data: Array<{
+      id: string;
+      content: string;
+      createdAt: any;
+      updatedAt: any;
+      isEdited: boolean;
+      isDeleted: boolean;
+      parentId?: string | null;
+      postId?: string | null;
+      userId: string;
+      user?: {
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+      } | null;
+      replies: Array<{
+        id: string;
+        content: string;
+        createdAt: any;
+        updatedAt: any;
+        isEdited: boolean;
+        isDeleted: boolean;
+        parentId?: string | null;
+        userId: string;
+        user?: {
+          id: string;
+          email?: string | null;
+          name?: string | null;
+          image?: string | null;
+        } | null;
+      }>;
+    }>;
+  };
+};
+
+export type CreateCommentMutationVariables = Exact<{
+  input: CreateCommentInput;
+}>;
+
+export type CreateCommentMutation = {
+  createComment: {
+    success: boolean;
+    message?: string | null;
+    data?: {
+      id: string;
+      content: string;
+      createdAt: any;
+      updatedAt: any;
+      isEdited: boolean;
+      isDeleted: boolean;
+      parentId?: string | null;
+      postId?: string | null;
+      userId: string;
+      user?: {
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+      } | null;
+      replies: Array<{
+        id: string;
+        content: string;
+        createdAt: any;
+        updatedAt: any;
+        isEdited: boolean;
+        isDeleted: boolean;
+        parentId?: string | null;
+        userId: string;
+        user?: {
+          id: string;
+          email?: string | null;
+          name?: string | null;
+          image?: string | null;
+        } | null;
+      }>;
+    } | null;
+  };
+};
+
+export type UpdateCommentMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+  input: UpdateCommentInput;
+}>;
+
+export type UpdateCommentMutation = {
+  updateComment: {
+    success: boolean;
+    message?: string | null;
+    data?: {
+      id: string;
+      content: string;
+      createdAt: any;
+      updatedAt: any;
+      isEdited: boolean;
+      isDeleted: boolean;
+      parentId?: string | null;
+      postId?: string | null;
+      userId: string;
+      user?: {
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+      } | null;
+      replies: Array<{
+        id: string;
+        content: string;
+        createdAt: any;
+        updatedAt: any;
+        isEdited: boolean;
+        isDeleted: boolean;
+        parentId?: string | null;
+        userId: string;
+        user?: {
+          id: string;
+          email?: string | null;
+          name?: string | null;
+          image?: string | null;
+        } | null;
+      }>;
+    } | null;
+  };
+};
+
+export type DeleteCommentMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+}>;
+
+export type DeleteCommentMutation = {
+  deleteComment: {
+    success: boolean;
+    message: string;
+    deletedId?: string | null;
   };
 };
 
@@ -564,6 +936,7 @@ export type CategoryFragmentFragment = {
   id: string;
   name: string;
   slug: string;
+  description: string;
   createdAt: any;
   updatedAt: any;
 };
@@ -577,8 +950,13 @@ export type PostFragmentFragment = {
   mainImage?: string | null;
   isPublished: boolean;
   isPriority: boolean;
+  isPinned: boolean;
+  isDeleted: boolean;
   views: number;
+  votes: number;
   tags: Array<string>;
+  authorId: string;
+  categoryId: string;
   createdAt: any;
   updatedAt: any;
   author: {
@@ -591,6 +969,7 @@ export type PostFragmentFragment = {
     id: string;
     name: string;
     slug: string;
+    description: string;
     createdAt: any;
     updatedAt: any;
   } | null;
@@ -620,8 +999,13 @@ export type CreatePostMutation = {
       mainImage?: string | null;
       isPublished: boolean;
       isPriority: boolean;
+      isPinned: boolean;
+      isDeleted: boolean;
       views: number;
+      votes: number;
       tags: Array<string>;
+      authorId: string;
+      categoryId: string;
       createdAt: any;
       updatedAt: any;
       author: {
@@ -634,6 +1018,7 @@ export type CreatePostMutation = {
         id: string;
         name: string;
         slug: string;
+        description: string;
         createdAt: any;
         updatedAt: any;
       } | null;
@@ -659,8 +1044,13 @@ export type UpdatePostMutation = {
       mainImage?: string | null;
       isPublished: boolean;
       isPriority: boolean;
+      isPinned: boolean;
+      isDeleted: boolean;
       views: number;
+      votes: number;
       tags: Array<string>;
+      authorId: string;
+      categoryId: string;
       createdAt: any;
       updatedAt: any;
       author: {
@@ -673,6 +1063,7 @@ export type UpdatePostMutation = {
         id: string;
         name: string;
         slug: string;
+        description: string;
         createdAt: any;
         updatedAt: any;
       } | null;
@@ -710,8 +1101,13 @@ export type GetPublishedPostsQuery = {
       mainImage?: string | null;
       isPublished: boolean;
       isPriority: boolean;
+      isPinned: boolean;
+      isDeleted: boolean;
       views: number;
+      votes: number;
       tags: Array<string>;
+      authorId: string;
+      categoryId: string;
       createdAt: any;
       updatedAt: any;
       author: {
@@ -724,6 +1120,7 @@ export type GetPublishedPostsQuery = {
         id: string;
         name: string;
         slug: string;
+        description: string;
         createdAt: any;
         updatedAt: any;
       } | null;
@@ -756,8 +1153,13 @@ export type GetPostBySlugQuery = {
       mainImage?: string | null;
       isPublished: boolean;
       isPriority: boolean;
+      isPinned: boolean;
+      isDeleted: boolean;
       views: number;
+      votes: number;
       tags: Array<string>;
+      authorId: string;
+      categoryId: string;
       createdAt: any;
       updatedAt: any;
       author: {
@@ -770,6 +1172,7 @@ export type GetPostBySlugQuery = {
         id: string;
         name: string;
         slug: string;
+        description: string;
         createdAt: any;
         updatedAt: any;
       } | null;
@@ -794,8 +1197,13 @@ export type GetAllPostsQuery = {
       mainImage?: string | null;
       isPublished: boolean;
       isPriority: boolean;
+      isPinned: boolean;
+      isDeleted: boolean;
       views: number;
+      votes: number;
       tags: Array<string>;
+      authorId: string;
+      categoryId: string;
       createdAt: any;
       updatedAt: any;
       author: {
@@ -808,6 +1216,7 @@ export type GetAllPostsQuery = {
         id: string;
         name: string;
         slug: string;
+        description: string;
         createdAt: any;
         updatedAt: any;
       } | null;
@@ -831,6 +1240,146 @@ export type DeletePostMutation = {
   deletePost: { success: boolean; message: string };
 };
 
+export type GetMyPostsQueryVariables = Exact<{
+  filters: PostFiltersInput;
+}>;
+
+export type GetMyPostsQuery = {
+  myPosts: {
+    success: boolean;
+    message?: string | null;
+    data: Array<{
+      id: string;
+      title: string;
+      slug: string;
+      content: any;
+      description?: string | null;
+      mainImage?: string | null;
+      isPublished: boolean;
+      isPriority: boolean;
+      isPinned: boolean;
+      isDeleted: boolean;
+      views: number;
+      votes: number;
+      tags: Array<string>;
+      authorId: string;
+      categoryId: string;
+      createdAt: any;
+      updatedAt: any;
+      author: {
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+      };
+      category?: {
+        id: string;
+        name: string;
+        slug: string;
+        description: string;
+        createdAt: any;
+        updatedAt: any;
+      } | null;
+    }>;
+    meta: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+      hasNext: boolean;
+      hasPrev: boolean;
+    };
+  };
+};
+
+export type GetPriorityPostsQueryVariables = Exact<{
+  limit: Scalars["Int"]["input"];
+}>;
+
+export type GetPriorityPostsQuery = {
+  priorityPosts: {
+    success: boolean;
+    message?: string | null;
+    count: number;
+    data: Array<{
+      id: string;
+      title: string;
+      slug: string;
+      content: any;
+      description?: string | null;
+      mainImage?: string | null;
+      isPublished: boolean;
+      isPriority: boolean;
+      isPinned: boolean;
+      isDeleted: boolean;
+      views: number;
+      votes: number;
+      tags: Array<string>;
+      authorId: string;
+      categoryId: string;
+      createdAt: any;
+      updatedAt: any;
+      author: {
+        id: string;
+        email?: string | null;
+        name?: string | null;
+        image?: string | null;
+      };
+      category?: {
+        id: string;
+        name: string;
+        slug: string;
+        description: string;
+        createdAt: any;
+        updatedAt: any;
+      } | null;
+    }>;
+  };
+};
+
+export type GetVoteStatusQueryVariables = Exact<{
+  postId: Scalars["String"]["input"];
+}>;
+
+export type GetVoteStatusQuery = {
+  voteStatus: {
+    success: boolean;
+    message?: string | null;
+    data?: {
+      upvotes: number;
+      downvotes: number;
+      score: number;
+      userVote?: VoteType | null;
+    } | null;
+  };
+};
+
+export type CastVoteMutationVariables = Exact<{
+  input: CastVoteInput;
+}>;
+
+export type CastVoteMutation = {
+  castVote: {
+    success: boolean;
+    message?: string | null;
+    data?: {
+      id: string;
+      postId: string;
+      userId: string;
+      value: VoteType;
+      createdAt: any;
+    } | null;
+  };
+};
+
+export type RemoveVoteMutationVariables = Exact<{
+  postId: Scalars["String"]["input"];
+}>;
+
+export type RemoveVoteMutation = {
+  removeVote: { success: boolean; message: string; deletedId?: string | null };
+};
+
 export const UserFragmentFragmentDoc = gql`
   fragment UserFragment on UserModel {
     id
@@ -839,11 +1388,42 @@ export const UserFragmentFragmentDoc = gql`
     image
   }
 `;
+export const CommentFragmentFragmentDoc = gql`
+  fragment CommentFragment on CommentModel {
+    id
+    content
+    createdAt
+    updatedAt
+    isEdited
+    isDeleted
+    parentId
+    postId
+    userId
+    user {
+      ...UserFragment
+    }
+    replies {
+      id
+      content
+      createdAt
+      updatedAt
+      isEdited
+      isDeleted
+      parentId
+      userId
+      user {
+        ...UserFragment
+      }
+    }
+  }
+  ${UserFragmentFragmentDoc}
+`;
 export const CategoryFragmentFragmentDoc = gql`
   fragment CategoryFragment on CategoryModel {
     id
     name
     slug
+    description
     createdAt
     updatedAt
   }
@@ -858,8 +1438,13 @@ export const PostFragmentFragmentDoc = gql`
     mainImage
     isPublished
     isPriority
+    isPinned
+    isDeleted
     views
+    votes
     tags
+    authorId
+    categoryId
     createdAt
     updatedAt
     author {
@@ -1141,27 +1726,6 @@ export function useGetSessionLazyQuery(
     GetSessionQueryVariables
   >(GetSessionDocument, options);
 }
-// @ts-ignore
-export function useGetSessionSuspenseQuery(
-  baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<
-    GetSessionQuery,
-    GetSessionQueryVariables
-  >,
-): ApolloReactHooks.UseSuspenseQueryResult<
-  GetSessionQuery,
-  GetSessionQueryVariables
->;
-export function useGetSessionSuspenseQuery(
-  baseOptions?:
-    | ApolloReactHooks.SkipToken
-    | ApolloReactHooks.SuspenseQueryHookOptions<
-        GetSessionQuery,
-        GetSessionQueryVariables
-      >,
-): ApolloReactHooks.UseSuspenseQueryResult<
-  GetSessionQuery | undefined,
-  GetSessionQueryVariables
->;
 export function useGetSessionSuspenseQuery(
   baseOptions?:
     | ApolloReactHooks.SkipToken
@@ -1189,6 +1753,89 @@ export type GetSessionSuspenseQueryHookResult = ReturnType<
 export type GetSessionQueryResult = ApolloReactCommon.QueryResult<
   GetSessionQuery,
   GetSessionQueryVariables
+>;
+export const GetCategoriesDocument = gql`
+  query GetCategories {
+    categories {
+      success
+      message
+      count
+      data {
+        ...CategoryFragment
+      }
+    }
+  }
+  ${CategoryFragmentFragmentDoc}
+`;
+
+/**
+ * __useGetCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCategoriesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCategoriesQuery,
+    GetCategoriesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useQuery<
+    GetCategoriesQuery,
+    GetCategoriesQueryVariables
+  >(GetCategoriesDocument, options);
+}
+export function useGetCategoriesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCategoriesQuery,
+    GetCategoriesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useLazyQuery<
+    GetCategoriesQuery,
+    GetCategoriesQueryVariables
+  >(GetCategoriesDocument, options);
+}
+export function useGetCategoriesSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetCategoriesQuery,
+        GetCategoriesQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === ApolloReactHooks.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useSuspenseQuery<
+    GetCategoriesQuery,
+    GetCategoriesQueryVariables
+  >(GetCategoriesDocument, options);
+}
+export type GetCategoriesQueryHookResult = ReturnType<
+  typeof useGetCategoriesQuery
+>;
+export type GetCategoriesLazyQueryHookResult = ReturnType<
+  typeof useGetCategoriesLazyQuery
+>;
+export type GetCategoriesSuspenseQueryHookResult = ReturnType<
+  typeof useGetCategoriesSuspenseQuery
+>;
+export type GetCategoriesQueryResult = ApolloReactCommon.QueryResult<
+  GetCategoriesQuery,
+  GetCategoriesQueryVariables
 >;
 export const CreateCategoryDocument = gql`
   mutation CreateCategory($input: CreateCategoryDto!) {
@@ -1245,6 +1892,369 @@ export type CreateCategoryMutationOptions =
   ApolloReactCommon.BaseMutationOptions<
     CreateCategoryMutation,
     CreateCategoryMutationVariables
+  >;
+export const UpdateCategoryDocument = gql`
+  mutation UpdateCategory($id: String!, $input: UpdateCategoryDto!) {
+    updateCategory(id: $id, input: $input) {
+      success
+      message
+      data {
+        ...CategoryFragment
+      }
+    }
+  }
+  ${CategoryFragmentFragmentDoc}
+`;
+export type UpdateCategoryMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateCategoryMutation,
+  UpdateCategoryMutationVariables
+>;
+
+/**
+ * __useUpdateCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCategoryMutation, { data, loading, error }] = useUpdateCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCategoryMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateCategoryMutation,
+    UpdateCategoryMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useMutation<
+    UpdateCategoryMutation,
+    UpdateCategoryMutationVariables
+  >(UpdateCategoryDocument, options);
+}
+export type UpdateCategoryMutationHookResult = ReturnType<
+  typeof useUpdateCategoryMutation
+>;
+export type UpdateCategoryMutationResult =
+  ApolloReactCommon.MutationResult<UpdateCategoryMutation>;
+export type UpdateCategoryMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpdateCategoryMutation,
+    UpdateCategoryMutationVariables
+  >;
+export const DeleteCategoryDocument = gql`
+  mutation DeleteCategory($id: String!) {
+    deleteCategory(id: $id) {
+      success
+      message
+    }
+  }
+`;
+export type DeleteCategoryMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteCategoryMutation,
+  DeleteCategoryMutationVariables
+>;
+
+/**
+ * __useDeleteCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCategoryMutation, { data, loading, error }] = useDeleteCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCategoryMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteCategoryMutation,
+    DeleteCategoryMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useMutation<
+    DeleteCategoryMutation,
+    DeleteCategoryMutationVariables
+  >(DeleteCategoryDocument, options);
+}
+export type DeleteCategoryMutationHookResult = ReturnType<
+  typeof useDeleteCategoryMutation
+>;
+export type DeleteCategoryMutationResult =
+  ApolloReactCommon.MutationResult<DeleteCategoryMutation>;
+export type DeleteCategoryMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    DeleteCategoryMutation,
+    DeleteCategoryMutationVariables
+  >;
+export const GetCommentsByPostDocument = gql`
+  query GetCommentsByPost($postId: String!) {
+    commentsByPost(postId: $postId) {
+      success
+      message
+      count
+      data {
+        ...CommentFragment
+      }
+    }
+  }
+  ${CommentFragmentFragmentDoc}
+`;
+
+/**
+ * __useGetCommentsByPostQuery__
+ *
+ * To run a query within a React component, call `useGetCommentsByPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsByPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentsByPostQuery({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useGetCommentsByPostQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetCommentsByPostQuery,
+    GetCommentsByPostQueryVariables
+  > &
+    (
+      | { variables: GetCommentsByPostQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useQuery<
+    GetCommentsByPostQuery,
+    GetCommentsByPostQueryVariables
+  >(GetCommentsByPostDocument, options);
+}
+export function useGetCommentsByPostLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCommentsByPostQuery,
+    GetCommentsByPostQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useLazyQuery<
+    GetCommentsByPostQuery,
+    GetCommentsByPostQueryVariables
+  >(GetCommentsByPostDocument, options);
+}
+export function useGetCommentsByPostSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetCommentsByPostQuery,
+        GetCommentsByPostQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === ApolloReactHooks.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useSuspenseQuery<
+    GetCommentsByPostQuery,
+    GetCommentsByPostQueryVariables
+  >(GetCommentsByPostDocument, options);
+}
+export type GetCommentsByPostQueryHookResult = ReturnType<
+  typeof useGetCommentsByPostQuery
+>;
+export type GetCommentsByPostLazyQueryHookResult = ReturnType<
+  typeof useGetCommentsByPostLazyQuery
+>;
+export type GetCommentsByPostSuspenseQueryHookResult = ReturnType<
+  typeof useGetCommentsByPostSuspenseQuery
+>;
+export type GetCommentsByPostQueryResult = ApolloReactCommon.QueryResult<
+  GetCommentsByPostQuery,
+  GetCommentsByPostQueryVariables
+>;
+export const CreateCommentDocument = gql`
+  mutation CreateComment($input: CreateCommentInput!) {
+    createComment(input: $input) {
+      success
+      message
+      data {
+        ...CommentFragment
+      }
+    }
+  }
+  ${CommentFragmentFragmentDoc}
+`;
+export type CreateCommentMutationFn = ApolloReactCommon.MutationFunction<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useMutation<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >(CreateCommentDocument, options);
+}
+export type CreateCommentMutationHookResult = ReturnType<
+  typeof useCreateCommentMutation
+>;
+export type CreateCommentMutationResult =
+  ApolloReactCommon.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >;
+export const UpdateCommentDocument = gql`
+  mutation UpdateComment($id: String!, $input: UpdateCommentInput!) {
+    updateComment(id: $id, input: $input) {
+      success
+      message
+      data {
+        ...CommentFragment
+      }
+    }
+  }
+  ${CommentFragmentFragmentDoc}
+`;
+export type UpdateCommentMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateCommentMutation,
+  UpdateCommentMutationVariables
+>;
+
+/**
+ * __useUpdateCommentMutation__
+ *
+ * To run a mutation, you first call `useUpdateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCommentMutation, { data, loading, error }] = useUpdateCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCommentMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateCommentMutation,
+    UpdateCommentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useMutation<
+    UpdateCommentMutation,
+    UpdateCommentMutationVariables
+  >(UpdateCommentDocument, options);
+}
+export type UpdateCommentMutationHookResult = ReturnType<
+  typeof useUpdateCommentMutation
+>;
+export type UpdateCommentMutationResult =
+  ApolloReactCommon.MutationResult<UpdateCommentMutation>;
+export type UpdateCommentMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpdateCommentMutation,
+    UpdateCommentMutationVariables
+  >;
+export const DeleteCommentDocument = gql`
+  mutation DeleteComment($id: String!) {
+    deleteComment(id: $id) {
+      success
+      message
+      deletedId
+    }
+  }
+`;
+export type DeleteCommentMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteCommentMutation,
+  DeleteCommentMutationVariables
+>;
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentMutation, { data, loading, error }] = useDeleteCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteCommentMutation,
+    DeleteCommentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useMutation<
+    DeleteCommentMutation,
+    DeleteCommentMutationVariables
+  >(DeleteCommentDocument, options);
+}
+export type DeleteCommentMutationHookResult = ReturnType<
+  typeof useDeleteCommentMutation
+>;
+export type DeleteCommentMutationResult =
+  ApolloReactCommon.MutationResult<DeleteCommentMutation>;
+export type DeleteCommentMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    DeleteCommentMutation,
+    DeleteCommentMutationVariables
   >;
 export const CreatePostDocument = gql`
   mutation CreatePost($input: CreatePostInput!) {
@@ -1479,27 +2489,6 @@ export function useGetPublishedPostsLazyQuery(
     GetPublishedPostsQueryVariables
   >(GetPublishedPostsDocument, options);
 }
-// @ts-ignore
-export function useGetPublishedPostsSuspenseQuery(
-  baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<
-    GetPublishedPostsQuery,
-    GetPublishedPostsQueryVariables
-  >,
-): ApolloReactHooks.UseSuspenseQueryResult<
-  GetPublishedPostsQuery,
-  GetPublishedPostsQueryVariables
->;
-export function useGetPublishedPostsSuspenseQuery(
-  baseOptions?:
-    | ApolloReactHooks.SkipToken
-    | ApolloReactHooks.SuspenseQueryHookOptions<
-        GetPublishedPostsQuery,
-        GetPublishedPostsQueryVariables
-      >,
-): ApolloReactHooks.UseSuspenseQueryResult<
-  GetPublishedPostsQuery | undefined,
-  GetPublishedPostsQueryVariables
->;
 export function useGetPublishedPostsSuspenseQuery(
   baseOptions?:
     | ApolloReactHooks.SkipToken
@@ -1587,27 +2576,6 @@ export function useGetPostBySlugLazyQuery(
     GetPostBySlugQueryVariables
   >(GetPostBySlugDocument, options);
 }
-// @ts-ignore
-export function useGetPostBySlugSuspenseQuery(
-  baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<
-    GetPostBySlugQuery,
-    GetPostBySlugQueryVariables
-  >,
-): ApolloReactHooks.UseSuspenseQueryResult<
-  GetPostBySlugQuery,
-  GetPostBySlugQueryVariables
->;
-export function useGetPostBySlugSuspenseQuery(
-  baseOptions?:
-    | ApolloReactHooks.SkipToken
-    | ApolloReactHooks.SuspenseQueryHookOptions<
-        GetPostBySlugQuery,
-        GetPostBySlugQueryVariables
-      >,
-): ApolloReactHooks.UseSuspenseQueryResult<
-  GetPostBySlugQuery | undefined,
-  GetPostBySlugQueryVariables
->;
 export function useGetPostBySlugSuspenseQuery(
   baseOptions?:
     | ApolloReactHooks.SkipToken
@@ -1699,27 +2667,6 @@ export function useGetAllPostsLazyQuery(
     GetAllPostsQueryVariables
   >(GetAllPostsDocument, options);
 }
-// @ts-ignore
-export function useGetAllPostsSuspenseQuery(
-  baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<
-    GetAllPostsQuery,
-    GetAllPostsQueryVariables
-  >,
-): ApolloReactHooks.UseSuspenseQueryResult<
-  GetAllPostsQuery,
-  GetAllPostsQueryVariables
->;
-export function useGetAllPostsSuspenseQuery(
-  baseOptions?:
-    | ApolloReactHooks.SkipToken
-    | ApolloReactHooks.SuspenseQueryHookOptions<
-        GetAllPostsQuery,
-        GetAllPostsQueryVariables
-      >,
-): ApolloReactHooks.UseSuspenseQueryResult<
-  GetAllPostsQuery | undefined,
-  GetAllPostsQueryVariables
->;
 export function useGetAllPostsSuspenseQuery(
   baseOptions?:
     | ApolloReactHooks.SkipToken
@@ -1798,4 +2745,382 @@ export type DeletePostMutationResult =
 export type DeletePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   DeletePostMutation,
   DeletePostMutationVariables
+>;
+export const GetMyPostsDocument = gql`
+  query GetMyPosts($filters: PostFiltersInput!) {
+    myPosts(filters: $filters) {
+      success
+      message
+      data {
+        ...PostFragment
+      }
+      meta {
+        total
+        page
+        limit
+        totalPages
+        hasNext
+        hasPrev
+      }
+    }
+  }
+  ${PostFragmentFragmentDoc}
+`;
+
+/**
+ * __useGetMyPostsQuery__
+ *
+ * To run a query within a React component, call `useGetMyPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyPostsQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *   },
+ * });
+ */
+export function useGetMyPostsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetMyPostsQuery,
+    GetMyPostsQueryVariables
+  > &
+    (
+      | { variables: GetMyPostsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useQuery<GetMyPostsQuery, GetMyPostsQueryVariables>(
+    GetMyPostsDocument,
+    options,
+  );
+}
+export function useGetMyPostsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMyPostsQuery,
+    GetMyPostsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useLazyQuery<
+    GetMyPostsQuery,
+    GetMyPostsQueryVariables
+  >(GetMyPostsDocument, options);
+}
+export function useGetMyPostsSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetMyPostsQuery,
+        GetMyPostsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === ApolloReactHooks.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useSuspenseQuery<
+    GetMyPostsQuery,
+    GetMyPostsQueryVariables
+  >(GetMyPostsDocument, options);
+}
+export type GetMyPostsQueryHookResult = ReturnType<typeof useGetMyPostsQuery>;
+export type GetMyPostsLazyQueryHookResult = ReturnType<
+  typeof useGetMyPostsLazyQuery
+>;
+export type GetMyPostsSuspenseQueryHookResult = ReturnType<
+  typeof useGetMyPostsSuspenseQuery
+>;
+export type GetMyPostsQueryResult = ApolloReactCommon.QueryResult<
+  GetMyPostsQuery,
+  GetMyPostsQueryVariables
+>;
+export const GetPriorityPostsDocument = gql`
+  query GetPriorityPosts($limit: Int!) {
+    priorityPosts(limit: $limit) {
+      success
+      message
+      count
+      data {
+        ...PostFragment
+      }
+    }
+  }
+  ${PostFragmentFragmentDoc}
+`;
+
+/**
+ * __useGetPriorityPostsQuery__
+ *
+ * To run a query within a React component, call `useGetPriorityPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPriorityPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPriorityPostsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetPriorityPostsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetPriorityPostsQuery,
+    GetPriorityPostsQueryVariables
+  > &
+    (
+      | { variables: GetPriorityPostsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useQuery<
+    GetPriorityPostsQuery,
+    GetPriorityPostsQueryVariables
+  >(GetPriorityPostsDocument, options);
+}
+export function useGetPriorityPostsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPriorityPostsQuery,
+    GetPriorityPostsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useLazyQuery<
+    GetPriorityPostsQuery,
+    GetPriorityPostsQueryVariables
+  >(GetPriorityPostsDocument, options);
+}
+export function useGetPriorityPostsSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetPriorityPostsQuery,
+        GetPriorityPostsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === ApolloReactHooks.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useSuspenseQuery<
+    GetPriorityPostsQuery,
+    GetPriorityPostsQueryVariables
+  >(GetPriorityPostsDocument, options);
+}
+export type GetPriorityPostsQueryHookResult = ReturnType<
+  typeof useGetPriorityPostsQuery
+>;
+export type GetPriorityPostsLazyQueryHookResult = ReturnType<
+  typeof useGetPriorityPostsLazyQuery
+>;
+export type GetPriorityPostsSuspenseQueryHookResult = ReturnType<
+  typeof useGetPriorityPostsSuspenseQuery
+>;
+export type GetPriorityPostsQueryResult = ApolloReactCommon.QueryResult<
+  GetPriorityPostsQuery,
+  GetPriorityPostsQueryVariables
+>;
+export const GetVoteStatusDocument = gql`
+  query GetVoteStatus($postId: String!) {
+    voteStatus(postId: $postId) {
+      success
+      message
+      data {
+        upvotes
+        downvotes
+        score
+        userVote
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetVoteStatusQuery__
+ *
+ * To run a query within a React component, call `useGetVoteStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVoteStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVoteStatusQuery({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useGetVoteStatusQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetVoteStatusQuery,
+    GetVoteStatusQueryVariables
+  > &
+    (
+      | { variables: GetVoteStatusQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useQuery<
+    GetVoteStatusQuery,
+    GetVoteStatusQueryVariables
+  >(GetVoteStatusDocument, options);
+}
+export function useGetVoteStatusLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetVoteStatusQuery,
+    GetVoteStatusQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useLazyQuery<
+    GetVoteStatusQuery,
+    GetVoteStatusQueryVariables
+  >(GetVoteStatusDocument, options);
+}
+export function useGetVoteStatusSuspenseQuery(
+  baseOptions?:
+    | ApolloReactHooks.SkipToken
+    | ApolloReactHooks.SuspenseQueryHookOptions<
+        GetVoteStatusQuery,
+        GetVoteStatusQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === ApolloReactHooks.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useSuspenseQuery<
+    GetVoteStatusQuery,
+    GetVoteStatusQueryVariables
+  >(GetVoteStatusDocument, options);
+}
+export type GetVoteStatusQueryHookResult = ReturnType<
+  typeof useGetVoteStatusQuery
+>;
+export type GetVoteStatusLazyQueryHookResult = ReturnType<
+  typeof useGetVoteStatusLazyQuery
+>;
+export type GetVoteStatusSuspenseQueryHookResult = ReturnType<
+  typeof useGetVoteStatusSuspenseQuery
+>;
+export type GetVoteStatusQueryResult = ApolloReactCommon.QueryResult<
+  GetVoteStatusQuery,
+  GetVoteStatusQueryVariables
+>;
+export const CastVoteDocument = gql`
+  mutation CastVote($input: CastVoteInput!) {
+    castVote(input: $input) {
+      success
+      message
+      data {
+        id
+        postId
+        userId
+        value
+        createdAt
+      }
+    }
+  }
+`;
+export type CastVoteMutationFn = ApolloReactCommon.MutationFunction<
+  CastVoteMutation,
+  CastVoteMutationVariables
+>;
+
+/**
+ * __useCastVoteMutation__
+ *
+ * To run a mutation, you first call `useCastVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCastVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [castVoteMutation, { data, loading, error }] = useCastVoteMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCastVoteMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CastVoteMutation,
+    CastVoteMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useMutation<
+    CastVoteMutation,
+    CastVoteMutationVariables
+  >(CastVoteDocument, options);
+}
+export type CastVoteMutationHookResult = ReturnType<typeof useCastVoteMutation>;
+export type CastVoteMutationResult =
+  ApolloReactCommon.MutationResult<CastVoteMutation>;
+export type CastVoteMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CastVoteMutation,
+  CastVoteMutationVariables
+>;
+export const RemoveVoteDocument = gql`
+  mutation RemoveVote($postId: String!) {
+    removeVote(postId: $postId) {
+      success
+      message
+      deletedId
+    }
+  }
+`;
+export type RemoveVoteMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveVoteMutation,
+  RemoveVoteMutationVariables
+>;
+
+/**
+ * __useRemoveVoteMutation__
+ *
+ * To run a mutation, you first call `useRemoveVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeVoteMutation, { data, loading, error }] = useRemoveVoteMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useRemoveVoteMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RemoveVoteMutation,
+    RemoveVoteMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return ApolloReactHooks.useMutation<
+    RemoveVoteMutation,
+    RemoveVoteMutationVariables
+  >(RemoveVoteDocument, options);
+}
+export type RemoveVoteMutationHookResult = ReturnType<
+  typeof useRemoveVoteMutation
+>;
+export type RemoveVoteMutationResult =
+  ApolloReactCommon.MutationResult<RemoveVoteMutation>;
+export type RemoveVoteMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveVoteMutation,
+  RemoveVoteMutationVariables
 >;

@@ -3,6 +3,7 @@ import {
   CheckIcon,
   ChevronDownIcon,
   CopyIcon,
+  Loader2,
   NotepadTextDashedIcon,
   RocketIcon,
   ShareIcon,
@@ -37,12 +38,14 @@ interface PreviewControlProps {
   onSubmit: () => void;
   title: string;
   description: string;
+  isSubmitting?: boolean;
 }
 export const PreviewControl = ({
   form,
   title,
   description,
   onSubmit,
+  isSubmitting = false,
 }: PreviewControlProps) => {
   return (
     <div className="col-span-1 relative ">
@@ -60,9 +63,14 @@ export const PreviewControl = ({
               size="default"
               className="col-span-1"
               onClick={onSubmit}
+              disabled={isSubmitting}
             >
-              <RocketIcon className="size-6 text-primary" />
-              <span>Publish</span>
+              {isSubmitting ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <RocketIcon className="size-6 text-primary" />
+              )}
+              <span>{isSubmitting ? "Publishing..." : "Publish"}</span>
             </Button>
 
             <DropdownMenu>

@@ -48,7 +48,7 @@ describe("guestIdentifier", () => {
 
   describe("getOrCreateGuestIdentifier", () => {
     it("creates a new guest ID when no cookie exists", () => {
-      vi.mocked(Cookies.get).mockReturnValue(undefined);
+      vi.mocked(Cookies.get).mockReturnValue(undefined as any);
 
       const result = getOrCreateGuestIdentifier();
 
@@ -65,7 +65,7 @@ describe("guestIdentifier", () => {
     });
 
     it("returns existing guest ID when cookie exists", () => {
-      vi.mocked(Cookies.get).mockReturnValue("existing-guest-id");
+      vi.mocked(Cookies.get).mockReturnValue("existing-guest-id" as any);
 
       const result = getOrCreateGuestIdentifier();
 
@@ -76,13 +76,13 @@ describe("guestIdentifier", () => {
 
   describe("getGuestId", () => {
     it("returns the guest ID from cookie", () => {
-      vi.mocked(Cookies.get).mockReturnValue("some-guest-id");
+      vi.mocked(Cookies.get).mockReturnValue("some-guest-id" as any);
 
       expect(getGuestId()).toBe("some-guest-id");
     });
 
     it("returns undefined when no cookie exists", () => {
-      vi.mocked(Cookies.get).mockReturnValue(undefined);
+      vi.mocked(Cookies.get).mockReturnValue(undefined as any);
 
       expect(getGuestId()).toBeUndefined();
     });
@@ -90,7 +90,7 @@ describe("guestIdentifier", () => {
 
   describe("refreshGuestIdentifier", () => {
     it("removes existing cookie and creates a new one", async () => {
-      vi.mocked(Cookies.get).mockReturnValue(undefined);
+      vi.mocked(Cookies.get).mockReturnValue(undefined as any);
 
       await refreshGuestIdentifier();
 
@@ -101,13 +101,13 @@ describe("guestIdentifier", () => {
 
   describe("hasGuestIdentifier", () => {
     it("returns true when cookie exists", () => {
-      vi.mocked(Cookies.get).mockReturnValue("some-id");
+      vi.mocked(Cookies.get).mockReturnValue("some-id" as any);
 
       expect(hasGuestIdentifier()).toBe(true);
     });
 
     it("returns false when cookie does not exist", () => {
-      vi.mocked(Cookies.get).mockReturnValue(undefined);
+      vi.mocked(Cookies.get).mockReturnValue(undefined as any);
 
       expect(hasGuestIdentifier()).toBe(false);
     });

@@ -245,7 +245,6 @@ export function ActivityTimeline({
   // Initial load
   useEffect(() => {
     if (!initialActivities) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoading(true);
       // Simulate API call
       const timer = setTimeout(() => {

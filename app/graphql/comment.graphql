@@ -1,0 +1,74 @@
+fragment CommentFragment on CommentModel {
+  id
+  content
+  createdAt
+  updatedAt
+  isEdited
+  isDeleted
+  parentId
+  postId
+  userId
+  user {
+    ...UserFragment
+  }
+  replies {
+    id
+    content
+    createdAt
+    updatedAt
+    isEdited
+    isDeleted
+    parentId
+    userId
+    user {
+      ...UserFragment
+    }
+  }
+}
+
+# =========================
+# QUERIES
+# =========================
+
+query GetCommentsByPost($postId: String!) {
+  commentsByPost(postId: $postId) {
+    success
+    message
+    count
+    data {
+      ...CommentFragment
+    }
+  }
+}
+
+# =========================
+# MUTATIONS
+# =========================
+
+mutation CreateComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    success
+    message
+    data {
+      ...CommentFragment
+    }
+  }
+}
+
+mutation UpdateComment($id: String!, $input: UpdateCommentInput!) {
+  updateComment(id: $id, input: $input) {
+    success
+    message
+    data {
+      ...CommentFragment
+    }
+  }
+}
+
+mutation DeleteComment($id: String!) {
+  deleteComment(id: $id) {
+    success
+    message
+    deletedId
+  }
+}

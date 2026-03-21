@@ -7,8 +7,13 @@ fragment PostFragment on PostModel {
   mainImage
   isPublished
   isPriority
+  isPinned
+  isDeleted
   views
+  votes
   tags
+  authorId
+  categoryId
   createdAt
   updatedAt
   author {

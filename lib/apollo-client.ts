@@ -7,6 +7,7 @@ import {
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import { RemoveTypenameFromVariablesLink } from "@apollo/client/link/remove-typename";
+import { RetryLink } from "@apollo/client/link/retry";
 import { visit } from "graphql";
 
 import type { DocumentNode, GraphQLError } from "graphql";
@@ -88,22 +89,61 @@ function createErrorLink() {
 }
 
 /**
+ * Retry link for network resilience
+ * Retries failed requests with exponential backoff
+ */
+function createRetryLink() {
+  return new RetryLink({
+    delay: {
+      initial: 300,
+      max: 5000,
+      jitter: true,
+    },
+    attempts: {
+      max: 3,
+      retryIf: (error) => !!error, // Retry on any network error
+    },
+  });
+}
+
+/**
  * Creates the InMemoryCache configuration
- * Customizable for pagination and type policies
+ * Includes pagination merge strategies for list queries
  */
 function createCache(): InMemoryCache {
   return new InMemoryCache({
     typePolicies: {
       Query: {
         fields: {
-          // Add pagination or merge strategies here if needed
-          // Example:
-          // posts: {
-          //   keyArgs: ["filters"],
-          //   merge(existing, incoming, { args }) {
-          //     return incoming;
-          //   },
-          // },
+          publishedPosts: {
+            keyArgs: [
+              "filters",
+              ["categoryId", "search", "sortBy", "sortOrder", "tags"],
+            ],
+            merge(existing, incoming, { args }) {
+              // If requesting page 1, replace entirely
+              if (!existing || args?.filters?.page === 1) {
+                return incoming;
+              }
+              // Otherwise append data for infinite scroll
+              return {
+                ...incoming,
+                data: [...(existing.data || []), ...(incoming.data || [])],
+              };
+            },
+          },
+          myPosts: {
+            keyArgs: ["filters", ["status", "sortBy", "sortOrder"]],
+            merge(existing, incoming, { args }) {
+              if (!existing || args?.filters?.page === 1) {
+                return incoming;
+              }
+              return {
+                ...incoming,
+                data: [...(existing.data || []), ...(incoming.data || [])],
+              };
+            },
+          },
         },
       },
     },
@@ -113,13 +153,15 @@ function createCache(): InMemoryCache {
 /**
  * Apollo Client instance
  * Configured with:
+ * - Retry link for network resilience (3 attempts, exponential backoff)
  * - Error handling and logging
  * - __typename completely disabled (removed from queries and variables)
- * - Proper caching with customizable type policies
+ * - Pagination-aware caching for publishedPosts and myPosts
  */
 export const client = new ApolloClient({
   link: ApolloLink.from([
     createErrorLink(),
+    createRetryLink(),
     new RemoveTypenameFromVariablesLink(), // Remove __typename from mutation variables
     createHttpLink(),
   ]),
@@ -135,7 +177,6 @@ export const client = new ApolloClient({
     },
     mutate: {
       errorPolicy: "all",
-      // Note: __typename is automatically removed from variables via RemoveTypenameFromVariablesLink
     },
   },
   devtools: {

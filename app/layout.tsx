@@ -110,6 +110,13 @@ export default function RootLayout({
       <body
         className={`${figtree.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        {/* Skip link for keyboard/screen-reader users */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
         {process.env.NODE_ENV === "development" && <PreviewcnDevtools />}
         <Toaster richColors position="top-right" closeButton />
         <SettingsSheet />
@@ -118,7 +125,9 @@ export default function RootLayout({
           setCookies={setAuthCookies}
           deleteCookies={deleteCookies}
         >
-          <ApolloWrapper>{children}</ApolloWrapper>
+          <ApolloWrapper>
+            <main id="main-content">{children}</main>
+          </ApolloWrapper>
         </AuthProvider>
       </body>
     </html>

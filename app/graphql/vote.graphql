@@ -1,0 +1,42 @@
+# =========================
+# QUERIES
+# =========================
+
+query GetVoteStatus($postId: String!) {
+  voteStatus(postId: $postId) {
+    success
+    message
+    data {
+      upvotes
+      downvotes
+      score
+      userVote
+    }
+  }
+}
+
+# =========================
+# MUTATIONS
+# =========================
+
+mutation CastVote($input: CastVoteInput!) {
+  castVote(input: $input) {
+    success
+    message
+    data {
+      id
+      postId
+      userId
+      value
+      createdAt
+    }
+  }
+}
+
+mutation RemoveVote($postId: String!) {
+  removeVote(postId: $postId) {
+    success
+    message
+    deletedId
+  }
+}

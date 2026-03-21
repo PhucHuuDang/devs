@@ -13,6 +13,7 @@ import {
   GET_POSTS_STRING,
 } from "@/app/graphql/queries/blog.queries";
 import { BlogDetailWithMode } from "@/components/url-segment/blog/blog-details-components/blog-detail-with-mode";
+import { BlogInteractions } from "@/components/url-segment/blog/blog-details-components/blog-interactions";
 import { BlogPostAuthor } from "@/components/url-segment/blog/blog-details-components/blog-post-author";
 import { BlogPostHeader } from "@/components/url-segment/blog/blog-details-components/blog-post-header";
 import { BlogPostHero } from "@/components/url-segment/blog/blog-details-components/blog-post-hero";
@@ -199,6 +200,9 @@ const SlugBlogPage = async ({ params }: SlugBlogPageProps) => {
               forcedMode="viewClient"
             />
           </div>
+
+          {/* Voting + Comments (Client Interactive) */}
+          <BlogInteractions postId={post.id} />
         </div>
       </article>
     </Suspense>

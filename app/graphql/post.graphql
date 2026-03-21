@@ -89,3 +89,33 @@ mutation DeletePost($id: String!) {
     message
   }
 }
+
+query GetMyPosts($filters: PostFiltersInput!) {
+  myPosts(filters: $filters) {
+    success
+    message
+    data {
+      ...PostFragment
+    }
+    meta {
+      total
+      page
+      limit
+      totalPages
+      hasNext
+      hasPrev
+    }
+  }
+}
+
+query GetPriorityPosts($limit: Int!) {
+  priorityPosts(limit: $limit) {
+    success
+    message
+    count
+    data {
+      ...PostFragment
+    }
+  }
+}
+

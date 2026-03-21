@@ -1,4 +1,19 @@
 # =========================
+# CATEGORY QUERIES
+# =========================
+
+query GetCategories {
+  categories {
+    success
+    message
+    count
+    data {
+      ...CategoryFragment
+    }
+  }
+}
+
+# =========================
 # CATEGORY MUTATIONS
 # =========================
 
@@ -11,3 +26,21 @@ mutation CreateCategory($input: CreateCategoryDto!) {
     }
   }
 }
+
+mutation UpdateCategory($id: String!, $input: UpdateCategoryDto!) {
+  updateCategory(id: $id, input: $input) {
+    success
+    message
+    data {
+      ...CategoryFragment
+    }
+  }
+}
+
+mutation DeleteCategory($id: String!) {
+  deleteCategory(id: $id) {
+    success
+    message
+  }
+}
+
